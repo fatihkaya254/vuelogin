@@ -7,15 +7,18 @@ div
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import Cookie from "js-cookie";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 export default {
-  middleware : "auth",
+  middleware : ["session-control", "auth"],
   components:{
     HomePageCharts,
     Navbar
   },
     created(){
-      this.$store.dispatch("initAuth")
+      //let cookie = Cookie.get("jwt")
+      //console.log('cookie: ' + cookie);
+      //this.$store.dispatch("initAuth", cookie)
   }
 }
 </script>

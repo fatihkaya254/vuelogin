@@ -96,9 +96,14 @@ export default {
   },
   methods: {
     clickSubmit: function () {
-      this.$store.state.toForm = !this.$store.state.toForm;
-      this.smsValid = false;
-      this.phoneNumber = "";
+      if (this.$store.getters.isAuthenticated) {
+        this.$store.commit("clearAuthkey", this.$store.commit("changeButton", "Giriş Yap"))
+        this.$router.push('/');
+      } else {
+        this.$store.state.toForm = !this.$store.state.toForm;
+        this.smsValid = false;
+        this.phoneNumber = "";
+      }
     },
     beforeEnter: function (el) {
       el.style.opacity = 0;

@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 import PhoneAuth from '../api/db/phoneAuth.js'
 import User from '../api/db/user.js'
 import axios from "axios";
-import Cookie from "js-cookie"
 import jwt from "jsonwebtoken"
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
@@ -16,7 +15,7 @@ mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?re
 
 const maxAge = 3*24*60*60
 const createToken = (id)=>{
-    return jwt.sign({id}, "kediler zıplayamaz", {
+    return jwt.sign({id}, "G@#FCs5,2Bpy!wN}YCVE", {
         expiresIn: maxAge
     })
 }
@@ -77,6 +76,25 @@ app.post('/phone', async (req, res) => {
         //  console.log(error);
     }
 });
+
+app.post('/auth', async (req, res) => {
+    let token = req.body.token
+    if (token) {
+        jwt.verify(token, "G@#FCs5,2Bpy!wN}YCVE", async (err, decodedToken) => {
+            if (err) {
+                console.log(err.message);
+            } else {
+                console.log(decodedToken.id);
+                const userInfo = await User.findById(decodedToken.id)
+                console.log(userInfo);
+                res.status(201).json({ user: userInfo})
+            }
+        })
+    }else{
+        res.status(201).json({ user: null})
+    }
+})
+
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://192.168.1.20:8000")
     next();

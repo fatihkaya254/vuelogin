@@ -1,5 +1,5 @@
 import Vuex from "vuex";
-import axios from "axios";
+
 import Cookies from 'js-cookie'
 
 const createStore = () => {
@@ -13,29 +13,49 @@ const createStore = () => {
       numberInvalid: false,
       toForm: false,
       authKey: null,
+      user: [],
     },
     mutations: {
       setAuthkey(state, authKey){
-        Cookies.set("jwt", authKey)
         state.authKey = authKey
       },
       clearAuthkey(state){
         state.authKey = null
         Cookies.remove("jwt")
+      },
+      changeButton(state, buttonText){
+        state.loginText = buttonText
       }
     },
     actions: {
-      nuxtServerInit(vuexContext, contex){
-        if (contex.req.headers.cookie) {
-          let cookie = contex.req.headers.cookie.split(";").find( c => c.trim().startsWith("jwt="))
-          cookie = cookie.split("=")[1]
-          console.log(cookie);
-        }
+      nuxtServerInit(vuexContext, context){
+
       },
-      initAuth(dispatch){
-       // console.log(dispatch);
-       // const jwt = Cookies.get( 'jwt')
-        //console.log("jwt: " + jwt)
+      setUser(state, user){
+        console.log("user değiştirildi yenisi: " + user);
+        state.user = user
+      },
+      initAuth(vuexContext, req){
+        let token
+        if (req) {
+          if (!req.headers.cookie) {
+            return
+          } else {
+             token = req.headers.cookie.split(";").find( c => c.trim().startsWith("jwt="))
+            if (token) {
+              token = token.split("=")[1]
+              console.log("initAuth birinci aksiyon: " + token);
+            }
+          }
+        }else{
+          console.log('lokalden getir');
+        }
+        vuexContext.commit("setAuthkey", token)
+      },
+      login(vuexContext, authKey){
+        Cookies.set("jwt", authKey)
+        localStorage.setItem("jwt", authKey)
+        vuexContext.commit("setAuthkey", authKey)
       },
       generatePasscode({ commit, dispatch, state }, authData) {
         console.log(authData);
@@ -64,12 +84,12 @@ const createStore = () => {
           .then((res) => {
             console.log(res);
             if (res.data.auth) {
-              commit("setAuthkey", res.data.authKey)
+              dispatch("login", res.data.authKey)
               state.phoneIsValid = false;
               state.numberInvalid = false;
               state.toForm = false;
               state.smsValid = false;
-              state.loginText = authData.phone;
+              state.loginText = "Çıkış Yap";
             } else {
               console.log("");
             }
@@ -78,7 +98,7 @@ const createStore = () => {
     },
     getters: {
       isAuthenticated(state){
-        return state.authKey != null
+          return state.authKey != null
       },
       getAuthkey(state){
         return state.authKey
