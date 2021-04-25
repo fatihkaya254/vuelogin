@@ -5,6 +5,8 @@ header
       a(href="/") 
         img(src="../assets/logo.png", :title="iz", alt="İzders")
     .account 
+      #user 
+        input(type="text" v-model="this.userPhone")
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", :value="this.$store.state.loginText", @click="clickSubmit")
         transition-group(
@@ -57,6 +59,7 @@ header
               v-on:before-enter="startProgress",
               v-on:enter="finishProgress",
               v-on:after-enter="afterFinishProgress",
+              v-on:before-leave="stopProgress",
               v-bind:css="false"
             ) 
               .codeLoad(:disabled="this.$store.state.disabled == 1", v-show="this.$store.state.phoneIsValid")
@@ -64,7 +67,8 @@ header
             type="submit",
             v-if="this.$store.state.toForm",
             v-show="this.$store.state.phoneIsValid",
-            value="Vazgeç"
+            @click="cancelToGenerateCode",
+            value="Vazgeç",
             :key="cancel",
           ) 
           input#accept(
@@ -77,6 +81,8 @@ header
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { gsap } from "gsap";
 export default {
   data() {
     return {
@@ -91,38 +97,61 @@ export default {
       phone: "phone",
       pass: "pass",
       accept: "accept",
-      iz: "iz",
+      iz: "iz"
     };
   },
   methods: {
-    clickSubmit: function () {
+    clickSubmit: function() {
       if (this.$store.getters.isAuthenticated) {
-        this.$store.commit("clearAuthkey", this.$store.commit("changeButton", "Giriş Yap"))
-        this.$router.push('/');
+        this.$store.commit(
+          "clearAuthkey",
+          this.$store.commit("changeButton", "Giriş Yap")
+        );
+        this.$router.push("/");
       } else {
         this.$store.state.toForm = !this.$store.state.toForm;
         this.smsValid = false;
         this.phoneNumber = "";
       }
     },
-    beforeEnter: function (el) {
-      el.style.opacity = 0;
+    cancelToGenerateCode: function(){
+      this.$store.state.phoneIsValid = !this.$store.state.phoneIsValid
+      this.phoneNumber = ""
     },
-    enter: function (el, done) {
-     el.style.opacity =1;
-     done();
+    beforeEnter: function(el) {
+      gsap.set(el, {
+        opacity: 0
+      });
     },
-    startProgress: function (el) {
-      el.style.width = "0%";
+    enter: function(el, done) {
+      gsap.to(el, {
+        duration: 0.4,
+        opacity: 1,
+        ease: "elastic.inOut(2.5, 1)",
+        onComplete: done
+      });
     },
-    finishProgress: async function (el, done) {
-      let _this = this;
-      el.style.width = "100%"
-      done()
+    startProgress: function(el) {
+      gsap.set(el, {
+        width: "0%"
+      });
     },
-    afterFinishProgress: function (){
-      console.log('aldattın mı beniiiiii bunu yaptın mı banaaaa');
-      this.$store.dispatch("generatePasscode", { phone: this.phoneNumber});
+    finishProgress: async function(el, done) {
+      gsap.to(el, {
+        duration: 6,
+        width: "100%",
+        ease: "Power4.easeOut",
+        onComplete: done
+      });
+    },
+    stopProgress: async function(el, done) {
+      gsap.set(el, {
+        width: "0%"
+      });
+    },
+    afterFinishProgress: function() {
+      console.log("aldattın mı beniiiiii bunu yaptın mı banaaaa");
+      this.$store.dispatch("generatePasscode", { phone: this.phoneNumber });
     }
   },
   watch: {
@@ -146,16 +175,26 @@ export default {
       this.enteredCode = value.replace(/\D/g, "");
       console.log(value.length);
       if (value.length == 5) {
-        console.log('a');
-        _this.$store.dispatch("enterCode", { phone: _this.phoneNumber, code: _this.enteredCode})
+        console.log("a");
+        _this.$store.dispatch("enterCode", {
+          phone: _this.phoneNumber,
+          code: _this.enteredCode
+        });
       }
-    },
+    }
   },
-  components: {},
+    computed: {
+    // mix the getters into computed with object spread operator
+    ...mapGetters([
+      'userPhone',
+    ])
+  },
+  components: {}
 };
 </script>
 
 <style lang="sass">
+$ortadaKuyuVar: 36px
 input
   -webkit-appearance: none
 
@@ -184,10 +223,11 @@ header
     margin-top: 16px
 .account
   height: 90px
-  width: 150px
+  width: 50%
   float: right
   margin: 0
   margin-right: 2%
+  display: block
 .buttonIcon
   margin-left: -165px
   transition: all .1s ease
@@ -203,14 +243,31 @@ header
   background-color: white
   border-radius: 1em
   border: 0px solid black
+  position: relative
+  z-index: 2
   &:focus
     outline: 0px
     cursor: pointer
-
+#user
+  margin-top: 35px
+  margin-left: -200px
+  font-family: 'Open Sans', sans-serif
+  font-size: 9pt
+  color: white
+  float: left
+  height: 40px
+  width: 200px
+  float: right
+  position: relative
+  z-index: 1
+  &input[type=text]
+    background-color: rgba(0, 0, 0, 0)
+    height: 40px
 #phone
   height: 40px
   width: 200px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px
@@ -222,12 +279,12 @@ header
   &:focus
     outline: 0px
     cursor: pointer
-    & input[type="text"]
 
 .pass
   height: 34px
   width: 192px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px
@@ -239,12 +296,12 @@ header
   &:focus
     outline: 0px
     cursor: pointer
-    & input[type="tel"]
 
 #cancel
   height: 40px
   width: 200px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px
@@ -264,6 +321,7 @@ header
   height: 40px
   width: 200px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px
@@ -282,8 +340,8 @@ header
 #code
   height: 36px
   width: 196px
-  margin-left: 36px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px
@@ -305,6 +363,7 @@ header
   height: 40px
   width: 200px
   margin-top: 5%
+  margin-left: $ortadaKuyuVar
   font-family: 'Open Sans', sans-serif
   font-weight: 700
   letter-spacing: 1px

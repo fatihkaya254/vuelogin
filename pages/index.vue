@@ -1,13 +1,12 @@
 <template lang="pug">
 div
   Navbar
-  router-view
   HomePageCharts
+  router-view
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import Cookie from "js-cookie";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 export default {
   middleware : ["session-control", "auth"],
@@ -15,11 +14,12 @@ export default {
     HomePageCharts,
     Navbar
   },
-    created(){
+  created(){
       //let cookie = Cookie.get("jwt")
       //console.log('cookie: ' + cookie);
       //this.$store.dispatch("initAuth", cookie)
-  }
+  },
+
 }
 </script>
 

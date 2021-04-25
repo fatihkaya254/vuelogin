@@ -13,7 +13,9 @@ const createStore = () => {
       numberInvalid: false,
       toForm: false,
       authKey: null,
-      user: [],
+      user: {},
+      userId: null,
+      userPhone: null,
     },
     mutations: {
       setAuthkey(state, authKey){
@@ -25,23 +27,26 @@ const createStore = () => {
       },
       changeButton(state, buttonText){
         state.loginText = buttonText
-      }
+      },
+      setUser(state, user){
+        console.log("my user: " + user);
+        state.user = user
+        state.userPhone = user.phone
+        console.log(state.userPhone);
+      },
     },
     actions: {
       nuxtServerInit(vuexContext, context){
 
       },
-      setUser(state, user){
-        console.log("user değiştirildi yenisi: " + user);
-        state.user = user
-      },
+
       initAuth(vuexContext, req){
         let token
         if (req) {
           if (!req.headers.cookie) {
             return
           } else {
-             token = req.headers.cookie.split(";").find( c => c.trim().startsWith("jwt="))
+            token = req.headers.cookie.split(";").find( c => c.trim().startsWith("jwt="))
             if (token) {
               token = token.split("=")[1]
               console.log("initAuth birinci aksiyon: " + token);
@@ -85,11 +90,12 @@ const createStore = () => {
             console.log(res);
             if (res.data.auth) {
               dispatch("login", res.data.authKey)
-              state.phoneIsValid = false;
-              state.numberInvalid = false;
-              state.toForm = false;
-              state.smsValid = false;
-              state.loginText = "Çıkış Yap";
+              state.phoneIsValid = false
+              state.numberInvalid = false
+              state.toForm = false
+              state.smsValid = false
+              state.loginText = "Çıkış Yap"
+              state.userPhone = authData.phone
             } else {
               console.log("");
             }
@@ -102,6 +108,13 @@ const createStore = () => {
       },
       getAuthkey(state){
         return state.authKey
+      },
+      getUser(state){
+        console.log('come from ' + state.userPhone);
+        return state.userPhone
+      },
+      userPhone(state){
+        return state.userPhone
       }
     },
   })

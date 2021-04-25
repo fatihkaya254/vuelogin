@@ -6,8 +6,8 @@
           v-on:enter="enter",
           v-bind:css="false"
         )
-          img.charimage(src="@/assets/char.png")(v-show="onChar")
-        .stats__header(:class="isEnter ? 'active' : '' ")(show="isHead")
+          img.charimage(src="@/assets/char.png", v-show="onChar")
+        .stats__header(:class="isEnter ? 'active' : '' ", show="isHead")
           .stats__header-num
             p L&G
           .stats__header-name
@@ -17,28 +17,28 @@
         ul.stats__list
           li.stats__item
             p.stats__item-num(:style="number" ) 65
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  56
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  50
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  32
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  38
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  32
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  51
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
           li.stats__item
             p.stats__item-num(:style="number" )  50
-            .stats__item-bar(:class="isEnter ? 'active' : '' " )(@click="isOpen = !isOpen")
+            .stats__item-bar(:class="isEnter ? 'active' : '' ", @click="isOpen = !isOpen")
         .stats__overlay(:class="isOpen ? 'active' : '' " )
           .stats__overlay-back(@click="isOpen = !isOpen")
             svg(
@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { gsap } from "gsap";
 export default {
   mounted: function () {
     console.log("mounted");
@@ -152,13 +153,19 @@ export default {
   },
   methods: {
     beforeEnter: function (el) {
-      el.style.opacity = 0;
-      el.style.marginBottom = "-50px";
+      gsap.set(el, {
+        opacity : 0,
+        marginBottom: "-50px",
+      })
     },
     enter: function (el, done) {
-      el.style.marginBottom = 0
-      el.style.opacity = 1
-      done()
+      gsap.to(el, {
+        duration: 1,
+        opacity: 1,
+        marginBottom: 0,
+        ease: 'elastic.inOut(2.5, 1)',
+        onComplete: done
+      })
     },
   },
   watch: {},

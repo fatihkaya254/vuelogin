@@ -84,9 +84,9 @@ app.post('/auth', async (req, res) => {
             if (err) {
                 console.log(err.message);
             } else {
-                console.log(decodedToken.id);
+                //console.log("id: " + decodedToken.id);
                 const userInfo = await User.findById(decodedToken.id)
-                console.log(userInfo);
+                //console.log("userinfobeforeid: " + userInfo);
                 res.status(201).json({ user: userInfo})
             }
         })

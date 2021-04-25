@@ -8,8 +8,9 @@ export default function(context){
         axios
           .post("http://localhost:8000/api/auth", { token: token },{withCredentials: true, credentials: 'include'})
           .then((res) => {
-            let user = JSON.stringify(res.data.user)
-            context.store.dispatch("setUser", user)
+            let user = res.data.user
+            //console.log("let user: " + res.data.user);
+            context.store.commit("setUser", user)
         })
     }
 }
