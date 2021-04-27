@@ -5,6 +5,9 @@ import PhoneAuth from '../api/db/phoneAuth.js'
 import User from '../api/db/user.js'
 import axios from "axios";
 import jwt from "jsonwebtoken"
+import cors from "cors"
+
+app.use(cors());
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -19,8 +22,11 @@ const createToken = (id)=>{
         expiresIn: maxAge
     })
 }
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://192.168.1.20:8000")
+    next();
+});
 app.post('/phone', async (req, res) => {
-    console.log('sdf');
     const phoneNumber = req.body.phone
     const passcode = Math.floor(Math.random() * (99999 - 10000)) + 10000;
     axios.post('https://api.iletimerkezi.com/v1/send-sms/json',
@@ -95,10 +101,7 @@ app.post('/auth', async (req, res) => {
     }
 })
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://192.168.1.20:8000")
-    next();
-});
+
 app.post('/code', async (req, res) => {
     console.log('sa');
     const enteredCode = req.body.code

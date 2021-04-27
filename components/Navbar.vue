@@ -6,7 +6,8 @@ header
         img(src="../assets/logo.png", :title="iz", alt="İzders")
     .account 
       #user 
-        input(type="text" v-model="this.userPhone")
+        NuxtLink(:to="'/dashboard/' + this.$store.getters.userId", class="nuxt-link") 
+          p {{ this.userPhone }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", :value="this.$store.state.loginText", @click="clickSubmit")
         transition-group(
@@ -81,7 +82,6 @@ header
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { gsap } from "gsap";
 export default {
   data() {
@@ -97,21 +97,25 @@ export default {
       phone: "phone",
       pass: "pass",
       accept: "accept",
-      iz: "iz"
+      iz: "iz",
+      userPhone: this.$store.getters.userPhone,
     };
   },
   methods: {
     clickSubmit: function() {
       if (this.$store.getters.isAuthenticated) {
+        this.userPhone = ""
+        this.$store.commit("setUser", "")
         this.$store.commit(
           "clearAuthkey",
           this.$store.commit("changeButton", "Giriş Yap")
         );
         this.$router.push("/");
       } else {
-        this.$store.state.toForm = !this.$store.state.toForm;
-        this.smsValid = false;
-        this.phoneNumber = "";
+        this.$store.state.toForm = !this.$store.state.toForm
+        this.smsValid = false
+        this.userPhone = this.$store.getters.userPhone
+        this.phoneNumber = ""
       }
     },
     cancelToGenerateCode: function(){
@@ -138,7 +142,7 @@ export default {
     },
     finishProgress: async function(el, done) {
       gsap.to(el, {
-        duration: 6,
+        duration: 2,
         width: "100%",
         ease: "Power4.easeOut",
         onComplete: done
@@ -184,10 +188,8 @@ export default {
     }
   },
     computed: {
-    // mix the getters into computed with object spread operator
-    ...mapGetters([
-      'userPhone',
-    ])
+
+
   },
   components: {}
 };
@@ -263,6 +265,7 @@ header
   &input[type=text]
     background-color: rgba(0, 0, 0, 0)
     height: 40px
+    
 #phone
   height: 40px
   width: 200px
@@ -407,4 +410,11 @@ header
   border-radius: 12px
   position: absolute
   z-index: 1
+
+.nuxt-link
+  color: white
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+
 </style>
