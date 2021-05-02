@@ -17,14 +17,12 @@ const createStore = () => {
     },
     mutations: {
       setAuthkey(state, authKey) {
-        state.authKey = authKey;
+        state.authKey = authKey
+        console.log('setAuthkeyfp');
       },
       clearAuthkey(state) {
         state.authKey = null;
         Cookies.remove("jwt");
-      },
-      changeButton(state, buttonText) {
-        state.loginText = buttonText;
       },
       setUser(state, user) {
         state.user = user;
@@ -33,11 +31,10 @@ const createStore = () => {
     },
     actions: {
       nuxtServerInit(vuexContext, context) {},
-      initAuth(vuexContext, req,) {
+      initAuth(vuexContext, req) {
         let token;
         if (req) {
           if (!req.headers.cookie) {
-           
             return;
           } else {
             token = req.headers.cookie
@@ -50,34 +47,27 @@ const createStore = () => {
           }
         } else {
           console.log("lokalden getir");
-          token = localStorage.getItem("jwt")
+          token = localStorage.getItem("jwt");
         }
-        vuexContext.commit("setAuthkey", token)
+        vuexContext.commit("setAuthkey", token);
       },
       login(vuexContext, authKey) {
         Cookies.set("jwt", authKey);
         localStorage.setItem("jwt", authKey);
         vuexContext.commit("setAuthkey", authKey);
-        console.log("--------ELLÖÖ ------")
-        return this.$axios('http://localhost:8000/api/auth', {
-		    method: 'HEAD',
-		    mode: 'no-cors',
-      	}).then((response) => {
-    let user = JSON.stringify(res.data.user)
-    context.store.dispatch("setUser", user)
-	}).catch((e) => {
-		console.log(e);
-	});
-
-    //    return this.$axios
-    //    .post("http://localhost:8000/api/auth", { token: authKey },{withCredentials: true, credentials: 'include'})
-    //    .then((res) => {
-    //      let user = JSON.stringify(res.data.user)
-    //      context.store.dispatch("setUser", user)
-    //    })
-      }, 
-      setUser(state, user){
-        this.commit("setUser", user)
+        return this.$axios
+          .post(
+            "http://192.168.1.20:8000/api/auth",
+            { token: authKey },
+            { withCredentials: true, credentials: "include" }
+          )
+          .then(res => {
+            let user = JSON.stringify(res.data.user);
+            context.store.dispatch("setUser", user);
+          });
+      },
+      setUser(state, user) {
+        this.commit("setUser", user);
       },
       generatePasscode({ commit, dispatch, state }, authData) {
         console.log(authData);
@@ -138,14 +128,14 @@ const createStore = () => {
       },
       userPhone(state) {
         if (state.user != null && state.user != "") {
-          let userPhone = JSON.parse(state.user)
-          return userPhone.phone          
+          let userPhone = JSON.parse(state.user);
+          return userPhone.phone;
         }
       },
       userId(state) {
         if (state.user != null && state.user != "") {
-          let userPhone = JSON.parse(state.user)
-          return userPhone._id          
+          let userPhone = JSON.parse(state.user);
+          return userPhone._id;
         }
       }
     }

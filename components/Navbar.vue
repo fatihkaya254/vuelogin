@@ -9,7 +9,8 @@ header
         NuxtLink(:to="'/profile/' + this.$store.getters.userId", class="nuxt-link") 
           p {{ this.userPhone }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
-        input#login(type="submit", :value="this.$store.state.loginText", @click="clickSubmit")
+        input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
+        input#login(type="submit", value="Giriş Yap", v-show="!this.$store.getters.isAuthenticated", @click="clickSubmit")
         transition-group(
           v-on:before-enter="beforeEnter",
           v-on:enter="enter",
@@ -108,7 +109,6 @@ export default {
         this.$store.commit("setUser", "")
         this.$store.commit(
           "clearAuthkey",
-          this.$store.commit("changeButton", "Giriş Yap")
         );
         this.$router.push("/");
       } else {

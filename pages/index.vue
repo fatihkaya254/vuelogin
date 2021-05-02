@@ -14,11 +14,6 @@ export default {
     HomePageCharts,
     Navbar
   },
-  created(){
-      //let cookie = Cookie.get("jwt")
-      //console.log('cookie: ' + cookie);
-      //this.$store.dispatch("initAuth", cookie)
-  },
 
 }
 </script>

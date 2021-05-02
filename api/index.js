@@ -7,12 +7,12 @@ import axios from "axios";
 import jwt from "jsonwebtoken"
 import cors from "cors"
 
-app.use(cors());
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*")
-    
-    next();
-});
+var corsOptions = {
+    origin: 'http://192.168.1.20:8000',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+app.use(cors(corsOptions));
+
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
     useNewUrlParser: true,
