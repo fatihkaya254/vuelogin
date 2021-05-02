@@ -6,7 +6,7 @@ header
         img(src="../assets/logo.png", :title="iz", alt="İzders")
     .account 
       #user 
-        NuxtLink(:to="'/dashboard/' + this.$store.getters.userId", class="nuxt-link") 
+        NuxtLink(:to="'/profile/' + this.$store.getters.userId", class="nuxt-link") 
           p {{ this.userPhone }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", :value="this.$store.state.loginText", @click="clickSubmit")

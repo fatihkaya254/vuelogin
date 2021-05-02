@@ -1,3 +1,4 @@
 <template lang="pug">
-    p hello id
+div
+    p bune amk
 </template>

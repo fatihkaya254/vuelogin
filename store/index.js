@@ -37,6 +37,7 @@ const createStore = () => {
         let token;
         if (req) {
           if (!req.headers.cookie) {
+           
             return;
           } else {
             token = req.headers.cookie
@@ -49,6 +50,7 @@ const createStore = () => {
           }
         } else {
           console.log("lokalden getir");
+          token = localStorage.getItem("jwt")
         }
         vuexContext.commit("setAuthkey", token)
       },
@@ -56,12 +58,23 @@ const createStore = () => {
         Cookies.set("jwt", authKey);
         localStorage.setItem("jwt", authKey);
         vuexContext.commit("setAuthkey", authKey);
-        return this.$axios
-        .post("http://localhost:8000/api/auth", { token: authKey },{withCredentials: true, credentials: 'include'})
-        .then((res) => {
-          let user = JSON.stringify(res.data.user)
-          context.store.dispatch("setUser", user)
-        })
+        console.log("--------ELLÖÖ ------")
+        return this.$axios('http://localhost:8000/api/auth', {
+		    method: 'HEAD',
+		    mode: 'no-cors',
+      	}).then((response) => {
+    let user = JSON.stringify(res.data.user)
+    context.store.dispatch("setUser", user)
+	}).catch((e) => {
+		console.log(e);
+	});
+
+    //    return this.$axios
+    //    .post("http://localhost:8000/api/auth", { token: authKey },{withCredentials: true, credentials: 'include'})
+    //    .then((res) => {
+    //      let user = JSON.stringify(res.data.user)
+    //      context.store.dispatch("setUser", user)
+    //    })
       }, 
       setUser(state, user){
         this.commit("setUser", user)

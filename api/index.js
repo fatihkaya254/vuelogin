@@ -8,6 +8,11 @@ import jwt from "jsonwebtoken"
 import cors from "cors"
 
 app.use(cors());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*")
+    
+    next();
+});
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -22,10 +27,8 @@ const createToken = (id)=>{
         expiresIn: maxAge
     })
 }
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://192.168.1.20:8000")
-    next();
-});
+
+app.get("*")
 app.post('/phone', async (req, res) => {
     const phoneNumber = req.body.phone
     const passcode = Math.floor(Math.random() * (99999 - 10000)) + 10000;
