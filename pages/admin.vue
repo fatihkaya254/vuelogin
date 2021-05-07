@@ -1,0 +1,67 @@
+<template lang="pug">
+.adminDashboard
+    .container
+        .adminheader
+        .sidebar
+            NuxtLink(:to="'/admin/users'", class="nuxt-link") 
+                p Kullanıcılar
+            NuxtLink(:to="'/admin/roles'", class="nuxt-link") 
+                p Roller
+        .content
+            nuxt-child
+</template>
+
+<script>
+export default {
+  middleware: ["session-control", "masterAuth"],
+  components: {}
+};
+</script>
+<style lang="sass" scoped>
+$gray: rgb(142, 142, 147, 0.70)
+$gray2: rgb(174, 174, 178, 0.70)
+$gray6: rgb(242, 242, 247, 0.70)
+$gray6-dark: rgb(28, 28, 30)
+.adminheader
+    background-color: $gray
+    height: 70px
+    width: 100%
+.sidebar
+    background-color: $gray2
+    float: left
+    min-height: 800px
+    height: 90%
+    width: 20%
+    padding: 20px
+.content
+    background-color: $gray6
+    height: 90%
+    min-height: 800px
+    width: 80%
+    float: left
+    padding: 20px
+.nuxt-link
+  color: $gray6-dark
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+.adminDashboard
+    height: 100vh
+    width: 100vw
+    background-color: $gray
+    background-image: url("https://source.unsplash.com/1600x900/?sexy")
+    background-repeat: no-repeat
+    background-size: cover
+    background-position: center
+    transform-style: preserve-3d
+
+.container
+    border-radius: 2em
+    overflow: hidden
+    margin: auto
+    height: 90vh
+    width: 80vw
+    position: relative
+    top: 50%
+    transform: perspective(1px) translateY(-50%)
+</style>

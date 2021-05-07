@@ -9,7 +9,7 @@ div
 import Navbar from "@/components/Navbar.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 export default {
-  middleware : ["session-control", "auth"],
+  middleware : ["session-control", "homeAuth"],
   components:{
     HomePageCharts,
     Navbar

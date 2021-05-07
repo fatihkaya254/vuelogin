@@ -14,6 +14,16 @@ const userSchema = mongoose.Schema({
     surname: {
         type: String,
     },
+    googleId: {
+        type: String,
+    },
+    appleId: {
+        type: String,
+    },
+    role:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Role'
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 

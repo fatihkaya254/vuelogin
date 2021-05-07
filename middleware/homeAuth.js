@@ -2,7 +2,6 @@ import axios from "axios";
 export default function(context){
     let token = context.store.getters.getAuthkey
     if(!context.store.getters.isAuthenticated){
-       context.redirect("/");
     }else{
         return axios
           .post("http://192.168.1.54:8000/api/auth", { token: token })

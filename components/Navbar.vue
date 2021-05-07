@@ -6,8 +6,8 @@ header
         img(src="../assets/logo.png", :title="iz", alt="İzders")
     .account 
       #user 
-        NuxtLink(:to="'/profile/' + this.$store.getters.userId", class="nuxt-link") 
-          p {{ this.userPhone }}
+        NuxtLink(:to="'/profile/'", class="nuxt-link") 
+          p {{ this.$store.getters.userPhone }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
         input#login(type="submit", value="Giriş Yap", v-show="!this.$store.getters.isAuthenticated", @click="clickSubmit")
@@ -22,7 +22,7 @@ header
             v-if="this.$store.state.toForm",
             :key="phone",
             placeholder="Telefon Numarası",
-            :disabled="this.$store.state.disabled == 1",
+            :disabled="this.$store.state.disabled",
             :maxlength="phoneLength"
           )
           .error(v-if="this.$store.state.numberInvalid") 
@@ -52,7 +52,7 @@ header
             placeholder="_____"
           )
           #code(
-            :disabled="this.$store.state.disabled == 1",
+            :disabled="this.$store.state.disabled",
             v-show="this.$store.state.phoneIsValid",
             :v-model="enteredCode"
             :key="'code'",
@@ -64,7 +64,7 @@ header
               v-on:before-leave="stopProgress",
               v-bind:css="false"
             ) 
-              .codeLoad(:disabled="this.$store.state.disabled == 1", v-show="this.$store.state.phoneIsValid")
+              .codeLoad(:disabled="this.$store.state.disabled", v-show="this.$store.state.phoneIsValid")
           input#cancel(
             type="submit",
             v-if="this.$store.state.toForm",
@@ -98,29 +98,24 @@ export default {
       phone: "phone",
       pass: "pass",
       accept: "accept",
-      iz: "iz",
-      userPhone: this.$store.getters.userPhone,
+      iz: "iz"
     };
   },
   methods: {
     clickSubmit: function() {
       if (this.$store.getters.isAuthenticated) {
-        this.userPhone = ""
-        this.$store.commit("setUser", "")
-        this.$store.commit(
-          "clearAuthkey",
-        );
+        this.$store.commit("clearAuthkey");
         this.$router.push("/");
       } else {
-        this.$store.state.toForm = !this.$store.state.toForm
-        this.smsValid = false
-        this.userPhone = this.$store.getters.userPhone
-        this.phoneNumber = ""
+        this.$store.commit("changeToForm", !this.$store.state.toForm);
+        this.smsValid = false;
+        this.userPhone = this.$store.getters.userPhone;
+        this.phoneNumber = "";
       }
     },
-    cancelToGenerateCode: function(){
-      this.$store.state.phoneIsValid = !this.$store.state.phoneIsValid
-      this.phoneNumber = ""
+    cancelToGenerateCode: function() {
+      this.$store.commit("changePhoneIsValid", !this.$store.phoneIsValid);
+      this.phoneNumber = "";
     },
     beforeEnter: function(el) {
       gsap.set(el, {
@@ -160,18 +155,17 @@ export default {
   },
   watch: {
     phoneNumber(value) {
-      "";
       var firstChar = value.charAt(0);
       if (firstChar != 0) this.phoneLength = 10;
       else this.phoneLength = 11;
       this.phoneNumber = value.replace(/\D/g, "");
       if (this.phoneNumber.length == this.phoneLength) {
-        this.$store.state.phoneIsValid = true;
-        this.$store.state.numberInvalid = false;
-        this.$store.state.disabled = 0;
+        this.$store.commit("changePhoneIsValid", true);
+        this.$store.commit("changeNumberInvalid", false);
+        this.$store.commit("changeDisabled", false);
       } else {
-        this.$store.state.phoneIsValid = false;
-        this.$store.state.smsValid = false;
+        this.$store.commit("changePhoneIsValid", false);
+        this.$store.commit("changeSmsValid", false);
       }
     },
     enteredCode(value) {
@@ -187,10 +181,7 @@ export default {
       }
     }
   },
-    computed: {
-
-
-  },
+  computed: {},
   components: {}
 };
 </script>
@@ -265,7 +256,7 @@ header
   &input[type=text]
     background-color: rgba(0, 0, 0, 0)
     height: 40px
-    
+
 #phone
   height: 40px
   width: 200px
@@ -416,5 +407,4 @@ header
   text-decoration: none
   &:hover
     text-decoration: underline
-
 </style>

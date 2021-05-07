@@ -1,144 +1,189 @@
-import Vuex from "vuex";
-
 import Cookies from "js-cookie";
 
-const createStore = () => {
-  return new Vuex.Store({
-    state: {
-      token: "",
-      loginText: "Giriş Yapın",
-      disabled: 0,
-      phoneIsValid: false,
-      smsValid: false,
-      numberInvalid: false,
-      toForm: false,
-      authKey: null,
-      user: null
-    },
-    mutations: {
-      setAuthkey(state, authKey) {
-        state.authKey = authKey
-        console.log('setAuthkeyfp');
-      },
-      clearAuthkey(state) {
-        state.authKey = null;
-        Cookies.remove("jwt");
-      },
-      setUser(state, user) {
-        state.user = user;
-        console.log("my user: " + state.user);
-      }
-    },
-    actions: {
-      nuxtServerInit(vuexContext, context) {},
-      initAuth(vuexContext, req) {
-        let token;
-        if (req) {
-          if (!req.headers.cookie) {
-            return;
-          } else {
-            token = req.headers.cookie
-              .split(";")
-              .find(c => c.trim().startsWith("jwt="));
-            if (token) {
-              token = token.split("=")[1];
-              console.log("initAuth birinci aksiyon: " + token);
-            }
-          }
-        } else {
-          console.log("lokalden getir");
-          token = localStorage.getItem("jwt");
-        }
-        vuexContext.commit("setAuthkey", token);
-      },
-      login(vuexContext, authKey) {
-        Cookies.set("jwt", authKey);
-        localStorage.setItem("jwt", authKey);
-        vuexContext.commit("setAuthkey", authKey);
-        return this.$axios
-          .post(
-            "http://192.168.1.20:8000/api/auth",
-            { token: authKey },
-            { withCredentials: true, credentials: "include" }
-          )
-          .then(res => {
-            let user = JSON.stringify(res.data.user);
-            context.store.dispatch("setUser", user);
-          });
-      },
-      setUser(state, user) {
-        this.commit("setUser", user);
-      },
-      generatePasscode({ commit, dispatch, state }, authData) {
-        console.log(authData);
-        this.$axios
-          .post(
-            "/phone",
-            { phone: authData.phone },
-            { withCredentials: true, credentials: "include" }
-          )
-          .then(res => {
-            console.log(res);
-            if (res.data.smsStatus == "success") {
-              state.phoneIsValid = false;
-              state.smsValid = true;
-              state.numberInvalid = false;
-            } else {
-              state.phoneIsValid = false;
-              state.smsValid = false;
-              state.numberInvalid = true;
-            }
-          });
-      },
-      enterCode({ commit, dispatch, state }, authData) {
-        console.log("as");
-        this.$axios
-          .post(
-            "/code",
-            {
-              phone: authData.phone,
-              code: authData.code
-            },
-            { withCredentials: true, credentials: "include" }
-          )
-          .then(res => {
-            console.log(res);
-            if (res.data.auth) {
-              dispatch("login", res.data.authKey);
-              state.phoneIsValid = false;
-              state.numberInvalid = false;
-              state.toForm = false;
-              state.smsValid = false;
-              state.loginText = "Çıkış Yap";
-            } else {
-              console.log("");
-            }
-          });
-      }
-    },
-    getters: {
-      isAuthenticated(state) {
-        return state.authKey != null;
-      },
-      getAuthkey(state) {
-        return state.authKey;
-      },
-      getUser(state) {
-        return state.user;
-      },
-      userPhone(state) {
-        if (state.user != null && state.user != "") {
-          let userPhone = JSON.parse(state.user);
-          return userPhone.phone;
-        }
-      },
-      userId(state) {
-        if (state.user != null && state.user != "") {
-          let userPhone = JSON.parse(state.user);
-          return userPhone._id;
+export const state = () => ({
+  token: "",
+  loginText: "Giriş Yapın",
+  disabled: false,
+  phoneIsValid: false,
+  smsValid: false,
+  numberInvalid: false,
+  toForm: false,
+  authKey: null,
+  user: null
+})
+
+
+export const mutations = {
+
+  setAuthkey(state, authKey) {
+    state.authKey = authKey
+  },
+  clearAuthkey(state) {
+    state.authKey = null
+    state.user = null
+    Cookies.remove("jwt")
+    localStorage.removeItem("jwt")
+  },
+  setUser(state, user) {
+    state.user = user
+    console.log("my user: " + state.user)
+  },
+  changeToForm(state){
+    state.toForm = !state.toForm
+  },
+  changePhoneIsValid(state, boolean){
+    state.phoneIsValid = boolean
+  },
+  changeNumberInvalid(state, boolean){
+    state.numberInvalid = boolean
+  },
+  changeDisabled(state, boolean){
+    state.disabled = boolean
+  },
+  changeSmsValid(state, boolean){
+    state.smsValid = boolean
+  },
+}
+
+export const actions = {
+
+  nuxtServerInit(vuexContext, context) {},
+  initAuth(vuexContext, req) {
+    let token;
+    if (req) {
+      if (!req.headers.cookie) {
+        return;
+      } else {
+        token = req.headers.cookie
+          .split(";")
+          .find(c => c.trim().startsWith("jwt="));
+        if (token) {
+          token = token.split("=")[1];
         }
       }
+    } else {
+      console.log("lokalden getir");
+      token = localStorage.getItem("jwt");
     }
-  });
-};
-export default createStore;
+    vuexContext.commit("setAuthkey", token);
+  },
+  login(vuexContext, authKey) {
+    console.log('login fonksiyonu başladı, authkey: ' + authKey);
+    Cookies.set("jwt", authKey);
+    localStorage.setItem("jwt", authKey);
+    vuexContext.commit("setAuthkey", authKey);
+    return this.$axios
+      .post(
+        "http://192.168.1.54:8000/api/auth",
+        { token: authKey },
+        { withCredentials: true, credentials: "include" }
+      )
+      .then(res => {
+        console.log('login axos response: ' + res.data.user);
+        let user = JSON.stringify(res.data.user);
+        vuexContext.dispatch("setUser", user);
+      });
+  },
+  setUser(vuexContext, user) {
+    vuexContext.commit("setUser", user);
+  },
+
+  changeUserInfo(vuexContext, changes){
+    let id = changes.id
+    let where = changes.where
+    let value = changes.value
+    console.log('value in store: ' + value);
+    this.$axios
+    .put(
+      "/updateProfile",
+      { id, where, value },
+      { withCredentials: true, credentials: "include" }
+    )
+    .then(res => {
+      console.log(res);
+      vuexContext.dispatch("users/getUsers")
+    });
+  },
+
+  generatePasscode({ commit, dispatch, state }, authData) {
+    console.log(authData);
+    this.$axios
+      .post(
+        "/phone",
+        { phone: authData.phone },
+        { withCredentials: true, credentials: "include" }
+      )
+      .then(res => {
+        console.log(res);
+        if (res.data.smsStatus == "success") {
+          commit("changePhoneIsValid", false);
+          commit("changeSmsValid", true);
+          commit("changeNumberInvalid", false);
+        } else {
+          commit("changePhoneIsValid", false);
+          commit("changeSmsValid", false);
+          commit("changeNumberInvalid", true);
+        }
+      });
+  },
+  enterCode({ commit, dispatch, state }, authData) {
+    console.log("as");
+    this.$axios
+      .post(
+        "/code",
+        {
+          phone: authData.phone,
+          code: authData.code
+        },
+        { withCredentials: true, credentials: "include" }
+      )
+      .then(res => {
+        console.log(res);
+        if (res.data.auth) {
+          dispatch("login", res.data.authKey);
+          commit("changePhoneIsValid", false);
+          commit("changeNumberInvalid", false);
+          commit("changeSmsValid", false);
+          commit("changeToForm", false);
+        } else {
+          console.log("");
+        }
+      });
+  }
+}
+
+export const getters = {
+  isAuthenticated(state) {
+    return state.authKey != null;
+  },
+  getAuthkey(state) {
+    return state.authKey;
+  },
+  getUser(state) {
+    return state.user;
+  },
+  userPhone(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.phone;
+    }
+  },
+  userId(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user._id;
+    }
+  },
+  userName(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.name;
+    }
+  },
+  userSurname(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.surname;
+    }
+  },
+}
