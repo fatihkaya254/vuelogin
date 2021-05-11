@@ -6,11 +6,11 @@ exports.newgrade = async(req,res) => {
     res.status(201).json({ grade: newgrade})
 }
 
-exports.getAllgradees = async (req,res) =>{
-    Grade.find({}, function(err, gradees) {
+exports.getAllgrades = async (req,res) =>{
+    Grade.find({}, function(err, grades) {
         var gradeMap = {};
     
-        gradees.forEach(function(grade) {
+        grades.forEach(function(grade) {
             gradeMap[grade._id] = grade;
         });
     

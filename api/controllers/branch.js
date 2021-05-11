@@ -1,12 +1,12 @@
 import Branch from "../models/branch"
 
-exports.newBranch = async(req,res) => {
+exports.newbranch = async(req,res) => {
     let branch = req.body.branch
-    const newBranch = await Branch.create(branch)
-    res.status(201).json({ branch: newBranch})
+    const newbranch = await Branch.create(branch)
+    res.status(201).json({ branch: newbranch})
 }
 
-exports.getAllBranches = async (req,res) =>{
+exports.getAllbranches = async (req,res) =>{
     Branch.find({}, function(err, branches) {
         var branchMap = {};
     

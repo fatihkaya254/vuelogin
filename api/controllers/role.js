@@ -1,12 +1,12 @@
 import Role from "../models/role"
 
-exports.newRole = async(req,res) => {
+exports.newrole = async(req,res) => {
     let role = req.body.role
-    const newRole = await Role.create(role)
-    res.status(201).json({ role: newRole})
+    const newrole = await Role.create(role)
+    res.status(201).json({ role: newrole})
 }
 
-exports.getAllRoles = async (req,res) =>{
+exports.getAllroles = async (req,res) =>{
     Role.find({}, function(err, roles) {
         var roleMap = {};
     

@@ -40,4 +40,4 @@ const TestQuestion = mongoose.model('testQuestion', testQuestionSchema)
 
 
 
-export default testQuestionSchema
+export default TestQuestion

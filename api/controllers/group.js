@@ -6,7 +6,7 @@ exports.newgroup = async(req,res) => {
     res.status(201).json({ group: newgroup})
 }
 
-exports.getAllgroupes = async (req,res) =>{
+exports.getAllgroups = async (req,res) =>{
     Group.find({}, function(err, groups) {
         var groupMap = {};
     

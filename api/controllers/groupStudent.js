@@ -1,19 +1,19 @@
-import Branch from "../models/branch"
+import GroupStudent from "../models/groupStudent"
 
-exports.newBranch = async(req,res) => {
-    let branch = req.body.branch
-    const newBranch = await Branch.create(branch)
-    res.status(201).json({ branch: newBranch})
+exports.newgroupStudent = async(req,res) => {
+    let groupStudent = req.body.groupStudent
+    const newgroupStudent = await GroupStudent.create(groupStudent)
+    res.status(201).json({ groupStudent: newgroupStudent})
 }
 
-exports.getAllBranches = async (req,res) =>{
-    Branch.find({}, function(err, branches) {
-        var branchMap = {};
+exports.getAllgroupStudents = async (req,res) =>{
+    GroupStudent.find({}, function(err, groupStudents) {
+        var groupStudentMap = {};
     
-        branches.forEach(function(branch) {
-            branchMap[branch._id] = branch;
+        groupStudents.forEach(function(groupStudent) {
+            groupStudentMap[groupStudent._id] = groupStudent;
         });
     
-        res.send(branchMap);  
+        res.send(groupStudentMap);  
     });
 }
