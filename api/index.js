@@ -1,9 +1,37 @@
 import express from 'express'
 const app = express()
 import mongoose from 'mongoose'
-//import PhoneAuth from './models/phoneAuth.js'
-import User from './controllers/user.js'
-import Role from './controllers/role.js'
+import User from './controllers/user'
+import Branch from './controllers/branch'
+import Role from './controllers/role'
+import BranchProcess from './controllers/'
+import BranchProgress from './controllers/'
+import EducationBack from './controllers/'
+import Exam from './controllers/'
+import Grade from './controllers/'
+import Group from './controllers/'
+import GroupStudent from './controllers/'
+import Package from './controllers/'
+import Parent from './controllers/'
+import ParentShip from './controllers/'
+import PrivateLesson from './controllers/'
+import Purchase from './controllers/purchase'
+import Question from './controllers/question'
+import QuestionSubtopic from './controllers/questionSubtopic'
+import SchoolCourse from './controllers/schoolCourse'
+import SendedSMS from './controllers/sendedSMS'
+import Student from './controllers/student'
+import StudentAnswer from './controllers/studentAnswer'
+import Subject from './controllers/subject'
+import SubjectProcess from './controllers/subjectProcess'
+import SubjectProgress from './controllers/subjectProgress'
+import Subtopic from './controllers/subtopic'
+import Teacher from './controllers/teacher'
+import TeacherBranch from './controllers/teacherBranch'
+import Test from './controllers/test'
+import TestQuestion from './controllers/testQuestion'
+import WaitingSMS from './controllers/waitingSMS'
+
 import cors from "cors"
 
 var corsOptions = {
@@ -82,6 +110,78 @@ app.get('/parentShip', ParentShip.getAllParentsShip)
 //--------------------------------------------  PRİVATE LESSON -------------------------------------------- //
 app.post('/addPrivateLesson', PrivateLesson.newPrivateLesson)
 app.get('/privateLesson', PrivateLesson.getAllPrivateLessons)
+
+//--------------------------------------------  PURCHASE -------------------------------------------- //
+app.post('/addPurchase', Purchase.newPurchase)
+app.get('/purchase', Purchase.getAllPurchases)
+
+//--------------------------------------------  QUESTİON -------------------------------------------- //
+app.post('/addQuestion', Question.newQuestion)
+app.get('/question', Question.getAllQuestions)
+
+//--------------------------------------------  QUESTİON SUBTOPİC -------------------------------------------- //
+app.post('/addQuestionSubtopic', QuestionSubtopic.newQuestionSubtopic)
+app.get('/questionSubtopic', QuestionSubtopic.getAllQuestionSubtopics)
+
+//--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
+app.post('/addSchoolCourse', SchoolCourse.newSchoolCourse)
+app.get('/schoolCourse', SchoolCourse.getAllSchoolCourses)
+
+//--------------------------------------------  SENDED SMS -------------------------------------------- //
+app.post('/addSendedSMS', SendedSMS.newSendedSMS)
+app.get('/sendedSMS', SendedSMS.getAllSendedSMSes)
+
+//--------------------------------------------  STUDENT -------------------------------------------- //
+app.post('/addStudent', Student.newStudent)
+app.get('/student', Student.getAllStudents)
+
+//--------------------------------------------  STUDENT ANSWER -------------------------------------------- //
+app.post('/addStudentAnswer', StudentAnswer.newStudentAnswer)
+app.get('/studentAnswer', StudentAnswer.getAllStudentAnswers)
+
+//--------------------------------------------  SUBJECT -------------------------------------------- //
+app.post('/addSubject', Subject.newSubject)
+app.get('/subject', Subject.getAllSubjects)
+
+//--------------------------------------------  SUBJECT PROCESS-------------------------------------------- //
+app.post('/addSubjectProcess', SubjectProcess.newSubjectProcess)
+app.get('/subjectProcess', SubjectProcess.getAllSubjectProcesses)
+
+//--------------------------------------------  SUBJECT PROGRESS-------------------------------------------- //
+app.post('/addSubjectProgress', SubjectProgress.newSubjectProgress)
+app.get('/subjectProgress', SubjectProgress.getAllSubjectProgresses)
+
+//--------------------------------------------  SUBTOPİC -------------------------------------------- //
+app.post('/addSubtopic', Subtopic.newSubtopic)
+app.get('/subtopic', Subtopic.getAllSubtopics)
+
+//--------------------------------------------  TEACHER -------------------------------------------- //
+app.post('/addTeacher', Teacher.newTeacher)
+app.get('/teacher', Teacher.getAllTeachers)
+
+//--------------------------------------------  TEACHER BRANCH -------------------------------------------- //
+app.post('/addTeacherBranch', TeacherBranch.newTeacherBranch)
+app.get('/teacherBranch', TeacherBranch.getAllTeacherBranches)
+
+//--------------------------------------------  TEST -------------------------------------------- //
+app.post('/addTest', Test.newTest)
+app.get('/test', Test.getAllTests)
+
+//--------------------------------------------  TEST QUESTİON -------------------------------------------- //
+app.post('/addTestQuestion', TestQuestion.newTestQuestion)
+app.get('/testQuestion', TestQuestion.getAllTestQuestions)
+
+//--------------------------------------------  TEST -------------------------------------------- //
+app.post('/addWaitingSMS', WaitingSMS.newWaitingSMS)
+app.get('/waitingSMS', WaitingSMS.getAllWaitingSMSes)
+
+
+
+
+
+
+
+
 
 module.exports = {
     path : "/api",
