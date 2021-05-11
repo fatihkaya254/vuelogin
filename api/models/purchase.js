@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const purchasesSchema = mongoose.Schema({
+const purchaseSchema = mongoose.Schema({
     package: {
         type: String,
         required: true
@@ -28,8 +28,8 @@ const purchasesSchema = mongoose.Schema({
     
 })
 
-const Purchases = mongoose.model('purchases', purchasesSchema)
+const Purchase = mongoose.model('purchase', purchaseSchema)
 
 
 
-export default Purchases
+export default Purchase

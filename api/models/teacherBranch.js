@@ -4,7 +4,7 @@ const teacherBranchSchema = mongoose.Schema({
     
     teacher:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Purchased'
+        ref:'Teacher'
     },
     branch:{
         type: mongoose.Schema.Types.ObjectId,

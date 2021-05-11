@@ -11,8 +11,7 @@ const parentShipSchema = mongoose.Schema({
         ref:'Parent'
     },
     parentRole:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'ParentRole'
+        type: String,
     },
     
 })

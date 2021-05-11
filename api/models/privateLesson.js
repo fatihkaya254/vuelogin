@@ -8,7 +8,7 @@ const privateLessonSchema = mongoose.Schema({
     
     purchased:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Purchased'
+        ref:'Purchase'
     },
     branch:{
         type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +17,7 @@ const privateLessonSchema = mongoose.Schema({
     
 })
 
-const PrivateLesson = mongoose.model('purchases', privateLessonSchema)
+const PrivateLesson = mongoose.model('privateLesson', privateLessonSchema)
 
 
 
