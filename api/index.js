@@ -24,17 +24,64 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 
-//kullanıcılar
+//-------------------------------------------- USERS -------------------------------------------- //
 app.post('/phone', User.generateCode)
 app.post('/code', User.authCode)
 app.post('/auth', User.auth)
 app.put('/updateProfile', User.update)
 app.get('/users', User.getAll)
 
-//ROLLER
+//--------------------------------------------  ROLES -------------------------------------------- //
 app.post('/addRole', Role.newRole)
 app.get('/roles', Role.getAllRoles)
 
+//--------------------------------------------  BRANCHES -------------------------------------------- //
+app.post('/addBranch', Branch.newBranch)
+app.get('/branch', Branch.getAllBranches)
+
+//--------------------------------------------  BRANCH PROCESS -------------------------------------------- //
+app.post('/addBranchProcess', BranchProcess.newBranchProcess)
+app.get('/branchProcess', BranchProcess.getAllBranchProcesses)
+
+//--------------------------------------------  BRANCH PROGRESS -------------------------------------------- //
+app.post('/addBranchProgress', BranchProgress.newBranchProgress)
+app.get('/branchProgress', BranchProgress.getAllBranchProgresses)
+
+//--------------------------------------------  EDUCATİON BACKGROUND -------------------------------------------- //
+app.post('/addEducationBack', EducationBack.newEducationBack)
+app.get('/educationBack', EducationBack.getAllEducationBacks)
+
+//--------------------------------------------  EXAMS -------------------------------------------- //
+app.post('/addExam', Exam.newExam)
+app.get('/exam', Exam.getAllExams)
+
+//--------------------------------------------  GRADES -------------------------------------------- //
+app.post('/addGrade', Grade.newGrade)
+app.get('/grade', Grade.getAllGrades)
+
+//--------------------------------------------  GROUPS -------------------------------------------- //
+app.post('/addGroup', Group.newGroup)
+app.get('/group', Group.getAllGroups)
+
+//--------------------------------------------  GROUP STUDENTS -------------------------------------------- //
+app.post('/addGroupStudent', GroupStudent.newGroupStudent)
+app.get('/groupStudent', GroupStudent.getAllGroupStudents)
+
+//--------------------------------------------  PACKAGES -------------------------------------------- //
+app.post('/addPackage', Package.newPackage)
+app.get('/package', Package.getAllPackages)
+
+//--------------------------------------------  PARENTS -------------------------------------------- //
+app.post('/addParent', Parent.newParent)
+app.get('/parent', Parent.getAllParents)
+
+//--------------------------------------------  PARENTSHİP -------------------------------------------- //
+app.post('/addParentShip', ParentShip.newParentShip)
+app.get('/parentShip', ParentShip.getAllParentsShip)
+
+//--------------------------------------------  PRİVATE LESSON -------------------------------------------- //
+app.post('/addPrivateLesson', PrivateLesson.newPrivateLesson)
+app.get('/privateLesson', PrivateLesson.getAllPrivateLessons)
 
 module.exports = {
     path : "/api",
