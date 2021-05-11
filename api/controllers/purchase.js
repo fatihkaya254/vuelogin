@@ -1,19 +1,19 @@
-import Purchace from "../models/purchace"
+import Purchase from "../models/purchase"
 
-exports.newpurchace = async(req,res) => {
-    let purchace = req.body.purchace
-    const newpurchace = await Purchace.create(purchace)
-    res.status(201).json({ purchace: newpurchace})
+exports.newPurchase = async(req,res) => {
+    let purchase = req.body.purchase
+    const newpurchase = await Purchase.create(purchase)
+    res.status(201).json({ purchase: newpurchase})
 }
 
-exports.getAllpurchaces = async (req,res) =>{
-    Purchace.find({}, function(err, purchaces) {
-        var purchaceMap = {};
+exports.getAllPurchases = async (req,res) =>{
+    Purchase.find({}, function(err, purchases) {
+        var purchaseMap = {};
     
-        purchaces.forEach(function(purchace) {
-            purchaceMap[purchace._id] = purchace;
+        purchases.forEach(function(purchase) {
+            purchaseMap[purchase._id] = purchase;
         });
     
-        res.send(purchaceMap);  
+        res.send(purchaseMap);  
     });
 }

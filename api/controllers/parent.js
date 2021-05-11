@@ -1,12 +1,12 @@
 import Parent from "../models/parent"
 
-exports.newparent = async(req,res) => {
+exports.newParent = async(req,res) => {
     let parent = req.body.parent
     const newparent = await Parent.create(parent)
     res.status(201).json({ parent: newparent})
 }
 
-exports.getAllparents = async (req,res) =>{
+exports.getAllParents = async (req,res) =>{
     Parent.find({}, function(err, parents) {
         var parentMap = {};
     

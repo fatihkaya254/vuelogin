@@ -1,12 +1,12 @@
 import TeacherBranch from "../models/teacherBranch"
 
-exports.newteacherBranch = async(req,res) => {
+exports.newTeacherBranch = async(req,res) => {
     let teacherBranch = req.body.teacherBranch
     const newteacherBranch = await TeacherBranch.create(teacherBranch)
     res.status(201).json({ teacherBranch: newteacherBranch})
 }
 
-exports.getAllteacherBranches = async (req,res) =>{
+exports.getAllTeacherBranches = async (req,res) =>{
     TeacherBranch.find({}, function(err, teacherBranches) {
         var teacherBranchMap = {};
     

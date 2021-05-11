@@ -1,12 +1,12 @@
 import WaitingSMS from "../models/waitingSMS"
 
-exports.newwaitingSMS = async(req,res) => {
+exports.newWaitingSMS = async(req,res) => {
     let waitingSMS = req.body.waitingSMS
     const newwaitingSMS = await WaitingSMS.create(waitingSMS)
     res.status(201).json({ waitingSMS: newwaitingSMS})
 }
 
-exports.getAllwaitingSMSes = async (req,res) =>{
+exports.getAllWaitingSMSes = async (req,res) =>{
     WaitingSMS.find({}, function(err, waitingSMSes) {
         var waitingSMSMap = {};
     

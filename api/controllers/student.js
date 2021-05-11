@@ -1,12 +1,12 @@
 import Student from "../models/student"
 
-exports.newstudent = async(req,res) => {
+exports.newStudent = async(req,res) => {
     let student = req.body.student
     const newstudent = await Student.create(student)
     res.status(201).json({ student: newstudent})
 }
 
-exports.getAllstudents = async (req,res) =>{
+exports.getAllStudents = async (req,res) =>{
     Student.find({}, function(err, students) {
         var studentMap = {};
     

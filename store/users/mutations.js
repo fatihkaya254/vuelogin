@@ -5,4 +5,26 @@ export default {
     setRoles(state, role) {
       state.role = role
     },
+    setBranchProgresses(state, branchProgress) {
+      state.branchProgress = branchProgress
+    },
+    setEducationBacks(state, educationBack) {
+      state.educationBack = educationBack
+    },
+    setParents(state, parent) {
+      state.parent = parent
+    },
+    setParentShips(state, parentShip) {
+      state.parentShip = parentShip
+    },
+    setSubjectProgresses(state, subjectProgress) {
+      state.subjectProgress = subjectProgress
+    },
+    setTeachers(state, teacher) {
+      state.teacher = teacher
+    },
+    setTeacherBranches(state, teacherBranch) {
+      state.teacherBranch = teacherBranch
+    },
+
   };

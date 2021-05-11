@@ -1,3 +1,7 @@
 export default () => ({
-    stateElement: [],
+    grade: [],
+    group: [],
+    groupStudent: [],
+    schoolCourse: [],
+    student: [],
   });

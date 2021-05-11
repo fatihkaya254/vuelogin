@@ -1,12 +1,12 @@
 import Teacher from "../models/teacher"
 
-exports.newteacher = async(req,res) => {
+exports.newTeacher = async(req,res) => {
     let teacher = req.body.teacher
     const newteacher = await Teacher.create(teacher)
     res.status(201).json({ teacher: newteacher})
 }
 
-exports.getAllteachers = async (req,res) =>{
+exports.getAllTeachers = async (req,res) =>{
     Teacher.find({}, function(err, teachers) {
         var teacherMap = {};
     

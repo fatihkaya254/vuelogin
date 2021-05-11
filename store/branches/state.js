@@ -1,3 +1,7 @@
 export default () => ({
-    stateElement: [],
+    branch: [],
+    branchProcess: [],
+    subject: [],
+    subjectProcess: [],
+    subtopic: [],
   });

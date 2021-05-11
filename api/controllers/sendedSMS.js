@@ -1,12 +1,12 @@
 import SendedSMS from "../models/sendedSMS"
 
-exports.newsendedSMS = async(req,res) => {
+exports.newSendedSMS = async(req,res) => {
     let sendedSMS = req.body.sendedSMS
     const newsendedSMS = await SendedSMS.create(sendedSMS)
     res.status(201).json({ sendedSMS: newsendedSMS})
 }
 
-exports.getAllsendedSMSes = async (req,res) =>{
+exports.getAllSendedSMSes = async (req,res) =>{
     SendedSMS.find({}, function(err, sendedSMSes) {
         var sendedSMSMap = {};
     

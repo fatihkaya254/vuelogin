@@ -1,12 +1,12 @@
 import Grade from "../models/grade"
 
-exports.newgrade = async(req,res) => {
+exports.newGrade = async(req,res) => {
     let grade = req.body.grade
     const newgrade = await Grade.create(grade)
     res.status(201).json({ grade: newgrade})
 }
 
-exports.getAllgrades = async (req,res) =>{
+exports.getAllGrades = async (req,res) =>{
     Grade.find({}, function(err, grades) {
         var gradeMap = {};
     

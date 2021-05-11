@@ -1,12 +1,12 @@
 import Question from "../models/question"
 
-exports.newquestion = async(req,res) => {
+exports.newQuestion = async(req,res) => {
     let question = req.body.question
     const newquestion = await Question.create(question)
     res.status(201).json({ question: newquestion})
 }
 
-exports.getAllquestions = async (req,res) =>{
+exports.getAllQuestions = async (req,res) =>{
     Question.find({}, function(err, questions) {
         var questionMap = {};
     

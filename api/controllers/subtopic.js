@@ -1,12 +1,12 @@
 import Subtopic from "../models/subtopic"
 
-exports.newsubtopic = async(req,res) => {
+exports.newSubtopic = async(req,res) => {
     let subtopic = req.body.subtopic
     const newsubtopic = await Subtopic.create(subtopic)
     res.status(201).json({ subtopic: newsubtopic})
 }
 
-exports.getAllsubtopics = async (req,res) =>{
+exports.getAllSubtopics = async (req,res) =>{
     Subtopic.find({}, function(err, subtopics) {
         var subtopicMap = {};
     

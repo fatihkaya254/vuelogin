@@ -1,12 +1,12 @@
 import Group from "../models/group"
 
-exports.newgroup = async(req,res) => {
+exports.newGroup = async(req,res) => {
     let group = req.body.group
     const newgroup = await Group.create(group)
     res.status(201).json({ group: newgroup})
 }
 
-exports.getAllgroups = async (req,res) =>{
+exports.getAllGroups = async (req,res) =>{
     Group.find({}, function(err, groups) {
         var groupMap = {};
     

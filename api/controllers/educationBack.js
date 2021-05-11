@@ -1,12 +1,12 @@
 import EducationBack from "../models/educationBack"
 
-exports.neweducationBack = async(req,res) => {
+exports.newEducationBack = async(req,res) => {
     let educationBack = req.body.educationBack
     const neweducationBack = await EducationBack.create(educationBack)
     res.status(201).json({ educationBack: neweducationBack})
 }
 
-exports.getAlleducationBacks = async (req,res) =>{
+exports.getAllEducationBacks = async (req,res) =>{
     EducationBack.find({}, function(err, educationBacks) {
         var educationBackMap = {};
     

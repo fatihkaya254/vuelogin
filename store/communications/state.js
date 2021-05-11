@@ -1,3 +1,4 @@
 export default () => ({
-    stateElement: [],
+    sendedSMS: [],
+    waitingSMS: [],
   });

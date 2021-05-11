@@ -4,17 +4,17 @@ import mongoose from 'mongoose'
 import User from './controllers/user'
 import Branch from './controllers/branch'
 import Role from './controllers/role'
-import BranchProcess from './controllers/'
-import BranchProgress from './controllers/'
-import EducationBack from './controllers/'
-import Exam from './controllers/'
-import Grade from './controllers/'
-import Group from './controllers/'
-import GroupStudent from './controllers/'
-import Package from './controllers/'
-import Parent from './controllers/'
-import ParentShip from './controllers/'
-import PrivateLesson from './controllers/'
+import BranchProcess from './controllers/branchProcess'
+import BranchProgress from './controllers/branchProgress'
+import EducationBack from './controllers/educationBack'
+import Exam from './controllers/exam'
+import Grade from './controllers/grade'
+import Group from './controllers/group'
+import GroupStudent from './controllers/groupStudent'
+import Package from './controllers/package'
+import Parent from './controllers/parent'
+import ParentShip from './controllers/parentShip'
+import PrivateLesson from './controllers/privateLesson'
 import Purchase from './controllers/purchase'
 import Question from './controllers/question'
 import QuestionSubtopic from './controllers/questionSubtopic'
@@ -105,7 +105,7 @@ app.get('/parent', Parent.getAllParents)
 
 //--------------------------------------------  PARENTSHİP -------------------------------------------- //
 app.post('/addParentShip', ParentShip.newParentShip)
-app.get('/parentShip', ParentShip.getAllParentsShip)
+app.get('/parentShip', ParentShip.getAllParentShips)
 
 //--------------------------------------------  PRİVATE LESSON -------------------------------------------- //
 app.post('/addPrivateLesson', PrivateLesson.newPrivateLesson)

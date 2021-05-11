@@ -1,3 +1,5 @@
 export default () => ({
-    stateElement: [],
+    package: [],
+    privateLesson: [],
+    purchase: [],
   });
