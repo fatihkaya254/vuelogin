@@ -42,7 +42,7 @@ export default {
     this.getRoles()
   },
   methods: {
-    ...mapActions("users", ["getUsers", "getRoles"]),
+    ...mapActions("users", ["getUsers", "getRoles", "changeUserInfo"]),
     ...mapGetters("users", ["getRole"]),
     hookUser: function(id) {
       this.id = this.$store.state.users.user[id]._id;
@@ -52,7 +52,8 @@ export default {
       this.roleId = this.$store.state.users.user[id].role;
     },
     updateUser: function(value, where){
-        this.$store.dispatch("changeUserInfo", { id: this.id, value, where  });
+      this.changeUserInfo({ id: this.id, value, where  })
+      //  this.$store.dispatch("changeUserInfo", { id: this.id, value, where  });
     },
     roleName: function(id){
         if (this.$store.state.users.role[id] != null || this.$store.state.users.role[id] != undefined) {

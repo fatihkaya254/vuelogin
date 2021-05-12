@@ -74,7 +74,7 @@ export const actions = {
     vuexContext.commit("setAuthkey", authKey);
     return this.$axios
       .post(
-        "http://192.168.1.54:8000/api/auth",
+        `${process.env.OUR_HOST}/auth`,
         { token: authKey },
         { withCredentials: true, credentials: "include" }
       )
@@ -88,22 +88,7 @@ export const actions = {
     vuexContext.commit("setUser", user);
   },
 
-  changeUserInfo(vuexContext, changes){
-    let id = changes.id
-    let where = changes.where
-    let value = changes.value
-    console.log('value in store: ' + value);
-    this.$axios
-    .put(
-      "/updateProfile",
-      { id, where, value },
-      { withCredentials: true, credentials: "include" }
-    )
-    .then(res => {
-      console.log(res);
-      vuexContext.dispatch("users/getUsers")
-    });
-  },
+
 
   generatePasscode({ commit, dispatch, state }, authData) {
     console.log(authData);

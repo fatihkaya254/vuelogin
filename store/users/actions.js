@@ -1,7 +1,7 @@
 export default {
   getUsers(vuexContext) {
     console.log("getiriyoum admin efendim");
-    return this.$axios.get("http://192.168.1.54:8000/api/users").then(res => {
+    return this.$axios.get(`${process.env.OUR_HOST}/users`).then(res => {
       console.log(res);
       let users = res.data
       vuexContext.dispatch("putUsers", users)
@@ -10,8 +10,25 @@ export default {
   putUsers(vuexContext, users){
     vuexContext.commit("setUsers", users)
   },
+  changeUserInfo(vuexContext, changes){
+    let id = changes.id
+    let where = changes.where
+    let value = changes.value
+    console.log('value in store: ' + value);
+    this.$axios
+    .put(
+      "/updateProfile",
+      { id, where, value },
+      { withCredentials: true, credentials: "include" }
+    )
+    .then(res => {
+      console.log(res);
+      vuexContext.dispatch("getUsers")
+    });
+  },
+
   getRoles(vuexContext) {
-      return this.$axios.get("http://192.168.1.54:8000/api/roles").then(res => {
+      return this.$axios.get(`${process.env.OUR_HOST}/roles`).then(res => {
       console.log(res);
       let roles = res.data
       vuexContext.dispatch("putRoles", roles)
@@ -20,8 +37,17 @@ export default {
   putRoles(vuexContext, roles){
     vuexContext.commit("setRoles", roles)
   },
+  addRole: function(vuexContext, role) {
+    this.$axios
+      .post("/addRole", { role: role })
+      .then(res => {
+        console.log(res.data.role)
+        vuexContext.dispatch("getRoles")
+      });
+  },
+
  getBranchProgresses(vuexContext) {
-    return this.$axios.get("http://192.168.1.54:8000/api/branchProgresses").then(res => {
+    return this.$axios.get(`${process.env.OUR_HOST}/branchProgresses`).then(res => {
     console.log(res);
     let branchProgresses = res.data
     vuexContext.dispatch("putBranchProgresses", branchProgresses)
@@ -32,7 +58,7 @@ export default {
   },
 
  getEducationBacks(vuexContext) {
-    return this.$axios.get("http://192.168.1.54:8000/api/educationBacks").then(res => {
+    return this.$axios.get(`${process.env.OUR_HOST}/educationBacks`).then(res => {
     console.log(res);
     let educationBacks = res.data
     vuexContext.dispatch("putEducationBacks", educationBacks)
@@ -43,7 +69,7 @@ export default {
  },
 
  getParents(vuexContext) {
-  return this.$axios.get("http://192.168.1.54:8000/api/parents").then(res => {
+  return this.$axios.get(`${process.env.OUR_HOST}/parents`).then(res => {
   console.log(res);
   let parents = res.data
   vuexContext.dispatch("putParents", parents)
@@ -54,7 +80,7 @@ vuexContext.commit("setParents", parents)
  },
 
  getParentShips(vuexContext) {
-  return this.$axios.get("http://192.168.1.54:8000/api/parentShips").then(res => {
+  return this.$axios.get(`${process.env.OUR_HOST}/parentShips`).then(res => {
   console.log(res);
   let parentShips = res.data
   vuexContext.dispatch("putParentShips", parentShips)
@@ -65,7 +91,7 @@ vuexContext.commit("setParenShipts", parentShips)
  },
 
  getSubjectProgresses(vuexContext) {
-  return this.$axios.get("http://192.168.1.54:8000/api/subjectProgresses").then(res => {
+  return this.$axios.get(`${process.env.OUR_HOST}/subjectProgresses`).then(res => {
   console.log(res);
   let subjectProgresses = res.data
   vuexContext.dispatch("putSubjectProgresses", subjectProgresses)
@@ -76,7 +102,7 @@ vuexContext.commit("setSubjectProgresses", subjectProgresses)
  },
 
  getTeachers(vuexContext) {
-  return this.$axios.get("http://192.168.1.54:8000/api/teachers").then(res => {
+  return this.$axios.get(`${process.env.OUR_HOST}/teachers`).then(res => {
   console.log(res);
   let teachers = res.data
   vuexContext.dispatch("putTeachers", teachers)
@@ -87,7 +113,7 @@ vuexContext.commit("setTeachers", teachers)
  },
  
  getTeacherBraches(vuexContext) {
-  return this.$axios.get("http://192.168.1.54:8000/api/teacherBraches").then(res => {
+  return this.$axios.get(`${process.env.OUR_HOST}/teacherBraches`).then(res => {
   console.log(res);
   let teacherBraches = res.data
   vuexContext.dispatch("putTeacherBraches", teacherBraches)

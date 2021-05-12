@@ -15,7 +15,7 @@ div
     label Açıklaması 
     input(type="text" v-model="descripton")
     br
-    input(type="submit" @click="addRole")
+    input(type="submit" @click="throwAddRole")
 </template>
 
 <script>
@@ -30,15 +30,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions("users", ["getRoles"]),
-    addRole: function() {
-      let role = { roleDescripton: this.descripton, roleName: this.name };
-      axios
-        .post("http://192.168.1.54:8000/api/addRole", { role: role })
-        .then(res => {
-          console.log(res.data.role);
-          this.getRoles();
-        });
+    ...mapActions("users", ["getRoles", "addRole"]),
+    throwAddRole: function(){
+      this.addRole({ roleDescripton: this.descripton, roleName: this.name})
     },
     hookRole: function(id) {
       this.id = this.$store.state.users.role[id]._id;

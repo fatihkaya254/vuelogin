@@ -5,7 +5,7 @@ export default function(context) {
     context.redirect("/");
   } else {
     return axios
-      .post("http://192.168.1.54:8000/api/auth", { token: token })
+      .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
         console.log("hello master");
         if (res.data.user.phone == 5073857166) {

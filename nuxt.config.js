@@ -1,4 +1,5 @@
 const bodyParser = require("body-parser")
+require('dotenv').config()
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -41,11 +42,12 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/dotenv',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: "http://192.168.1.54:8000/api"
+    baseURL: process.env.OUR_HOST
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
