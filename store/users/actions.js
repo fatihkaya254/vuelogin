@@ -30,7 +30,7 @@ export default {
  putBranchProgresses(vuexContext, branchProgresses){
   vuexContext.commit("setBranchProgresses", branchProgresses)
   },
-  
+
  getEducationBacks(vuexContext) {
     return this.$axios.get("http://192.168.1.54:8000/api/educationBacks").then(res => {
     console.log(res);
@@ -96,12 +96,5 @@ vuexContext.commit("setTeachers", teachers)
  putTeacherBraches(vuexContext, teacherBraches){
 vuexContext.commit("setTeacherBraches", teacherBraches)
  },
-
-
-
-
-
-
-
   
 };
