@@ -10,8 +10,9 @@
     .updateUser
         h4 {{ id }}
         label İsim 
-        input(type="text" v-model="name" @blur="updateUser(name, 'name')")
+        input(type="text" v-model="name")
         br
+        input(type="submit" @click="addSchool(name, 'name')")
 </template>
 
 <script>
@@ -24,19 +25,16 @@ export default {
     };
   },
   mounted() {
-    this.getUsers()
+    this.getEducationBacks()
   },
   methods: {
-    ...mapActions("users", ["getEducationBacks"]),
+    ...mapActions("users", ["getEducationBacks", "addSchoolCourse"]),
     hookUser: function(id) {
       this.id = this.$store.state.users.user[id]._id;
       this.name = this.$store.state.users.user[id].name;
-      this.surname = this.$store.state.users.user[id].surname;
-      this.phone = this.$store.state.users.user[id].phone;
-      this.roleId = this.$store.state.users.user[id].role;
     },
-    updateUser: function(value, where){
-        this.$store.dispatch("changeUserInfo", { id: this.id, value, where  });
+    throwAddSchoolCourse: function(){
+      this.addRole({ SchoolCourseName: this.name})
     },
     roleName: function(id){
         if (this.$store.state.users.role[id] != null || this.$store.state.users.role[id] != undefined) {

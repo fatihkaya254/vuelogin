@@ -10,6 +10,14 @@ export default {
   putUsers(vuexContext, users){
     vuexContext.commit("setUsers", users)
   },
+  addUser: function(vuexContext, user) {
+    this.$axios
+      .post("/addUser", { user: user })
+      .then(res => {
+        console.log(res.data.user)
+        vuexContext.dispatch("getUsers")
+      });
+  },
   changeUserInfo(vuexContext, changes){
     let id = changes.id
     let where = changes.where
@@ -56,6 +64,14 @@ export default {
  putBranchProgresses(vuexContext, branchProgresses){
   vuexContext.commit("setBranchProgresses", branchProgresses)
   },
+  addBranchProgres: function(vuexContext, branchProgress) {
+    this.$axios
+      .post("/addBranchProgres", { branchProgress: branchProgress })
+      .then(res => {
+        console.log(res.data.branchProgress)
+        vuexContext.dispatch("getBranchProgres")
+      });
+  },
 
  getEducationBacks(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/educationBacks`).then(res => {
@@ -67,6 +83,14 @@ export default {
  putEducationBacks(vuexContext, educationBacks){
   vuexContext.commit("setEducationBacks", educationBacks)
  },
+ addEducationBack: function(vuexContext, educationBack) {
+  this.$axios
+    .post("/addEducationBack", { educationBack: educationBack })
+    .then(res => {
+      console.log(res.data.educationBack)
+      vuexContext.dispatch("getEducationBacks")
+    });
+},
 
  getParents(vuexContext) {
   return this.$axios.get(`${process.env.OUR_HOST}/parents`).then(res => {
@@ -78,6 +102,14 @@ export default {
  putParents(vuexContext, parents){
 vuexContext.commit("setParents", parents)
  },
+ addParent: function(vuexContext, parent) {
+  this.$axios
+    .post("/addParent", { parent: parent })
+    .then(res => {
+      console.log(res.data.parent)
+      vuexContext.dispatch("getParents")
+    });
+},
 
  getParentShips(vuexContext) {
   return this.$axios.get(`${process.env.OUR_HOST}/parentShips`).then(res => {
@@ -89,6 +121,14 @@ vuexContext.commit("setParents", parents)
  putParentShips(vuexContext, parentShips){
 vuexContext.commit("setParenShipts", parentShips)
  },
+ addParentShip: function(vuexContext, parentShip) {
+  this.$axios
+    .post("/addParentShip", { parentShip: parentShip })
+    .then(res => {
+      console.log(res.data.parentShip)
+      vuexContext.dispatch("getParentsShip")
+    });
+},
 
  getSubjectProgresses(vuexContext) {
   return this.$axios.get(`${process.env.OUR_HOST}/subjectProgresses`).then(res => {
@@ -100,6 +140,14 @@ vuexContext.commit("setParenShipts", parentShips)
  putSubjectProgresses(vuexContext, subjectProgresses){
 vuexContext.commit("setSubjectProgresses", subjectProgresses)
  },
+ addSubjectProgress: function(vuexContext, subjectProgress) {
+  this.$axios
+    .post("/addSubjectProgress", { subjectProgress: subjectProgress })
+    .then(res => {
+      console.log(res.data.subjectProgress)
+      vuexContext.dispatch("getSubjectProgresses")
+    });
+},
 
  getTeachers(vuexContext) {
   return this.$axios.get(`${process.env.OUR_HOST}/teachers`).then(res => {
@@ -111,6 +159,15 @@ vuexContext.commit("setSubjectProgresses", subjectProgresses)
  putTeachers(vuexContext, teachers){
 vuexContext.commit("setTeachers", teachers)
  },
+ addTeacher: function(vuexContext, teacher) {
+  this.$axios
+    .post("/addTeacher", { teacher: teacher })
+    .then(res => {
+      console.log(res.data.teacher)
+      vuexContext.dispatch("getTeachers")
+    });
+},
+
  
  getTeacherBraches(vuexContext) {
   return this.$axios.get(`${process.env.OUR_HOST}/teacherBraches`).then(res => {
@@ -122,5 +179,13 @@ vuexContext.commit("setTeachers", teachers)
  putTeacherBraches(vuexContext, teacherBraches){
 vuexContext.commit("setTeacherBraches", teacherBraches)
  },
+ addTeacherBrach: function(vuexContext, teacherBrach) {
+  this.$axios
+    .post("/addTeacherBrach", { teacherBrach: teacherBrach })
+    .then(res => {
+      console.log(res.data.teacherBrach)
+      vuexContext.dispatch("getTeacherBraches")
+    });
+},
   
 };
