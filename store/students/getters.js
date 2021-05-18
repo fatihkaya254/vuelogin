@@ -1,3 +1,5 @@
 export default {
-    aGetter(vuexContext, user) {},
+    grade(vuexContext) {
+        return vuexContext.grade
+    },
 };

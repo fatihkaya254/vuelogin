@@ -1,23 +1,24 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const subtopicSchema = mongoose.Schema({
-    subtopicName: {
-        type: String,
-        required: true
-    },
-    subtopicStat: {
-        type: String,
-        required: true
-    },
-    subject:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'Subject'
-    },
-    
-})
+const subTopicSchema = mongoose.Schema({
+  subTopicName: {
+    type: String,
+    required: true
+  },
+  subTopicStat: {
+    type: String,
+    required: true
+  },
+  subTopicOrder: {
+    type: String,
+    required: true
+  },
+  subject: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subject"
+  }
+});
 
-const Subtopic = mongoose.model('subtopic', subtopicSchema)
+const SubTopic = mongoose.model("subTopic", subTopicSchema);
 
-
-
-export default Subtopic
+export default SubTopic;

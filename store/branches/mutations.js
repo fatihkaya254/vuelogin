@@ -11,9 +11,7 @@ export default {
     setSubjectProcesses(state, subjectProcess) {
         state.subjectProcess = subjectProcess
     },
-    setSubtoics(state, subtoic) {
-        state.subtoic = subtoic
+    setSubTopics(state, subtopic) {
+        state.subTopic = subtopic
     },
-    
-    
-      };
+};

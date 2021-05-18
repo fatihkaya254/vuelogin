@@ -13,9 +13,40 @@ export default {
         this.$axios
           .post("/addBranch", { branch: branch })
           .then(res => {
-            console.log(res.data.branch)
+            console.log(res.status)
             vuexContext.dispatch("getBranches")
           });
+      },
+      changeBranchInfo(vuexContext, changes){
+        let id = changes.id
+        let where = changes.where
+        let value = changes.value
+        console.log('value in store: ' + value);
+        this.$axios
+        .put(
+          "/updateBranch",
+          { id, where, value },
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res);
+          vuexContext.dispatch("getBranches")
+        });
+      },
+      deleteBranch(vuexContext, id){
+        this.$axios
+        .put(
+          "/deleteBranch",
+          {id : id},
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res.data.message);
+          if(res.data.message == "deleteFailed"){
+            alert("bu derse ait konular vardır, önce konuları siliniz")
+          }
+          vuexContext.dispatch("getBranches")
+        })
       },
     
       getBranchProcesses(vuexContext) {
@@ -36,6 +67,10 @@ export default {
             vuexContext.dispatch("getBranchProcesses")
           });
       },
+     
+    
+
+      
     
       getSubjects(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subjects`).then(res => {
@@ -75,22 +110,22 @@ export default {
           });
       },
 
-      getSubtopics(vuexContext) {
+      getSubTopics(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subtopics`).then(res => {
         console.log(res);
         let subtopics = res.data
-        vuexContext.dispatch("putSubtopics", subtopics)
+        vuexContext.dispatch("putSubTopics", subtopics)
       });
        },
-       putSubtopics(vuexContext, subtopics){
-      vuexContext.commit("setSubtopics", subtopics)
+       putSubTopics(vuexContext, subtopics){
+      vuexContext.commit("setSubTopics", subtopics)
        },
-       addSubtopic: function(vuexContext, subtopic) {
+       addSubTopic: function(vuexContext, subtopic) {
         this.$axios
-          .post("/addSubtopic", { subtopic: subtopic })
+          .post("/addSubtopic", { subTopic: subtopic })
           .then(res => {
-            console.log(res.data.subtopic)
-            vuexContext.dispatch("getSubtopics")
+            console.log(res.data.subTopic)
+            vuexContext.dispatch("getSubTopics")
           });
       },
 };

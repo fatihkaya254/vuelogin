@@ -1,13 +1,13 @@
-import Subtopic from "../models/subtopic"
+import SubTopic from "../models/subtopic"
 
-exports.newSubtopic = async(req,res) => {
-    let subtopic = req.body.subtopic
-    const newsubtopic = await Subtopic.create(subtopic)
-    res.status(201).json({ subtopic: newsubtopic})
+exports.newSubTopic = async(req,res) => {
+    let subTopic = req.body.subTopic
+    const newsubtopic = await SubTopic.create(subTopic)
+    res.status(201).json({ subTopic: newsubtopic})
 }
 
-exports.getAllSubtopics = async (req,res) =>{
-    Subtopic.find({}, function(err, subtopics) {
+exports.getAllSubTopics = async (req,res) =>{
+    SubTopic.find({}, function(err, subtopics) {
         var subtopicMap = {};
     
         subtopics.forEach(function(subtopic) {

@@ -11,11 +11,13 @@ const educationBackSchema = mongoose.Schema({
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'Student',
+        required: true,
     },
     schoolCourse:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'SchoolCourse'
+        ref:'SchoolCourse',
+        required: true
     }
     
 })

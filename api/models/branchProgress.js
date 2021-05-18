@@ -11,11 +11,14 @@ const branchProgressSchema = mongoose.Schema({
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'Student',
+        required: true,
     },
     brachProcess:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'BranchProcess'
+        ref:'BranchProcess',
+        required: true,
+        
     }
     
 })

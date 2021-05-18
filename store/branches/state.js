@@ -3,5 +3,5 @@ export default () => ({
     branchProcess: [],
     subject: [],
     subjectProcess: [],
-    subtopic: [],
+    subTopic: [],
   });

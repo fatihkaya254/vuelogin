@@ -1,3 +1,5 @@
 export default {
-    aGetter(vuexContext, user) {},
+    branch(vuexContext) {
+        return vuexContext.branch
+    },
 };

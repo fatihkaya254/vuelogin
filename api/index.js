@@ -25,7 +25,7 @@ import StudentAnswer from './controllers/studentAnswer'
 import Subject from './controllers/subject'
 import SubjectProcess from './controllers/subjectProcess'
 import SubjectProgress from './controllers/subjectProgress'
-import Subtopic from './controllers/subtopic'
+import SubTopic from './controllers/subtopic'
 import Teacher from './controllers/teacher'
 import TeacherBranch from './controllers/teacherBranch'
 import Test from './controllers/test'
@@ -35,7 +35,7 @@ import WaitingSMS from './controllers/waitingSMS'
 import cors from "cors"
 
 var corsOptions = {
-    origin: 'http://http://192.168.1.240:8000',
+    origin: 'http://http://192.168.1.54:8000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
@@ -65,115 +65,116 @@ app.get('/roles', Role.getAllRoles)
 
 //--------------------------------------------  BRANCHES -------------------------------------------- //
 app.post('/addBranch', Branch.newBranch)
-app.get('/branch', Branch.getAllBranches)
-
+app.get('/branches', Branch.getAllBranches)
+app.put('/updateBranch', Branch.update)
+app.put('/deleteBranch', Branch.delete)
 //--------------------------------------------  BRANCH PROCESS -------------------------------------------- //
 app.post('/addBranchProcess', BranchProcess.newBranchProcess)
-app.get('/branchProcess', BranchProcess.getAllBranchProcesses)
+app.get('/branchProcesses', BranchProcess.getAllBranchProcesses)
 
 //--------------------------------------------  BRANCH PROGRESS -------------------------------------------- //
 app.post('/addBranchProgress', BranchProgress.newBranchProgress)
-app.get('/branchProgress', BranchProgress.getAllBranchProgresses)
+app.get('/branchProgresses', BranchProgress.getAllBranchProgresses)
 
 //--------------------------------------------  EDUCATİON BACKGROUND -------------------------------------------- //
 app.post('/addEducationBack', EducationBack.newEducationBack)
-app.get('/educationBack', EducationBack.getAllEducationBacks)
+app.get('/educationBacks', EducationBack.getAllEducationBacks)
 
 //--------------------------------------------  EXAMS -------------------------------------------- //
 app.post('/addExam', Exam.newExam)
-app.get('/exam', Exam.getAllExams)
+app.get('/exams', Exam.getAllExams)
 
 //--------------------------------------------  GRADES -------------------------------------------- //
 app.post('/addGrade', Grade.newGrade)
-app.get('/grade', Grade.getAllGrades)
+app.get('/grades', Grade.getAllGrades)
 
 //--------------------------------------------  GROUPS -------------------------------------------- //
 app.post('/addGroup', Group.newGroup)
-app.get('/group', Group.getAllGroups)
+app.get('/groups', Group.getAllGroups)
 
 //--------------------------------------------  GROUP STUDENTS -------------------------------------------- //
 app.post('/addGroupStudent', GroupStudent.newGroupStudent)
-app.get('/groupStudent', GroupStudent.getAllGroupStudents)
+app.get('/groupStudents', GroupStudent.getAllGroupStudents)
 
 //--------------------------------------------  PACKAGES -------------------------------------------- //
 app.post('/addPackage', Package.newPackage)
-app.get('/package', Package.getAllPackages)
+app.get('/packages', Package.getAllPackages)
 
 //--------------------------------------------  PARENTS -------------------------------------------- //
 app.post('/addParent', Parent.newParent)
-app.get('/parent', Parent.getAllParents)
+app.get('/parents', Parent.getAllParents)
 
 //--------------------------------------------  PARENTSHİP -------------------------------------------- //
 app.post('/addParentShip', ParentShip.newParentShip)
-app.get('/parentShip', ParentShip.getAllParentShips)
+app.get('/parentShips', ParentShip.getAllParentShips)
 
 //--------------------------------------------  PRİVATE LESSON -------------------------------------------- //
 app.post('/addPrivateLesson', PrivateLesson.newPrivateLesson)
-app.get('/privateLesson', PrivateLesson.getAllPrivateLessons)
+app.get('/privateLessons', PrivateLesson.getAllPrivateLessons)
 
 //--------------------------------------------  PURCHASE -------------------------------------------- //
 app.post('/addPurchase', Purchase.newPurchase)
-app.get('/purchase', Purchase.getAllPurchases)
+app.get('/purchases', Purchase.getAllPurchases)
 
 //--------------------------------------------  QUESTİON -------------------------------------------- //
 app.post('/addQuestion', Question.newQuestion)
-app.get('/question', Question.getAllQuestions)
+app.get('/questions', Question.getAllQuestions)
 
 //--------------------------------------------  QUESTİON SUBTOPİC -------------------------------------------- //
 app.post('/addQuestionSubtopic', QuestionSubtopic.newQuestionSubtopic)
-app.get('/questionSubtopic', QuestionSubtopic.getAllQuestionSubtopics)
+app.get('/questionSubtopics', QuestionSubtopic.getAllQuestionSubtopics)
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post('/addSchoolCourse', SchoolCourse.newSchoolCourse)
-app.get('/schoolCourse', SchoolCourse.getAllSchoolCourses)
+app.get('/schoolCourses', SchoolCourse.getAllSchoolCourses)
 
 //--------------------------------------------  SENDED SMS -------------------------------------------- //
 app.post('/addSendedSMS', SendedSMS.newSendedSMS)
-app.get('/sendedSMS', SendedSMS.getAllSendedSMSes)
+app.get('/sendedSMSes', SendedSMS.getAllSendedSMSes)
 
 //--------------------------------------------  STUDENT -------------------------------------------- //
 app.post('/addStudent', Student.newStudent)
-app.get('/student', Student.getAllStudents)
+app.get('/students', Student.getAllStudents)
 
 //--------------------------------------------  STUDENT ANSWER -------------------------------------------- //
 app.post('/addStudentAnswer', StudentAnswer.newStudentAnswer)
-app.get('/studentAnswer', StudentAnswer.getAllStudentAnswers)
+app.get('/studentAnswers', StudentAnswer.getAllStudentAnswers)
 
 //--------------------------------------------  SUBJECT -------------------------------------------- //
 app.post('/addSubject', Subject.newSubject)
-app.get('/subject', Subject.getAllSubjects)
+app.get('/subjects', Subject.getAllSubjects)
 
 //--------------------------------------------  SUBJECT PROCESS-------------------------------------------- //
 app.post('/addSubjectProcess', SubjectProcess.newSubjectProcess)
-app.get('/subjectProcess', SubjectProcess.getAllSubjectProcesses)
+app.get('/subjectProcesses', SubjectProcess.getAllSubjectProcesses)
 
 //--------------------------------------------  SUBJECT PROGRESS-------------------------------------------- //
 app.post('/addSubjectProgress', SubjectProgress.newSubjectProgress)
-app.get('/subjectProgress', SubjectProgress.getAllSubjectProgresses)
+app.get('/subjectProgresses', SubjectProgress.getAllSubjectProgresses)
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
-app.post('/addSubtopic', Subtopic.newSubtopic)
-app.get('/subtopic', Subtopic.getAllSubtopics)
+app.post('/addSubTopic', SubTopic.newSubTopic)
+app.get('/subTopics', SubTopic.getAllSubTopics)
 
 //--------------------------------------------  TEACHER -------------------------------------------- //
 app.post('/addTeacher', Teacher.newTeacher)
-app.get('/teacher', Teacher.getAllTeachers)
+app.get('/teachers', Teacher.getAllTeachers)
 
 //--------------------------------------------  TEACHER BRANCH -------------------------------------------- //
 app.post('/addTeacherBranch', TeacherBranch.newTeacherBranch)
-app.get('/teacherBranch', TeacherBranch.getAllTeacherBranches)
+app.get('/teacherBranches', TeacherBranch.getAllTeacherBranches)
 
 //--------------------------------------------  TEST -------------------------------------------- //
 app.post('/addTest', Test.newTest)
-app.get('/test', Test.getAllTests)
+app.get('/tests', Test.getAllTests)
 
 //--------------------------------------------  TEST QUESTİON -------------------------------------------- //
 app.post('/addTestQuestion', TestQuestion.newTestQuestion)
-app.get('/testQuestion', TestQuestion.getAllTestQuestions)
+app.get('/testQuestions', TestQuestion.getAllTestQuestions)
 
 //--------------------------------------------  TEST -------------------------------------------- //
 app.post('/addWaitingSMS', WaitingSMS.newWaitingSMS)
-app.get('/waitingSMS', WaitingSMS.getAllWaitingSMSes)
+app.get('/waitingSMSes', WaitingSMS.getAllWaitingSMSes)
 
 
 
