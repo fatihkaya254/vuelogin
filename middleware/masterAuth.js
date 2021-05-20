@@ -8,7 +8,7 @@ export default function(context) {
       .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
         console.log("hello master");
-        if (res.data.user.phone == 5073857166) {
+        if (res.data.user.phone == 5321130988 ) {
           let user = JSON.stringify(res.data.user);
           context.store.dispatch("setUser", user);
         } else {
