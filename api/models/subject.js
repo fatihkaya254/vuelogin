@@ -6,7 +6,7 @@ const subjectSchema = mongoose.Schema({
         required: true
     },
     subjectOrder: {
-        type: String,
+        type: Number,
         required: true
       },
     branch:{

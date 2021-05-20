@@ -35,7 +35,7 @@ import WaitingSMS from './controllers/waitingSMS'
 import cors from "cors"
 
 var corsOptions = {
-    origin: 'http://http://192.168.1.240:8000',
+    origin: 'http://http://192.168.0.117:8000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
@@ -143,7 +143,8 @@ app.get('/studentAnswers', StudentAnswer.getAllStudentAnswers)
 //--------------------------------------------  SUBJECT -------------------------------------------- //
 app.post('/addSubject', Subject.newSubject)
 app.get('/subjects', Subject.getAllSubjects)
-
+app.put('/updateSubject', Subject.update)
+app.put('/deleteSubject', Subject.delete)
 //--------------------------------------------  SUBJECT PROCESS-------------------------------------------- //
 app.post('/addSubjectProcess', SubjectProcess.newSubjectProcess)
 app.get('/subjectProcesses', SubjectProcess.getAllSubjectProcesses)

@@ -4,6 +4,13 @@
   </div>
 </template>
 
+<script>
+
+console.log("%c Bizi mi araştırmak istiyorsun %c Doğru yerdesin :)", "color: red; font-size: 24px", "color: green; font-size: 24px" );
+
+</script>
+
+
 <style>
 html {
   font-family:
@@ -59,4 +66,6 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+
+
 </style>

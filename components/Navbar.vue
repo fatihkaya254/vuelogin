@@ -83,6 +83,8 @@ header
 </template>
 
 <script>
+console.log("%c Bizi araştırmaya mı çalışıyorsun %c Doğru yerdesin :)", "color: blue; font-size: 24px", "color: green; font-size: 24px" );
+
 import { gsap } from "gsap";
 export default {
   data() {

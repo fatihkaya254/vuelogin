@@ -90,6 +90,37 @@ export default {
             vuexContext.dispatch("getSubjects")
           });
       },
+      changeSubjectInfo(vuexContext, changes){
+        let id = changes.id
+        let where = changes.where
+        let value = changes.value
+        console.log('value in store: ' + value);
+        this.$axios
+        .put(
+          "/updateSubject",
+          { id, where, value },
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res);
+          vuexContext.dispatch("getSubjects")
+        });
+      },
+      deleteSubject(vuexContext, id){
+        this.$axios
+        .put(
+          "/deleteSubject",
+          {id : id},
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res.data.message);
+          if(res.data.message == "deleteFailed"){
+            alert("bu konuya ait alt konular vardır, önce konuları siliniz")
+          }
+          vuexContext.dispatch("getSubjects")
+        })
+      },
 
       getSubjectProcesses(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subjectProcesses`).then(res => {

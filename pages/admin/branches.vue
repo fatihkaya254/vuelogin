@@ -16,15 +16,11 @@ div
                     li( v-for="branch in branch()" v-if="branch.grade == grade._id")
                         .card(@click="move($event, branch._id)")
                            | ·{{ branch.branchName }}
-    .updateUser
-    label Branş Adı 
-    input(type="text" v-model="name")
-    br
-    label Sınıf 
-    select(v-model="gradeId")
-        option(v-for="grade in this.$store.state.students.grade" :value="grade._id") {{grade.gradeName}}
-    br
-    input(type="submit" @click="throwAddBranch")
+                    li 
+                        input(type="text" v-model="name" v-on:keyup.13="throwAddBranch(grade._id)")
+
+
+   
 </template>
 
 <script>
@@ -53,8 +49,9 @@ export default {
     ...mapActions("students", ["getGrades"]),
     ...mapGetters("students", ["grade"]),
     ...mapGetters("branches", ["branch"]),
-    throwAddBranch: function() {
-      this.addBranch({ branchName: this.name, grade: this.gradeId });
+    throwAddBranch: function(gradeId) {
+      this.addBranch({ branchName: this.name, grade: gradeId });
+      this.name=""
     },
     hookSubject: function(id) {
       this.id = this.$store.state.users.role[id]._id;
@@ -92,7 +89,7 @@ export default {
     },
     collapseGrades: function(grades) {
       for (var grade in grades) {
-        this.collapseGrade[grade] = true;
+        this.collapseGrade[grade] = false;
       }
     },
     openClose: function(id) {
