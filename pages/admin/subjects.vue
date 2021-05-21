@@ -13,6 +13,8 @@ div
                 | {{ grade.gradeName }} 
               .accordionContent(v-show="collapseGrade[grade._id]")
                     li( v-for="branch in branch()" v-if="branch.grade == grade._id")
+                        .refresh(@click="refreshList(branch._id)")
+                          span R
                         .card
                            | ·{{ branch.branchName }}
                         .accordionContent
@@ -22,6 +24,7 @@ div
                                    | &nbsp;&nbsp;&nbsp;{{ subject.subjectOrder }} - {{ subject.subjectName }}  
                             li &nbsp;&nbsp;&nbsp;{{ getSubjectOrder(branch._id) }} - 
                                 input(type="text" v-model="name" v-on:keyup.13="throwAddSubject(branch._id)")
+                            
 </template>
 
 <script>
@@ -55,9 +58,13 @@ export default {
     ...mapGetters("students", ["grade"]),
     ...mapGetters("branches", ["branch", "subject"]),
     throwAddSubject: function(branchId) {
-      let order = this.getSubjectOrder(branchId)
-      this.addSubject({ subjectName: this.name, branch: branchId, subjectOrder: order });
-      this.name=""
+      let order = this.getSubjectOrder(branchId);
+      this.addSubject({
+        subjectName: this.name,
+        branch: branchId,
+        subjectOrder: order
+      });
+      this.name = "";
     },
     hookSubject: function(id) {
       this.id = this.$store.state.users.role[id]._id;
@@ -101,15 +108,41 @@ export default {
     openClose: function(id) {
       this.$set(this.collapseGrade, id, !this.collapseGrade[id]);
     },
-    getSubjectOrder: function(branchId){
+    getSubjectOrder: function(branchId) {
       var subject = this.subject();
-      var order = 1
-      for (var element in subject)  {
+      var order = 1;
+      for (var element in subject) {
         if (subject[element].branch == branchId) {
-          order = subject[element].subjectOrder +1
+          order = subject[element].subjectOrder + 1;
         }
       }
-      return order
+      return order;
+    },
+    refreshList: function(branchId) {
+      var subject = this.subject();
+      let index = 1;
+      for (var element in subject) {
+        if (subject[element].branch == branchId) {
+          if (index != subject[element].subjectOrder) {
+            console.log(
+              "index: " +
+                index +
+                " order: " +
+                subject[element].subjectOrder +
+                " id: " +
+                element +
+                " name: " +
+                subject[element].subjectName
+            );
+            this.changeSubjectInfo({
+              id: element,
+              value: index,
+              where: "subjectOrder"
+            });
+          }
+          index++;
+        }
+      }
     }
   },
   created() {
@@ -119,7 +152,7 @@ export default {
       .then(() => {
         var grades = this.grade();
       })
-      .then((grades) => {
+      .then(grades => {
         this.collapseGrades(grades);
       });
   }
@@ -138,6 +171,20 @@ ul
     -webkit-appearance: none
     background-color: red
 
+.refresh
+  border: 1px solid black
+  border-radius: 50%
+  width: 20px
+  height: 20px
+  line-height: 18px
+  text-align: center
+  font-size: 9pt
+  font-weight: bold
+  position: absolute
+  margin-top: 28px
+  margin-left: 8px
+  z-index: 1
+  cursor: pointer
 
 .reformative
     height: 200px
@@ -149,6 +196,8 @@ ul
 .close
     height: 18px
     width: 18px
+    line-height: 12px
+    font-size: 9pt
     border-radius: 50%
     background-color: $red
     position: relative
@@ -157,7 +206,8 @@ ul
     margin: 2px
     color: white
     padding: 2px
-
+    text-align: center
+    cursor: pointer
 
 .listContainer
     margin-top: 50px
@@ -186,5 +236,4 @@ ul
     user-select: none
     & li
       border-bottom: 1px solid white
-
 </style>
