@@ -6,7 +6,7 @@
 
 <script>
 
-console.log("%c Bizi mi araştırmak istiyorsun %c Doğru yerdesin :)", "color: red; font-size: 24px", "color: green; font-size: 24px" );
+console.log("%c Bizi araştırmak mı istiyorsun %c Doğru yerdesin :)", "color: red; font-size: 24px", "color: green; font-size: 24px" );
 
 </script>
 

@@ -39,7 +39,7 @@ exports.delete = async(req,res) => {
     let id = req.body.id
     console.log("---------------------------------------------------------" + id)
     try {
-        let subTopics = await Subject.find({subject : id})
+        let subTopics = await SubTopic.find({subject : id})
         console.log(subTopics)
         if(subTopics.length != 0){
             console.log('değiştiremennnnnn');

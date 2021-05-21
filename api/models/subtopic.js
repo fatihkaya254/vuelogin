@@ -6,11 +6,10 @@ const subTopicSchema = mongoose.Schema({
     required: true
   },
   subTopicStat: {
-    type: String,
-    required: true
+    type: String
   },
   subTopicOrder: {
-    type: String,
+    type: Number,
     required: true
   },
   subject: {

@@ -5,4 +5,7 @@ export default {
     subject(vuexContext) {
         return vuexContext.subject
     },
+    subTopic(vuexContext) {
+        return vuexContext.subTopic
+    }
 };

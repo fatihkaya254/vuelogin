@@ -13,11 +13,9 @@ div
                 | {{ grade.gradeName }} 
               .accordionContent(v-show="collapseGrade[grade._id]")
                     li( v-for="branch in branch()" v-if="branch.grade == grade._id")
-                        .refresh(@click="refreshList(branch._id)")
-                          span R
-                        .card
+                        div(@click="openCloseBranch(branch._id)" :class="[collapseBranch[branch._id] ? 'accordionTittle accordionTittleOpen' : 'accordionTittle']")
                            | ·{{ branch.branchName }}
-                        .accordionContent
+                        .accordionContent(v-show="collapseBranch[branch._id]")
                           ul
                             li( v-for="subject in subject()" v-if="subject.branch == branch._id")
                                 .card(@click="move($event, subject._id)")
@@ -40,7 +38,8 @@ export default {
       gradeId: "",
       top: 0,
       left: 0,
-      collapseGrade: []
+      collapseGrade: [],
+      collapseBranch: []
     };
   },
   methods: {
@@ -105,8 +104,16 @@ export default {
         this.collapseGrade[grade] = false;
       }
     },
+    collapseBranches: function(branches) {
+      for (var branch in branches) {
+        this.collapseBranch[branch] = false;
+      }
+    },
     openClose: function(id) {
       this.$set(this.collapseGrade, id, !this.collapseGrade[id]);
+    },
+    openCloseBranch: function(id) {
+      this.$set(this.collapseBranch, id, !this.collapseBranch[id]);
     },
     getSubjectOrder: function(branchId) {
       var subject = this.subject();
@@ -146,8 +153,14 @@ export default {
     }
   },
   created() {
-    this.getSubjects();
-    this.getBranches();
+    this.getSubjects()
+    this.getBranches()
+      .then(() => {
+        var branches = this.branch();
+      })
+      .then(branches => {
+        this.collapseBranches(branches);
+      });
     this.getGrades()
       .then(() => {
         var grades = this.grade();

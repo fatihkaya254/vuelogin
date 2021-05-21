@@ -159,4 +159,33 @@ export default {
             vuexContext.dispatch("getSubTopics")
           });
       },
+      changeSubTopicInfo(vuexContext, changes){
+        let id = changes.id
+        let where = changes.where
+        let value = changes.value
+        console.log('value in store: ' + value);
+        this.$axios
+        .put(
+          "/updateSubTopic",
+          { id, where, value },
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res);
+          vuexContext.dispatch("getSubTopics")
+        });
+      },
+      deleteSubTopic(vuexContext, id){
+        this.$axios
+        .put(
+          "/deleteSubTopic",
+          {id : id},
+          { withCredentials: true, credentials: "include" }
+        )
+        .then(res => {
+          console.log(res.data.message);
+          
+          vuexContext.dispatch("getSubTopics")
+        })
+      },
 };
