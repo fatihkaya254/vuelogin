@@ -1,3 +1,5 @@
 export default {
-    aGetter(vuexContext, user) {},
+    question(vuexContext) {
+        return vuexContext.question
+    }
 };

@@ -1,4 +1,5 @@
 import express from 'express'
+import multer from 'multer'
 const app = express()
 import mongoose from 'mongoose'
 import User from './controllers/user'
@@ -35,7 +36,7 @@ import WaitingSMS from './controllers/waitingSMS'
 import cors from "cors"
 
 var corsOptions = {
-    origin: 'http://http://192.168.1.34:8000',
+    origin: 'http://http://192.168.1.54:8000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));

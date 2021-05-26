@@ -1,9 +1,10 @@
 import Question from "../models/question"
 
 exports.newQuestion = async(req,res) => {
-    let question = req.body.question
-    const newquestion = await Question.create(question)
-    res.status(201).json({ question: newquestion})
+    let question = req.body.formData
+    console.log(req.body);
+    //const newquestion = await Question.create(question)
+    //res.status(201).json({ question: newquestion})
 }
 
 exports.getAllQuestions = async (req,res) =>{

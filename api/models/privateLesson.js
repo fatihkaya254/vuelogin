@@ -5,8 +5,7 @@ const privateLessonSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    
-    purchased:{
+    purchase:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Purchase'
     },
