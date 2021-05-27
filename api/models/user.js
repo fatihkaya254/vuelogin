@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 const userSchema = mongoose.Schema({
     phone: {
         type: Number,
-        required: true
     },
     email: {
         type: String,
@@ -12,6 +11,9 @@ const userSchema = mongoose.Schema({
         type: String,
     },
     surname: {
+        type: String,
+    },
+    profilePic: {
         type: String,
     },
     googleId: {

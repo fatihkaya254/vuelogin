@@ -36,7 +36,7 @@ import WaitingSMS from './controllers/waitingSMS'
 import cors from "cors"
 
 var corsOptions = {
-    origin: 'http://http://192.168.1.54:8000',
+    origin: 'http://localhost:8000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
@@ -56,6 +56,7 @@ mongoose.set('useCreateIndex', true);
 //-------------------------------------------- USERS -------------------------------------------- //
 app.post('/phone', User.generateCode)
 app.post('/code', User.authCode)
+app.post('/authGoogle', User.authGoogle)
 app.post('/auth', User.auth)
 app.put('/updateProfile', User.update)
 app.get('/users', User.getAll)

@@ -134,6 +134,33 @@ export const actions = {
           console.log("");
         }
       });
+  },
+  authGoogle({ commit, dispatch, state }, authData) {
+    console.log("as");
+    this.$axios
+      .post(
+        "/authGoogle",
+        {
+          googleId: authData.googleId,
+          name: authData.name,
+          surname: authData.surname,
+          email: authData.email,
+          profilePic: authData.profilePic,
+        },
+        { withCredentials: true, credentials: "include" }
+      )
+      .then(res => {
+        console.log(res);
+        if (res.data.auth) {
+          dispatch("login", res.data.authKey);
+          commit("changePhoneIsValid", false);
+          commit("changeNumberInvalid", false);
+          commit("changeSmsValid", false);
+          commit("changeToForm", false);
+        } else {
+          console.log("");
+        }
+      });
   }
 }
 
@@ -150,7 +177,19 @@ export const getters = {
   userPhone(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
-      return user.phone;
+      let result = "Merhaba " + user.name
+      if (user.name == undefined) {
+        result = user.phone
+      }
+      return result;
+    }
+  },
+  userPic(state){
+    let user = JSON.parse(state.user);
+    if (user != null) {
+      return user.profilePic;
+    }else{
+      return false
     }
   },
   userId(state) {

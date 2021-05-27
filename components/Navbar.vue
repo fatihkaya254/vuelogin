@@ -7,6 +7,7 @@ header
     .account 
       #user 
         NuxtLink(:to="'/profile/'", class="nuxt-link") 
+          img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
           p {{ this.$store.getters.userPhone }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
@@ -27,14 +28,25 @@ header
           )
           .error(v-if="this.$store.state.numberInvalid") 
             | Telefon numarası hatalı.
-          input.outAuth(
+          GoogleLogin(
+            class="outAuth"
             type="submit",
             v-if="this.$store.state.toForm",
-            value="Google",
             :key="google",
-            v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid"
+            v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid",
+            :params="params",
+            :renderParams="renderParams",
+            :onSuccess="onSuccess",
+            :onFailure="onFailure"
           )
-          input.outAuth(
+          .googleText(
+            v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid",
+            v-if="this.$store.state.toForm",
+            :key="'googleText'"
+            ) 
+            | Google
+          input(
+            class="outAuth"
             type="submit",
             v-if="this.$store.state.toForm",
             value="Apple",
@@ -46,7 +58,7 @@ header
             maxlength=5,
             name="phone"
             v-model="enteredCode",
-            v-if="this.$store.state.smsValid",
+            v-show="this.$store.state.smsValid",
             ref="pass",
             :key="pass",
             placeholder="_____"
@@ -54,8 +66,8 @@ header
           #code(
             :disabled="this.$store.state.disabled",
             v-show="this.$store.state.phoneIsValid",
-            :v-model="enteredCode"
-            :key="'code'",
+            :v-model="enteredCode",
+            :key="'code'"
           )
             transition(
               v-on:before-enter="startProgress",
@@ -83,7 +95,13 @@ header
 </template>
 
 <script>
-console.log("%c Bizi araştırmaya mı çalışıyorsun %c Doğru yerdesin :)", "color: blue; font-size: 24px", "color: green; font-size: 24px" );
+import GoogleLogin from "vue-google-login";
+
+console.log(
+  "%c Bizi araştırmaya mı çalışıyorsun %c Doğru yerdesin :)",
+  "color: blue; font-size: 24px",
+  "color: green; font-size: 24px"
+);
 
 import { gsap } from "gsap";
 export default {
@@ -100,8 +118,27 @@ export default {
       phone: "phone",
       pass: "pass",
       accept: "accept",
-      iz: "iz"
+      iz: "iz",
+      // client_id is the only required property but you can add several more params, full list down bellow on the Auth api section
+      params: {
+        client_id:
+          "1062958103241-4o0u00itp4jpccd36l9rjrq3iltopdi4.apps.googleusercontent.com"
+      },
+      // only needed if you want to render the button with the google ui
+      renderParams: {
+        width: 250,
+        height: 50,
+        longtitle: true
+      }
     };
+  },
+  head: {
+    title: "my website title",
+    meta: [
+      { charset: "utf-8" },
+      { name: "google-signin-scope", content: "profile email" }
+    ],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   methods: {
     clickSubmit: function() {
@@ -114,6 +151,39 @@ export default {
         this.userPhone = this.$store.getters.userPhone;
         this.phoneNumber = "";
       }
+    },
+    onSuccess2(googleUser) {
+      console.log(googleUser);
+
+      // This only gets the user information: id, name, imageUrl and email
+      console.log(googleUser.getBasicProfile());
+    },
+    onFailure(googleUser) {
+      console.log(googleUser);
+
+      // This only gets the user information: id, name, imageUrl and email
+      console.log(googleUser.getBasicProfile());
+    },
+    onSuccess: function(googleUser) {
+      // Useful data for your client-side scripts:
+      var profile = googleUser.getBasicProfile();
+      console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+      console.log("Full Name: " + profile.getName());
+      console.log("Given Name: " + profile.getGivenName());
+      console.log("Family Name: " + profile.getFamilyName());
+      console.log("Image URL: " + profile.getImageUrl());
+      console.log("Email: " + profile.getEmail());
+
+      // The ID token you need to pass to your backend:
+      var id_token = googleUser.getAuthResponse().id_token;
+      console.log("ID Token: " + id_token);
+      this.$store.dispatch("authGoogle", {
+        googleId: profile.getId(),
+        name: profile.getGivenName(),
+        surname: profile.getFamilyName(),
+        email: profile.getEmail(),
+        profilePic: profile.getImageUrl()
+      });
     },
     cancelToGenerateCode: function() {
       this.$store.commit("changePhoneIsValid", !this.$store.phoneIsValid);
@@ -151,6 +221,7 @@ export default {
       });
     },
     afterFinishProgress: function() {
+      this.$refs.pass.focus()
       console.log("aldattın mı beniiiiii bunu yaptın mı banaaaa");
       this.$store.dispatch("generatePasscode", { phone: this.phoneNumber });
     }
@@ -184,7 +255,10 @@ export default {
     }
   },
   computed: {},
-  components: {}
+  components: {
+    GoogleLogin,
+  },
+  mounted() {}
 };
 </script>
 
@@ -255,10 +329,18 @@ header
   float: right
   position: relative
   z-index: 1
+  
   &input[type=text]
     background-color: rgba(0, 0, 0, 0)
     height: 40px
-
+  & img
+    height: 32px
+    width: 32px
+    border-radius: 50%
+    position: absolute
+    z-index: 1
+    margin-left: -48px
+    margin-top: -6px
 #phone
   height: 40px
   width: 200px
@@ -375,6 +457,43 @@ header
     &:hover
       cursor: pointer
       transform: scale(0.95)
+  &  > *
+    opacity: 0
+    margin-left: -30px
+    margin-top: -10px
+
+.googleText
+  font-family: 'Open Sans', sans-serif
+  letter-spacing: 1px
+  font-size: 9pt
+  color: white
+  font-weight: 700
+  position: absolute
+  margin-top: -28px
+  margin-left: $ortadaKuyuVar + 75
+
+
+  & button
+    height: 40px
+    width: 200px
+    margin-top: 5%
+    margin-left: $ortadaKuyuVar
+    font-family: 'Open Sans', sans-serif
+    font-weight: 700
+    letter-spacing: 1px
+    font-size: 9pt
+    background-color: black
+    color: white
+    border: 2px solid black
+    border-radius: 1em
+    transition: all .1s ease
+    padding: 1px 2px
+    &:focus
+      outline: 0px
+      &:hover
+        cursor: pointer
+        transform: scale(0.95)
+
 .login
   height: 36px
   width: 96px
@@ -409,4 +528,5 @@ header
   text-decoration: none
   &:hover
     text-decoration: underline
+
 </style>
