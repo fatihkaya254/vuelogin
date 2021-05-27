@@ -47,6 +47,21 @@ export const mutations = {
 
 export const actions = {
 
+  refreshUser({ commit, dispatch, state }){
+    let token = state.authKey
+    if(state.authKey==null){
+    }else{
+        return this.$axios
+          .post(`${process.env.OUR_HOST}/auth`, { token: token })
+          .then((res) => {
+            console.log('hello world');
+            let user = JSON.stringify(res.data.user)
+            console.log("-------------------"+user)
+            dispatch("setUser", user)
+        })
+    }
+  },
+
   nuxtServerInit(vuexContext, context) {},
   initAuth(vuexContext, req) {
     let token;

@@ -3,15 +3,22 @@ div
     .form
         h3 Kullanıcı Bilgileri
         label
-            | {{ this.$store.getters.userName }}
+            | {{ userName() }}
         input(type="text" placeholder="İsim" v-model="name" @blur="change(name, 'name')")
         label
-            | {{ this.$store.getters.userSurname }}
+            | {{userSurname()}}
         input(type="text" placeholder="Soyisim" v-model="surname" @blur="change(surname, 'surname')")
+            
+        img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+
+        
+    
+    
 
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -20,10 +27,16 @@ export default {
     };
   },
   methods: {
+      ...mapActions("users", ["changeUserInfo"]),
+      ...mapActions(["refreshUser"]),
+       ...mapGetters(["userName","userSurname"]),
+
       change: function(value, where) {
-        this.$store.dispatch("changeUserInfo", { id: this.$store.getters.userId, value, where  });
+        this.changeUserInfo({ id: this.$store.getters.userId, value, where  })
+        this.refreshUser()
       }
   }
+  
 };
 </script>
 

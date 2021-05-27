@@ -59,7 +59,7 @@ header
             name="phone"
             v-model="enteredCode",
             v-show="this.$store.state.smsValid",
-            ref="pass",
+            ref="pass"
             :key="pass",
             placeholder="_____"
           )
@@ -67,6 +67,7 @@ header
             :disabled="this.$store.state.disabled",
             v-show="this.$store.state.phoneIsValid",
             :v-model="enteredCode",
+             ref="code",
             :key="'code'"
           )
             transition(
@@ -107,6 +108,7 @@ import { gsap } from "gsap";
 export default {
   data() {
     return {
+     
       form: "loginForm",
       login: "login",
       phoneNumber: "",
@@ -141,6 +143,9 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   methods: {
+  
+  
+          
     clickSubmit: function() {
       if (this.$store.getters.isAuthenticated) {
         this.$store.commit("clearAuthkey");
@@ -221,9 +226,12 @@ export default {
       });
     },
     afterFinishProgress: function() {
-      this.$refs.pass.focus()
-      console.log("aldattın mı beniiiiii bunu yaptın mı banaaaa");
-      this.$store.dispatch("generatePasscode", { phone: this.phoneNumber });
+      
+      
+      this.$store.dispatch("generatePasscode", { phone: this.phoneNumber }).then(()=>{
+        this.$refs.pass.focus()
+      })
+     
     }
   },
   watch: {
@@ -257,6 +265,7 @@ export default {
   computed: {},
   components: {
     GoogleLogin,
+    
   },
   mounted() {}
 };
