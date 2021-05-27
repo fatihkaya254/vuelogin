@@ -225,4 +225,12 @@ export const getters = {
       return user.surname;
     }
   },
+
+  userPhone(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.phone;
+    }
+  },
+
 }
