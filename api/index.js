@@ -32,7 +32,7 @@ import TeacherBranch from './controllers/teacherBranch'
 import Test from './controllers/test'
 import TestQuestion from './controllers/testQuestion'
 import WaitingSMS from './controllers/waitingSMS'
-
+import Multer from "multer"
 import cors from "cors"
 
 var corsOptions = {
@@ -41,6 +41,25 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 
+const fileFilter = function(req, file, cb) {
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
+
+    if (!allowedTypes.includes(file.mimetype)) {
+        const error = new Error("Wrong file type")
+        error.code = "LIMIT_FILE_TYPES"
+        return cb(error, false)
+    }
+
+    cb(null, true)
+}
+const MAX_SIZE = 200000
+const upload = Multer({
+    dest: "./uploads",
+    fileFilter,
+    limits: {
+        fileSize: MAX_SIZE
+    }
+})
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -52,6 +71,21 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
+app.post('/upload', upload.single("file"), (req, res) =>{
+    console.log(req);
+    res.status(201).json({file: req.file})
+})
+
+app.use(function(err, req, res, next) {
+    if(err.code === "LIMIT_FILE_TYPES"){
+        res.status(422).json({ error: "Only images are allowed"})
+        return;
+    }
+    if(err.code === "LIMIT_FILE_SIZE"){
+        res.status(422).json({ error: `Too Large. Max size is ${MAX_SIZE/1000}kb`})
+        return;
+    }
+})
 
 //-------------------------------------------- USERS -------------------------------------------- //
 app.post('/phone', User.generateCode)

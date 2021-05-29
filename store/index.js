@@ -54,9 +54,7 @@ export const actions = {
         return this.$axios
           .post(`${process.env.OUR_HOST}/auth`, { token: token })
           .then((res) => {
-            console.log('hello world');
             let user = JSON.stringify(res.data.user)
-            console.log("-------------------"+user)
             dispatch("setUser", user)
         })
     }
@@ -77,13 +75,11 @@ export const actions = {
         }
       }
     } else {
-      console.log("lokalden getir");
       token = localStorage.getItem("jwt");
     }
     vuexContext.commit("setAuthkey", token);
   },
   login(vuexContext, authKey) {
-    console.log('login fonksiyonu başladı, authkey: ' + authKey);
     Cookies.set("jwt", authKey);
     localStorage.setItem("jwt", authKey);
     vuexContext.commit("setAuthkey", authKey);
@@ -94,7 +90,6 @@ export const actions = {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log('login axos response: ' + res.data.user);
         let user = JSON.stringify(res.data.user);
         vuexContext.dispatch("setUser", user);
       });
@@ -106,7 +101,6 @@ export const actions = {
 
 
   generatePasscode({ commit, dispatch, state }, authData) {
-    console.log(authData);
     this.$axios
       .post(
         "/phone",
@@ -114,7 +108,6 @@ export const actions = {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
         if (res.data.smsStatus == "success") {
           commit("changePhoneIsValid", false);
           commit("changeSmsValid", true);
@@ -127,7 +120,6 @@ export const actions = {
       });
   },
   enterCode({ commit, dispatch, state }, authData) {
-    console.log("as");
     this.$axios
       .post(
         "/code",
@@ -138,7 +130,6 @@ export const actions = {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
         if (res.data.auth) {
           dispatch("login", res.data.authKey);
           commit("changePhoneIsValid", false);
@@ -146,12 +137,11 @@ export const actions = {
           commit("changeSmsValid", false);
           commit("changeToForm", false);
         } else {
-          console.log("");
+          console.log("nothing else matters");
         }
       });
   },
   authGoogle({ commit, dispatch, state }, authData) {
-    console.log("as");
     this.$axios
       .post(
         "/authGoogle",
@@ -165,7 +155,6 @@ export const actions = {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
         if (res.data.auth) {
           dispatch("login", res.data.authKey);
           commit("changePhoneIsValid", false);
@@ -173,7 +162,7 @@ export const actions = {
           commit("changeSmsValid", false);
           commit("changeToForm", false);
         } else {
-          console.log("");
+          console.log("nothing else matters");
         }
       });
   }
@@ -189,11 +178,11 @@ export const getters = {
   getUser(state) {
     return state.user;
   },
-  userPhone(state) {
+  userMerhaba(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
       let result = "Merhaba " + user.name
-      if (user.name == undefined) {
+      if (user.name == undefined || user.name == "") {
         result = user.phone
       }
       return result;
@@ -213,6 +202,33 @@ export const getters = {
       return user._id;
     }
   },
+  userBirthDay(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user)
+      if (user.birthDay != null && user.birthDay != undefined){
+        let datetime = user.birthDay
+        let date = datetime.split("-")
+        let year = date[0]
+        let month = date[1]
+        let day = date[2].charAt(0) + date[2].charAt(1)
+        return day + "." + month + "." + year;
+      }
+
+    }
+  },
+  userBirthDayForInput(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user)
+      if (user.birthDay != null && user.birthDay != undefined){
+        let datetime = user.birthDay
+        let date = datetime.split("-")
+        let year = date[0]
+        let month = date[1]
+        let day = date[2].charAt(0) + date[2].charAt(1)
+        return year + "-" + month + "-" + day;
+      }
+    }
+  },
   userName(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
@@ -230,6 +246,13 @@ export const getters = {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
       return user.phone;
+    }
+  },
+
+  userImage(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.profilePic;
     }
   },
 

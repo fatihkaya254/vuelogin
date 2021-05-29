@@ -23,7 +23,8 @@
     "nuxt": "^2.15.3",
     "pug": "^3.0.2",
     "velocity-animate": "^1.5.2",
-    "vue-google-login": "^2.0.5"
+    "vue-google-login": "^2.0.5",
+    "vue-image-upload-resize": "^2.3.0"
   },
   "devDependencies": {
     "fibers": "^5.0.0",

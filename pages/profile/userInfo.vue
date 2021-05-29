@@ -13,39 +13,102 @@ div
     input(type="text" placeholder="Telefon numarası" v-model="phone" @blur="change(phone, 'phone')")
     br
     label
-
-
-
-    
-
+        | {{userBirthDay()}}
+    input(type="date" v-model="date" @change="change(date, 'birthDay')")
+    br    
+    GoogleLogin(
+        class="outAuth"
+        type="submit",
+        :params="params",
+        :renderParams="renderParams",
+        :onSuccess="onSuccess",
+        :onFailure="onFailure"
+    )
     img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
 
+    form(@submit.prevent="sendFile" enctype="multipart/form-data")
+        input(
+            type="file" 
+            @change="selectFile"
+            ref="file"
+        )
+        button send
 </template>
 
-
 <script>
+import axios from "axios"
+import GoogleLogin from "vue-google-login";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  
   data() {
     return {
+      file: "",
       name: "",
       surname: "",
-      phone:"",
-      grade:""
+      phone: "",
+      grade: "",
+      selectedFile: null,
+      date: this.userBirthDayForInput(),
+      params: {
+        client_id:
+          "1062958103241-4o0u00itp4jpccd36l9rjrq3iltopdi4.apps.googleusercontent.com"
+      },
+      renderParams: {
+        width: 250,
+        height: 50,
+        longtitle: true
+      }
     };
   },
   methods: {
-      ...mapActions("users", ["changeUserInfo"]),
-      ...mapActions(["refreshUser"]),
-       ...mapGetters(["userName","userSurname","userPhone",]),
+    ...mapActions("users", ["changeUserInfo"]),
+    ...mapActions(["refreshUser"]),
+    ...mapGetters([
+      "userName",
+      "userSurname",
+      "userPhone",
+      "userBirthDay",
+      "userImage",
+      "userBirthDayForInput"
+    ]),
+    onFailure(googleUser) {
+      console.log(googleUser);
+    },
+    selectFile: function() {
+        const file = this.$refs.file.files[0]
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
 
-      change: function(value, where) {
-        this.changeUserInfo({ id: this.$store.getters.userId, value, where  })
-        this.refreshUser()
-      }
+        if (allowedTypes.includes(file.type)) {
+            this.file = file
+        }else{
+            alert("Sadece Resim Dosyaları Kabul Edilmektedir")
+            this.$refs.file.value = null
+        }
+    },
+    sendFile: async function(){
+        const formData = new FormData()
+        formData.append('file', this.file)
+        try {
+            await axios.post(`${process.env.OUR_HOST}/upload`, formData)
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    onSuccess: function(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      this.change(profile.getEmail(), "email");
+      this.change(profile.getId(), "googleId");
+      this.change(profile.getImageUrl(), "profilePic");
+      console.log(googleUser);
+    },
+    change: function(value, where) {
+      this.changeUserInfo({ id: this.$store.getters.userId, value, where });
+    }
+  },
+
+  components: {
+    GoogleLogin
   }
-  
 };
 </script>
 
@@ -67,7 +130,28 @@ $gray6-dark: rgb(28, 28, 30)
     background-size: cover
     background-position: center
     transform-style: preserve-3d
-  
 
-
+.outAuth
+  height: 40px
+  width: 200px
+  margin-top: 5%
+  font-family: 'Open Sans', sans-serif
+  font-weight: 700
+  letter-spacing: 1px
+  font-size: 9pt
+  background-color: black
+  color: white
+  border: 2px solid black
+  border-radius: 1em
+  transition: all .1s ease
+  padding: 1px 2px
+  &:focus
+    outline: 0px
+    &:hover
+      cursor: pointer
+      transform: scale(0.95)
+  &  > *
+    opacity: 0
+    margin-left: -30px
+    margin-top: -10px
 </style>

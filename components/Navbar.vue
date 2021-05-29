@@ -8,7 +8,7 @@ header
       #user 
         NuxtLink(:to="'/profile/'", class="nuxt-link") 
           img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
-          p {{ this.$store.getters.userPhone }}
+          p {{ this.$store.getters.userMerhaba }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
         input#login(type="submit", value="Giriş Yap", v-show="!this.$store.getters.isAuthenticated", @click="clickSubmit")
@@ -350,6 +350,8 @@ header
     z-index: 1
     margin-left: -48px
     margin-top: -6px
+    background-color: white
+
 #phone
   height: 40px
   width: 200px

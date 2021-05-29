@@ -1,6 +1,7 @@
 <template lang="pug">
 .adminDashboard
-    Navbar
+    .navWrapper
+        Navbar
     .container
         .adminheader
         .sidebar
@@ -45,6 +46,11 @@ $gray: rgb(142, 142, 147, 0.70)
 $gray2: rgb(174, 174, 178, 0.70)
 $gray6: rgb(242, 242, 247, 0.70)
 $gray6-dark: rgb(28, 28, 30)
+
+.navWrapper
+    position: fixed
+    width: 100%
+    
 .adminheader
     background-color: $gray
     height: 70px
@@ -66,9 +72,9 @@ $gray6-dark: rgb(28, 28, 30)
     height: 90vh
     width: 80vw
     position: relative
-    top: 50%
+    top: 55%
     transform: perspective(1px) translateY(-50%)
-
+    
 .sidebar
     background-color: $gray2
     float: left
