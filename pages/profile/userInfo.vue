@@ -75,15 +75,20 @@ export default {
       console.log(googleUser);
     },
     selectFile: function() {
-        const file = this.$refs.file.files[0]
+      const file = this.$refs.file.files[0]
+      if (file != undefined) {
+        
+        console.log(file);
         const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
-
-        if (allowedTypes.includes(file.type)) {
-            this.file = file
+        const MAX_SIZE = 200000
+        const tooLarge = MAX_SIZE < file.size
+        if (allowedTypes.includes(file.type) && !tooLarge) {
+          this.file = file
         }else{
-            alert("Sadece Resim Dosyaları Kabul Edilmektedir")
+          alert("Sadece Resim Dosyaları Kabul Edilmektedir")
             this.$refs.file.value = null
         }
+      }
     },
     sendFile: async function(){
         const formData = new FormData()
