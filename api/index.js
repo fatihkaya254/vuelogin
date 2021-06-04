@@ -1,5 +1,4 @@
 import express from 'express'
-import multer from 'multer'
 const app = express()
 import mongoose from 'mongoose'
 import User from './controllers/user'
@@ -34,25 +33,26 @@ import TestQuestion from './controllers/testQuestion'
 import WaitingSMS from './controllers/waitingSMS'
 import Multer from "multer"
 import cors from "cors"
+import Sharp from "sharp"
+import fs from "fs"
+import path from "path"
 
 var corsOptions = {
     origin: 'http://localhost:8000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 app.use(cors(corsOptions));
-
+app.use("./static", express.static(path.join(__dirname, "static")))
 const fileFilter = function(req, file, cb) {
     const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
-
     if (!allowedTypes.includes(file.mimetype)) {
         const error = new Error("Wrong file type")
         error.code = "LIMIT_FILE_TYPES"
         return cb(error, false)
     }
-
     cb(null, true)
 }
-const MAX_SIZE = 200000
+const MAX_SIZE = 10000000
 const upload = Multer({
     dest: "./uploads",
     fileFilter,
@@ -60,6 +60,7 @@ const upload = Multer({
         fileSize: MAX_SIZE
     }
 })
+
 
 mongoose.connect("mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -72,8 +73,32 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 app.post('/upload', upload.single("file"), (req, res) =>{
-    console.log(req);
     res.status(201).json({file: req.file})
+})
+
+app.post('/dropzone', upload.single("file"), async (req, res) =>{
+    var newName = Date.now() + req.file.originalname;
+    console.log(newName);
+    try {
+        await Sharp(req.file.path)
+            .resize(300, 300, {
+                fit: "contain",
+                background: {
+                    r: 0,
+                    g: 0,
+                    b: 0,
+                    alpha: 0
+                }
+            })
+            //.background('white')
+            //.embed()
+            .toFile(`./static/${newName}`)
+        fs.unlink(req.file.path, () => {
+            res.status(200).json({ file: `/${newName}`})
+        })
+    } catch(err){
+        res.status(422).json({err})
+    }
 })
 
 app.use(function(err, req, res, next) {

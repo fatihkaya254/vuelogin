@@ -15,7 +15,9 @@ div
     label
         | {{userBirthDay()}}
     input(type="date" v-model="date" @change="change(date, 'birthDay')")
-    br    
+    br   
+    p 
+      | {{userEmail()}}
     GoogleLogin(
         class="outAuth"
         type="submit",
@@ -36,7 +38,8 @@ div
 </template>
 
 <script>
-import axios from "axios"
+import Dropzone from "@/components/Dropzone.vue";
+import axios from "axios";
 import GoogleLogin from "vue-google-login";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -67,44 +70,62 @@ export default {
       "userName",
       "userSurname",
       "userPhone",
+      "userEmail",
       "userBirthDay",
       "userImage",
-      "userBirthDayForInput"
+      "userBirthDayForInput",
+      "userGoogleId"
     ]),
     onFailure(googleUser) {
       console.log(googleUser);
     },
     selectFile: function() {
-      const file = this.$refs.file.files[0]
+      const file = this.$refs.file.files[0];
       if (file != undefined) {
-        
         console.log(file);
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"]
-        const MAX_SIZE = 200000
-        const tooLarge = MAX_SIZE < file.size
+        const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+        const MAX_SIZE = 10000000;
+        const tooLarge = MAX_SIZE < file.size;
         if (allowedTypes.includes(file.type) && !tooLarge) {
-          this.file = file
-        }else{
-          alert("Sadece Resim Dosyaları Kabul Edilmektedir")
-            this.$refs.file.value = null
+          this.file = file;
+        } else {
+          alert("Sadece Resim Dosyaları Kabul Edilmektedir");
+          this.$refs.file.value = null;
         }
       }
     },
-    sendFile: async function(){
-        const formData = new FormData()
-        formData.append('file', this.file)
-        try {
-            await axios.post(`${process.env.OUR_HOST}/upload`, formData)
-        } catch (error) {
-            console.log(error);
-        }
+    sendFile: async function() {
+      const formData = new FormData();
+      formData.append("file", this.file);
+      try {
+        await axios
+          .post(`${process.env.OUR_HOST}/dropzone`, formData)
+          .then(res => {
+            let profilePic = process.env.OUR_URL + res.data.file;
+            this.change(profilePic, "profilePic");
+          });
+      } catch (error) {
+        console.log(error);
+      }
     },
     onSuccess: function(googleUser) {
       var profile = googleUser.getBasicProfile();
-      this.change(profile.getEmail(), "email");
-      this.change(profile.getId(), "googleId");
-      this.change(profile.getImageUrl(), "profilePic");
-      console.log(googleUser);
+      if (this.userName() == "" || this.userName() == undefined || this.userName() == null) {
+        this.change(profile.getGivenName(), "name");
+      }
+      if (this.userSurname() == "" || this.userSurname() == undefined || this.userSurname() == null) {
+        this.change(profile.getFamilyName(), "surname");
+      }
+      if (this.userEmail() == "" || this.userEmail() == undefined || this.userEmail() == null) {
+        this.change(profile.getEmail(), "email");
+      }
+      if (this.userImage() == "" || this.userImage() == undefined || this.userImage() == null) {
+        this.change(profile.getImageUrl(), "profilePic");
+      }
+      if (this.userGoogleId() == "" || this.userGoogleId() == undefined || this.userGoogleId() == null) {
+        this.change(profile.getId(), "googleId");
+      }
+      console.log(profile);
     },
     change: function(value, where) {
       this.changeUserInfo({ id: this.$store.getters.userId, value, where });
@@ -112,7 +133,8 @@ export default {
   },
 
   components: {
-    GoogleLogin
+    GoogleLogin,
+    Dropzone
   }
 };
 </script>

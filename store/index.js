@@ -9,7 +9,7 @@ export const state = () => ({
   numberInvalid: false,
   toForm: false,
   authKey: null,
-  user: null
+  user: null,
 })
 
 
@@ -216,6 +216,16 @@ export const getters = {
 
     }
   },
+  userEmail(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user)
+      if (user.email != null && user.email != undefined){
+        return user.email
+      }else{
+        return "Kayıtlı Bir E-posta Adresi Yok"
+      }
+    }
+  },
   userBirthDayForInput(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user)
@@ -233,6 +243,12 @@ export const getters = {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
       return user.name;
+    }
+  },
+  userGoogleId(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.googleId;
     }
   },
   userSurname(state) {
