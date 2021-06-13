@@ -173,7 +173,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $spacing: 25px;
 $heights: (65, 56, 50, 32, 38, 32.1, 51, 50.1);
 

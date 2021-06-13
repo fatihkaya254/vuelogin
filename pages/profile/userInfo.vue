@@ -152,7 +152,6 @@ $gray6-dark: rgb(28, 28, 30)
     height: 100vh
     width: 100vw
     background-color: $gray
-    background-image: url("https://source.unsplash.com/1600x900/?woman-sexy")
     background-repeat: no-repeat
     background-size: cover
     background-position: center

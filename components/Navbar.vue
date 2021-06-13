@@ -271,7 +271,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" >
 $ortadaKuyuVar: 36px
 input
   -webkit-appearance: none
