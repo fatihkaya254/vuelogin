@@ -7,4 +7,10 @@ export default {
         console.log('id: ' + id)
         return " a + " + id
     },
+    getGenerated(state){
+        return state.isGenerated
+    },
+    getChangeNumberMessage(state){
+        return state.changeNumberMessage
+    },
   };

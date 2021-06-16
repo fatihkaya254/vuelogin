@@ -6,7 +6,7 @@
         .sidebar
             .profileInfo
                 .profilePhoto(@click="$refs.file.click()")
-                    img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+                    img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
                     input(
                         type="file"
                         class="input-field"
@@ -57,7 +57,8 @@ export default {
     return {
       name: "",
       surname: "",
-      file: ""
+      file: "",
+      ourhost:  process.env.OUR_URL,
     };
   },
   methods: {
@@ -84,7 +85,7 @@ export default {
         await axios
           .post(`${process.env.OUR_HOST}/dropzone`, formData)
           .then(res => {
-            let profilePic = process.env.OUR_URL + res.data.file;
+            let profilePic = res.data.file;
             this.change(profilePic, "profilePic");
           });
       } catch (error) {
@@ -139,7 +140,7 @@ a.nuxt-link-active
     height: 100vh
     width: 100vw
     background-color: $gray
-    background-image: url("http://localhost:8000/profileBackground.jpg")
+    background-image: url("http://192.168.1.54:8000/profileBackground.jpg")
     background-repeat: no-repeat
     background-size: cover
     background-position: center
@@ -174,7 +175,8 @@ a.nuxt-link-active
     height: 90vh
     width: 80%
     float: left
-    padding: 20px
+    padding: 30px
+    padding-top: 50px
 
 .profilePhoto
     height: 144px

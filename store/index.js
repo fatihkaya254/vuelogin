@@ -181,7 +181,7 @@ export const getters = {
   userMerhaba(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
-      let result = "Merhaba " + user.name
+      let result = user.name
       if (user.name == undefined || user.name == "") {
         result = user.phone
       }
@@ -249,6 +249,16 @@ export const getters = {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
       return user.googleId;
+    }
+  },
+  isGoogleConnected(state){
+    if (state.user != null && state.user != "") {
+     let user = JSON.parse(state.user);
+     if(user.googleId != undefined && user.googleId != null){
+       return true
+     }else{
+       return false
+     }
     }
   },
   userSurname(state) {

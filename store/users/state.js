@@ -8,5 +8,6 @@ export default () => ({
     subjectProgress: [],
     teacher: [],
     teacherBranch: [],
-   
+    isGenerated : false,
+    changeNumberMessage: "Doğrulama Kodu"
   });

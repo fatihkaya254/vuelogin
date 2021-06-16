@@ -11,11 +11,8 @@ import Exam from "./controllers/exam";
 import Grade from "./controllers/grade";
 import Group from "./controllers/group";
 import GroupStudent from "./controllers/groupStudent";
-import Package from "./controllers/package";
 import Parent from "./controllers/parent";
 import ParentShip from "./controllers/parentShip";
-import PrivateLesson from "./controllers/privateLesson";
-import Purchase from "./controllers/purchase";
 import Question from "./controllers/question";
 import QuestionSubtopic from "./controllers/questionSubtopic";
 import SchoolCourse from "./controllers/schoolCourse";
@@ -36,13 +33,11 @@ import cors from "cors";
 import Sharp from "sharp";
 import fs from "fs";
 import path from "path";
-import sequelize from "./sqlDatabase";
-import Assamble from "./controllers/assamble";
 
 
 
   var corsOptions = {
-  origin: "http://localhost:8000",
+  origin: "http://192.168.1.54:8000",
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
@@ -124,9 +119,6 @@ app.use(function(err, req, res, next) {
     return;
   }
 });
-//-------------------------------------------- ASSAMBLE -------------------------------------------- //
-app.post("/assamble", Assamble.newAssamble);
-
 
 
 //-------------------------------------------- USERS -------------------------------------------- //
@@ -136,6 +128,7 @@ app.post("/authGoogle", User.authGoogle);
 app.post("/auth", User.auth);
 app.put("/updateProfile", User.update);
 app.get("/users", User.getAll);
+app.put("/changePhoneCheck", User.changePhoneCheck);
 
 //--------------------------------------------  ROLES -------------------------------------------- //
 app.post("/addRole", Role.newRole);
@@ -174,9 +167,6 @@ app.get("/groups", Group.getAllGroups);
 app.post("/addGroupStudent", GroupStudent.newGroupStudent);
 app.get("/groupStudents", GroupStudent.getAllGroupStudents);
 
-//--------------------------------------------  PACKAGES -------------------------------------------- //
-app.post("/addPackage", Package.newPackage);
-app.get("/packages", Package.getAllPackages);
 
 //--------------------------------------------  PARENTS -------------------------------------------- //
 app.post("/addParent", Parent.newParent);
@@ -186,13 +176,6 @@ app.get("/parents", Parent.getAllParents);
 app.post("/addParentShip", ParentShip.newParentShip);
 app.get("/parentShips", ParentShip.getAllParentShips);
 
-//--------------------------------------------  PRİVATE LESSON -------------------------------------------- //
-app.post("/addPrivateLesson", PrivateLesson.newPrivateLesson);
-app.get("/privateLessons", PrivateLesson.getAllPrivateLessons);
-
-//--------------------------------------------  PURCHASE -------------------------------------------- //
-app.post("/addPurchase", Purchase.newPurchase);
-app.get("/purchases", Purchase.getAllPurchases);
 
 //--------------------------------------------  QUESTİON -------------------------------------------- //
 app.post("/addQuestion", Question.newQuestion);

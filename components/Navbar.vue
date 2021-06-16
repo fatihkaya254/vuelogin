@@ -5,10 +5,11 @@ header
       a(href="/") 
         img(src="../assets/logo.png", :title="iz", alt="İzders")
     .account 
-      #user 
-        NuxtLink(:to="'/profile/'", class="nuxt-link") 
-          img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
-          p {{ this.$store.getters.userMerhaba }}
+      #user
+        .nuxt-link-cover
+          NuxtLink(:to="'/profile/'", class="nuxt-link") 
+            img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+            p {{ this.$store.getters.userMerhaba }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
         input#login(type="submit", value="Giriş Yap", v-show="!this.$store.getters.isAuthenticated", @click="clickSubmit")
@@ -98,11 +99,6 @@ header
 <script>
 import GoogleLogin from "vue-google-login";
 
-console.log(
-  "%c Bizi araştırmaya mı çalışıyorsun %c Doğru yerdesin :)",
-  "color: blue; font-size: 24px",
-  "color: green; font-size: 24px"
-);
 
 import { gsap } from "gsap";
 export default {
@@ -271,7 +267,7 @@ export default {
 };
 </script>
 
-<style lang="sass" >
+<style lang="sass" scoped>
 $ortadaKuyuVar: 36px
 input
   -webkit-appearance: none
@@ -533,6 +529,7 @@ header
   border-radius: 12px
   position: absolute
   z-index: 1
+
 
 .nuxt-link
   color: white

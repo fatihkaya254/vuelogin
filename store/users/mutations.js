@@ -26,5 +26,11 @@ export default {
     setTeacherBranches(state, teacherBranch) {
       state.teacherBranch = teacherBranch
     },
+    setGenerated(state, generated) {
+      state.isGenerated = generated
+    },
+    setChangeNumberMessage(state, changes){
+      state.changeNumberMessage = changes
+    }
 
   };

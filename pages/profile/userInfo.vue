@@ -1,40 +1,50 @@
 <template lang="pug">
-div
-    label
-        | {{ userName() }}
-    input(type="text" placeholder="İsim" v-model="name" @blur="change(name, 'name')")
-    br
-    label
-        | {{userSurname()}}
-    input(type="text" placeholder="Soyisim" v-model="surname" @blur="change(surname, 'surname')")
-    br
-    label
-        | {{userPhone()}}
-    input(type="text" placeholder="Telefon numarası" v-model="phone" @blur="change(phone, 'phone')")
-    br
-    label
-        | {{userBirthDay()}}
-    input(type="date" v-model="date" @change="change(date, 'birthDay')")
-    br   
-    p 
-      | {{userEmail()}}
-    GoogleLogin(
-        class="outAuth"
-        type="submit",
-        :params="params",
-        :renderParams="renderParams",
-        :onSuccess="onSuccess",
-        :onFailure="onFailure"
-    )
-    img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+div 
+    .infoLine
+      label
+          | {{ userName() }}
+      input(type="text" placeholder="İsim" v-model="name" @change="change(name, 'name')")
+    .infoLine
+      label
+          | {{userSurname()}}
+      input(type="text" placeholder="Soyisim" v-model="surname" @change="change(surname, 'surname')")
+    .infoLine
+      label
+          | {{userPhone()}}
+      input(type="text" placeholder="Telefon numarası" v-model="phone" :maxlength="phoneLength")
+    .infoLine(v-if="getGenerated()")
+      label(style="color: red")
+          | {{getChangeNumberMessage()}}
+      input(type="text" placeholder="_ _ _ _ _" v-model="code")
+    .infoLine
+      label
+          | {{userBirthDay()}}
+      input(type="date" v-model="date" @change="change(date, 'birthDay')")
+    .infoLine
+      label 
+        | {{userEmail()}}
+      input(type="text" disabled="true" value="Yanlızca Apple veya Google Hesabı Bağlayarak Değiştirilebilir")
+    .infoLine
+      label(v-if="isGoogleConnected()")
+        | Google Bağlı
+      label(v-if="!isGoogleConnected()")
+        | Google Bağlı Değil
+      input(type="submit" value="Google Hesabınızı Bağlayın" @click="googleRemote()" v-if="!isGoogleConnected()")
+      input(type="submit" value="Google Bağlantınızı Kaldırın" @click="googleDisconnect()" v-if="isGoogleConnected()")
+      GoogleLogin(
+          ref="googleA",
+          type="submit",
+          :params="params",
+          :renderParams="renderParams",
+          :onSuccess="onSuccess",
+          :onFailure="onFailure"
+      )
+    .infoLine
+      label
+        | Apple Bağlı Değil
+      input(type="submit" value="Apple Hesabınızı Bağlayın" @click="")
 
-    form(@submit.prevent="sendFile" enctype="multipart/form-data")
-        input(
-            type="file" 
-            @change="selectFile"
-            ref="file"
-        )
-        button send
+
 </template>
 
 <script>
@@ -49,8 +59,10 @@ export default {
       name: "",
       surname: "",
       phone: "",
-      grade: "",
+      grade: "",      
+      phoneLength: 11,
       selectedFile: null,
+      code: "",
       date: this.userBirthDayForInput(),
       params: {
         client_id:
@@ -64,7 +76,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions("users", ["changeUserInfo"]),
+    ...mapGetters("users", ["getGenerated","getChangeNumberMessage"]),
+    ...mapActions("users", ["changeUserInfo", "changePhoneCheck"]),
     ...mapActions(["refreshUser"]),
     ...mapGetters([
       "userName",
@@ -74,8 +87,13 @@ export default {
       "userBirthDay",
       "userImage",
       "userBirthDayForInput",
-      "userGoogleId"
+      "userGoogleId",
+      "isGoogleConnected"
     ]),
+    googleRemote() {
+      var el = this.$refs.googleA;
+      el.handleClick();
+    },
     onFailure(googleUser) {
       console.log(googleUser);
     },
@@ -110,28 +128,74 @@ export default {
     },
     onSuccess: function(googleUser) {
       var profile = googleUser.getBasicProfile();
-      if (this.userName() == "" || this.userName() == undefined || this.userName() == null) {
+      if (
+        this.userName() == "" ||
+        this.userName() == undefined ||
+        this.userName() == null
+      ) {
         this.change(profile.getGivenName(), "name");
       }
-      if (this.userSurname() == "" || this.userSurname() == undefined || this.userSurname() == null) {
+      if (
+        this.userSurname() == "" ||
+        this.userSurname() == undefined ||
+        this.userSurname() == null
+      ) {
         this.change(profile.getFamilyName(), "surname");
       }
-      if (this.userEmail() == "" || this.userEmail() == undefined || this.userEmail() == null) {
+      if (
+        this.userEmail() == "" ||
+        this.userEmail() == undefined ||
+        this.userEmail() == null
+      ) {
         this.change(profile.getEmail(), "email");
       }
-      if (this.userImage() == "" || this.userImage() == undefined || this.userImage() == null) {
+      if (
+        this.userImage() == "" ||
+        this.userImage() == undefined ||
+        this.userImage() == null
+      ) {
         this.change(profile.getImageUrl(), "profilePic");
       }
-      if (this.userGoogleId() == "" || this.userGoogleId() == undefined || this.userGoogleId() == null) {
+      if (
+        this.userGoogleId() == "" ||
+        this.userGoogleId() == undefined ||
+        this.userGoogleId() == null
+      ) {
         this.change(profile.getId(), "googleId");
       }
       console.log(profile);
     },
-    change: function(value, where) {
-      this.changeUserInfo({ id: this.$store.getters.userId, value, where });
+    googleDisconnect() {
+      this.change(null, "googleId");
+    },
+    change: async function(value, where) {
+      if (value != "" && value != " ") {
+        this.changeUserInfo({ id: this.$store.getters.userId, value, where });
+      }
     }
   },
-
+  watch: {
+    phone(value) {
+      var firstChar = value.charAt(0);
+      if (firstChar != 0) this.phoneLength = 10;
+      else this.phoneLength = 11;
+      this.phoneNumber = value.replace(/\D/g, "");
+      if (this.phoneNumber.length == this.phoneLength) {
+        this.change(value, "phone");
+      }
+    },
+    code(value) {
+      this.enteredCode = value.replace(/\D/g, "");
+      console.log(value.length);
+      if (value.length == 5) {
+        this.changePhoneCheck({
+          id: this.$store.getters.userId,
+          code: value,
+          phone: this.phone
+        });
+      }
+    }
+  },
   components: {
     GoogleLogin,
     Dropzone
@@ -176,8 +240,35 @@ $gray6-dark: rgb(28, 28, 30)
     &:hover
       cursor: pointer
       transform: scale(0.95)
-  &  > *
-    opacity: 0
-    margin-left: -30px
-    margin-top: -10px
+
+
+.infoLine
+  margin-top: 10px
+  padding-top: 8px
+  height: 40px
+  border-bottom: 0.75px solid $gray
+
+  & input
+    float: right
+    margin-right: 20%
+    height: 28px
+    margin-top: -8px
+    border: none
+    min-width: 50%
+    -webkit-appearance: none
+    padding-left: 16px
+    padding-right: 16px
+    border-radius: 1em
+
+    &:focus
+      -webkit-appearance: none
+
+
+
+    &[type="submit"]
+      background-color: black
+      color: white
+
+      &:hover
+        cursor: pointer
 </style>
