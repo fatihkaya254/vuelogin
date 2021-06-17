@@ -1,13 +1,12 @@
 import mongoose from 'mongoose'
 
 const packageSchema = mongoose.Schema({
-    
     name:{
         type: String,
         required: true
     },
     fee:{
-        type: mongoose.Schema.Types.Double,
+        type: Number,
         required: true
     },
     scope:{
@@ -21,15 +20,9 @@ const packageSchema = mongoose.Schema({
     },
     condition:{
         type: String,
-        enum: ["private", "group"],
+        enum: ["private", "group", "none"],
         required: true
     },
-
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'user'
-    },
-    
     
 })
 

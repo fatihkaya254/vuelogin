@@ -1,17 +1,17 @@
 import Package from "../models/package"
 
 exports.newPackage = async(req,res) => {
-    let package = req.body.package
-    const newPackage = await Package.create(package)
+    let packageInfo = req.body.package
+    const newPackage = await Package.create(packageInfo)
     res.status(201).json({ package: newPackage})
 }
 
-exports.getAllPackage = async (req,res) =>{
+exports.getAllPackages = async (req,res) =>{
     Package.find({}, function(err, packages) {
         var packageMap = {};
     
-        packages.forEach(function(package) {
-            packageMap[package._id] = package;
+        packages.forEach(function(packageInfo) {
+            packageMap[packageInfo._id] = packageInfo;
         });
     
         res.send(packageMap);  

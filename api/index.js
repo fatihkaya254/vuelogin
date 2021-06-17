@@ -189,7 +189,7 @@ app.get("/questionSubtopics", QuestionSubtopic.getAllQuestionSubtopics);
 
 //--------------------------------------------  PACKAGE -------------------------------------------- //
 app.post("/addPackage", Package.newPackage);
-app.get("/package", Package.getAllPackages);
+app.get("/packages", Package.getAllPackages);
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);
