@@ -7,11 +7,11 @@ const subjectProcessSchema = mongoose.Schema({
     },
     subject:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Subject'
+        ref:'subject'
     },
     subtopic:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Subtopic'
+        ref:'subtopic'
     }
     
 })

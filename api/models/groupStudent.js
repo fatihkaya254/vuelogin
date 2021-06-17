@@ -7,11 +7,11 @@ const groupStudentSchema = mongoose.Schema({
     },
     group:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Group'
+        ref:'group'
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'student'
     }
     
 })

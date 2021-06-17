@@ -175,6 +175,7 @@ export default {
 
 <style lang="scss" scoped>
 $spacing: 25px;
+$spacingHalf: 12.5px;
 $heights: (65, 56, 50, 32, 38, 32.1, 51, 50.1);
 
 * {
@@ -338,7 +339,7 @@ ul {
     }
 
     @media (max-width: 690px) {
-      padding: $spacing/2;
+      padding: $spacingHalf;
     }
   }
 
@@ -378,7 +379,7 @@ ul {
   &__overlay-info {
     position: absolute;
     bottom: $spacing;
-    left: $spacing * 2;
+    left: $spacingHalf;
     display: flex;
 
     @media (max-width: 690px) {
@@ -424,7 +425,7 @@ ul {
     p {
       font-weight: 700;
       font-size: 24px;
-      margin: 0 0 0 $spacing/2;
+      margin: 0 0 0 $spacingHalf;
     }
 
     @media (max-width: 690px) {

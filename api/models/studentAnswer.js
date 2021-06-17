@@ -7,11 +7,11 @@ const studentAnswerSchema = mongoose.Schema({
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'student'
     },
     testQuestion:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'TestQuestion'
+        ref:'testQuestion'
     },
     
 })

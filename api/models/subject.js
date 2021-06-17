@@ -11,7 +11,7 @@ const subjectSchema = mongoose.Schema({
       },
     branch:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Branch'
+        ref:'branch'
     },
     
 })

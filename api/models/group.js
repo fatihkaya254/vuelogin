@@ -7,7 +7,7 @@ const groupSchema = mongoose.Schema({
     },
     grade:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Grade'
+        ref:'grade'
     }
     
 })

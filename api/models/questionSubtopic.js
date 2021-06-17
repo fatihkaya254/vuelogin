@@ -4,11 +4,11 @@ const questionSubtopicSchema = mongoose.Schema({
     
     question:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Question'
+        ref:'question'
     },
     subtopic:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Subtopic'
+        ref:'subtopic'
     },
 })
 

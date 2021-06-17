@@ -7,12 +7,12 @@ const branchProcessSchema = mongoose.Schema({
     },
     subject:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Subject',
+        ref:'subject',
         required: true,
     },
     branch:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Branch',
+        ref:'branch',
         required: true
     },
     

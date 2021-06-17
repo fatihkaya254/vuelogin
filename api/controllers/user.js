@@ -298,3 +298,20 @@ exports.getAll = async (req, res) => {
     res.send(userMap);
   });
 };
+
+exports.getUserRole = async (req, res) => {
+  User
+    .find()
+    .populate('role')
+    .then(users => {
+      var userMap = {};
+      users.forEach(function(user) {
+        userMap[user._id] = user;
+      });
+  
+      res.send(userMap);
+    })
+    .catch((err)=> {
+      console.log(err);
+    })
+};

@@ -14,7 +14,7 @@ const subTopicSchema = mongoose.Schema({
   },
   subject: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Subject"
+    ref: "subject"
   }
 });
 

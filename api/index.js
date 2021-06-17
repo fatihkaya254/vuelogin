@@ -126,6 +126,7 @@ app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);
 app.post("/authGoogle", User.authGoogle);
 app.post("/auth", User.auth);
+app.get("/getUserRole", User.getUserRole);
 app.put("/updateProfile", User.update);
 app.get("/users", User.getAll);
 app.put("/changePhoneCheck", User.changePhoneCheck);
@@ -217,6 +218,7 @@ app.get("/subjectProgresses", SubjectProgress.getAllSubjectProgresses);
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);
 app.get("/subTopics", SubTopic.getAllSubTopics);
+app.get("/subTopicsDetails", SubTopic.getFamilyTree);
 app.put("/updateSubTopic", SubTopic.update);
 app.put("/deleteSubTopic", SubTopic.delete);
 

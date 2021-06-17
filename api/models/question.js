@@ -38,7 +38,7 @@ const questionSchema = mongoose.Schema({
   },
   branch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Branch"
+    ref: "branch"
   }
 });
 

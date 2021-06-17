@@ -27,11 +27,11 @@ const testQuestionSchema = mongoose.Schema({
     },
     question:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Question'
+        ref:'question'
     },
     test:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Test'
+        ref:'test'
     }
     
 })

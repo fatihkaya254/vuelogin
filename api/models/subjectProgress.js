@@ -11,11 +11,11 @@ const subjectProgressSchema = mongoose.Schema({
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'student'
     },
     subjectProcess:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'SubjectProcess'
+        ref:'subjectProcess'
     }
     
 })

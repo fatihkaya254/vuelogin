@@ -7,11 +7,11 @@ const testSchema = mongoose.Schema({
     },
     grade:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Grade'
+        ref:'grade'
     },
     exam:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Exam'
+        ref:'exam'
     },
     
 })

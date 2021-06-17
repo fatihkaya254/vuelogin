@@ -4,11 +4,11 @@ const parentShipSchema = mongoose.Schema({
     
     student:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:'student'
     },
     parent:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Parent'
+        ref:'parent'
     },
     parentRole:{
         type: String,
