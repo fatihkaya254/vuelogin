@@ -191,6 +191,10 @@ app.get("/questionSubtopics", QuestionSubtopic.getAllQuestionSubtopics);
 app.post("/addPackage", Package.newPackage);
 app.get("/packages", Package.getAllPackages);
 
+//--------------------------------------------  Purchase -------------------------------------------- //
+app.post("/addPurchase", Purchase.newPurchase);
+app.get("/purchases", Purchase.getAllPurchases);
+
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);
 app.get("/schoolCourses", SchoolCourse.getAllSchoolCourses);
