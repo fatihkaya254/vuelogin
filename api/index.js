@@ -29,6 +29,7 @@ import Test from "./controllers/test";
 import TestQuestion from "./controllers/testQuestion";
 import WaitingSMS from "./controllers/waitingSMS";
 import Package from "./controllers/package";
+import Purchase from "./controllers/purchase";
 import Multer from "multer";
 import cors from "cors";
 import Sharp from "sharp";

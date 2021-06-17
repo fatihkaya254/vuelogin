@@ -14,7 +14,6 @@ const purchaseSchema = mongoose.Schema({
     student:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'user',
-        required: true
     },
     purchaseDate:{
         type: Date,
@@ -35,7 +34,6 @@ const purchaseSchema = mongoose.Schema({
     branch:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'branch',
-        required: true
     }
     
 })
