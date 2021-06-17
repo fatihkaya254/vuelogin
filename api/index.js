@@ -28,6 +28,7 @@ import TeacherBranch from "./controllers/teacherBranch";
 import Test from "./controllers/test";
 import TestQuestion from "./controllers/testQuestion";
 import WaitingSMS from "./controllers/waitingSMS";
+import Package from "./controllers/package";
 import Multer from "multer";
 import cors from "cors";
 import Sharp from "sharp";
@@ -185,6 +186,10 @@ app.get("/questions", Question.getAllQuestions);
 //--------------------------------------------  QUESTİON SUBTOPİC -------------------------------------------- //
 app.post("/addQuestionSubtopic", QuestionSubtopic.newQuestionSubtopic);
 app.get("/questionSubtopics", QuestionSubtopic.getAllQuestionSubtopics);
+
+//--------------------------------------------  PACKAGE -------------------------------------------- //
+app.post("/addPackage", Package.newPackage);
+app.get("/package", Package.getAllPackages);
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);
