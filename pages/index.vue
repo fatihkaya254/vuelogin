@@ -2,17 +2,19 @@
 div
   Navbar
   HomePageCharts
-  router-view
+  ServiceList
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
+import ServiceList from "@/components/ServiceList.vue";
 export default {
   middleware : ["session-control", "homeAuth"],
   components:{
     HomePageCharts,
-    Navbar
+    Navbar,
+    ServiceList
   },
 
 }
