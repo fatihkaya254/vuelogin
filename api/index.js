@@ -30,6 +30,7 @@ import TestQuestion from "./controllers/testQuestion";
 import WaitingSMS from "./controllers/waitingSMS";
 import Package from "./controllers/package";
 import Purchase from "./controllers/purchase";
+import Payment from "./controllers/payment";
 import Multer from "multer";
 import cors from "cors";
 import Sharp from "sharp";
@@ -192,9 +193,16 @@ app.get("/questionSubtopics", QuestionSubtopic.getAllQuestionSubtopics);
 app.post("/addPackage", Package.newPackage);
 app.get("/packages", Package.getAllPackages);
 
+
+//--------------------------------------------  Payment -------------------------------------------- //
+app.post("/addPayment", Payment.newPayment);
+app.get("/payments", Payment.getAllPayments);
+
+
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
+
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);
