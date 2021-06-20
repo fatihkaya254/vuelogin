@@ -9,9 +9,17 @@ const packageSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    classroomQuota:{
+        type: String,
+        required: true
+    },
+    description:{
+        type: String,
+        required: true
+    },
     scope:{
         type: String,
-        enum: ["private", "group"],
+        enum: ["private", "group", "exam"],
         required: true
     },
     privateLessonCount:{

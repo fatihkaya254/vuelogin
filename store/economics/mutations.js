@@ -2,8 +2,8 @@ export default {
     setPackages(state, paket) {
       state.package = paket
     },
-    setPrivateLessons(state, privateLesson) {
-      state.privateLesson = privateLesson
+    setPayments(state, payment) {
+      state.payment= payment
     },
     setPurchasess(state, purchases) {
         state.purchases = purchases

@@ -29,9 +29,22 @@
             .button(@click="where = 'exam'")
                 | Detaylar
         .packageWrapper(v-if="where != 'everywhere'")
+            .close(@click="where = 'everywhere'")
+                | x
+            .packages(v-for="onePackage in package()" v-if="onePackage.scope == where")
+                | {{ onePackage.name }}
+                .quota
+                    | {{ onePackage.classroomQuota }}
+                .packageDescription
+                    | {{ onePackage.description }}
+                .fee
+                    | {{ onePackage.fee }}₺
+                .packageButton
+                    | İncele
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "ServiceList",
@@ -43,9 +56,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions("economics", ["getPackages"]),
+    ...mapGetters("economics", ["package"]),
     
   },
-
+  created() {
+    this.getPackages();
+  },
   components: {}
 };
 </script>
@@ -61,17 +78,30 @@ export default {
     margin: auto
 
 .packageWrapper
-    height: 400px
+    height: 362px
     width: 56%
     margin: 2.5%
     float: left
     transition: all 0.3s ease
     border-radius: 1em
-    background-color: white    
+    overflow: auto
+    white-space: nowrap
+
+.packages
+    width: 180px
+    height: 280px
+    //background-color: #7fdeb9
+    margin: 16px
+    margin-top: 36px
+    border: 0.75px solid black
+    border-radius: 1em
+    padding: 16px 
+    display: inline-block
+    white-space: pre-wrap
 
 .service
     width: 28%
-    height: 400px
+    height: 362px
     margin: 2.5%
     float: left
     transition: all 0.3s ease
@@ -97,7 +127,7 @@ export default {
 .button
     margin: auto
     margin-top: 25px
-    padding-top: 3px 
+    padding-top: 5px 
     font-size: 11pt
     width: 120px
     height: 30px
@@ -108,6 +138,63 @@ export default {
     &:hover
         background-color: black
         color: white    
+.packageButton
+    margin: auto
+    margin-top: 8px
+    padding-top: 5px 
+    font-size: 11pt
+    width: 120px
+    height: 30px
+    border: 0.75px solid black
+    border-radius: 1em
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    cursor: pointer
+    &:hover
+        background-color: black
+        color: white    
+.close
+    position: absolute
+    float: right
+    margin-left: 12px
+    margin-top: 4px
+    cursor: pointer
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size: 11pt
+    font-weight: 600
+    &:hover
+        font-size: 12pt
 
+.fee
+    height: 10%
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-size: 11pt
+    
+.packageDescription
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    height: 42%
+    width: 100%
+    margin-top: 3px
+    margin-bottom: 12px
+    font-size: 9pt
+    overflow: hidden
+.quota
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    margin-top: 10px
+    height: 10%
+    font-size: 9pt
+
+::-webkit-scrollbar
+    height: 10px
+    border-radius: 1em
+::-webkit-scrollbar-track
+    background: #ffffff
+    border-radius: 1em
+
+::-webkit-scrollbar-thumb 
+    background: #000
+    border-radius: 1em
+
+::-webkit-scrollbar-thumb:hover 
+    background: #555
 
 </style>

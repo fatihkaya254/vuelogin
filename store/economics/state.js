@@ -1,5 +1,5 @@
 export default () => ({
     package: [],
-    privateLesson: [],
+    payment: [],
     purchase: [],
   });

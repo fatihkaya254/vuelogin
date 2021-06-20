@@ -1,58 +1,52 @@
 export default {
-    Packagess(vuexContext) {
-        return this.$axios.get(`${process.env.OUR_HOST}/packagess`).then(res => {
-        console.log(res);
-        let packagess = res.data
-        vuexContext.dispatch("Packagess", packagess)
-      });
-       },
-       Packagess(vuexContext, packagess){
-      vuexContext.commit("Packagess", packagess)
-       },
-       Packages: function(vuexContext, packages) {
-        this.$axios
-          .post("/Packages", { packages: packages })
-          .then(res => {
-            console.log(res.data.packages)
-            vuexContext.dispatch("Packagess")
-          });
-      },
+  getPackages(vuexContext) {
+    return this.$axios.get(`${process.env.OUR_HOST}/packages`).then(res => {
+      console.log(res);
+      let packages = res.data;
+      vuexContext.dispatch("putPackages", packages);
+    });
+  },
+  putPackages(vuexContext, packages) {
+    vuexContext.commit("setPackages", packages);
+  },
+  addPackages: function(vuexContext, packages) {
+    this.$axios.post("/addPackages", { packages: packages }).then(res => {
+      console.log(res.data.packages);
+      vuexContext.dispatch("getPackages");
+    });
+  },
 
-      getPrivateLessons(vuexContext) {
-        return this.$axios.get(`${process.env.OUR_HOST}/privateLessons`).then(res => {
-        console.log(res);
-        let privateLessons = res.data
-        vuexContext.dispatch("putPrivateLessons", privateLessons)
-      });
-       },
-       putPrivateLessons(vuexContext, privateLessons){
-      vuexContext.commit("setPrivateLessons", privateLessons)
-       },
-       addPrivateLesson: function(vuexContext, privateLesson) {
-        this.$axios
-          .post("/addPrivateLesson", { privateLesson: privateLesson })
-          .then(res => {
-            console.log(res.data.privateLesson)
-            vuexContext.dispatch("getPrivateLessons")
-          });
-      },
+  getPayments(vuexContext) {
+    return this.$axios.get(`${process.env.OUR_HOST}/payments`).then(res => {
+      console.log(res);
+      let payments = res.data;
+      vuexContext.dispatch("putPayments", payments);
+    });
+  },
+  putPayments(vuexContext, payments) {
+    vuexContext.commit("setPayments", payments);
+  },
+  addPayment: function(vuexContext, payment) {
+    this.$axios.post("/addPayment", { payment: payment }).then(res => {
+      console.log(res.data.payment);
+      vuexContext.dispatch("getPayments");
+    });
+  },
 
-      getPurchasesses(vuexContext) {
-        return this.$axios.get(`${process.env.OUR_HOST}/purchasesses`).then(res => {
-        console.log(res);
-        let purchasesses = res.data
-        vuexContext.dispatch("putPurchasesses", purchasesses)
-      });
-       },
-       putPurchasesses(vuexContext, purchasesses){
-      vuexContext.commit("setPurchasesses", purchasesses)
-       },
-       addPurchases: function(vuexContext, purchases) {
-        this.$axios
-          .post("/addPurchases", { purchases: purchases })
-          .then(res => {
-            console.log(res.data.purchases)
-            vuexContext.dispatch("getPurchasesses")
-          });
-      },
+  getPurchases(vuexContext) {
+    return this.$axios.get(`${process.env.OUR_HOST}/purchases`).then(res => {
+      console.log(res);
+      let purchases = res.data;
+      vuexContext.dispatch("putGurchases", purchases);
+    });
+  },
+  putPurchases(vuexContext, purchases) {
+    vuexContext.commit("setPurchases", purchases);
+  },
+  addPurchase: function(vuexContext, purchase) {
+    this.$axios.post("/addPurchase", { purchase: purchase }).then(res => {
+      console.log(res.data.purchase);
+      vuexContext.dispatch("getPurchases");
+    });
+  }
 };
