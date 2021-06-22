@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   Navbar
+  .lspWrapper(v-show="popup" @click="popup = false")
+    .lockServicePop(v-show="popup")
+      LockService
   HomePageCharts
   ServiceList
 </template>
@@ -9,15 +12,21 @@ div
 import Navbar from "@/components/Navbar.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 import ServiceList from "@/components/ServiceList.vue";
+import LockService from "@/components/LockService.vue";
 export default {
-  middleware : ["session-control", "homeAuth"],
-  components:{
+  data() {
+    return {
+      popup: true,
+    };
+  },
+  middleware: ["session-control", "homeAuth"],
+  components: {
     HomePageCharts,
     Navbar,
-    ServiceList
-  },
-
-}
+    ServiceList,
+    LockService
+  }
+};
 </script>
 
 <style lang="sass">
@@ -40,4 +49,20 @@ body
   margin: 0px
   background-color: antiquewhite
   -webkit-appearance: none
+.lspWrapper
+  width: 100vw
+  height: 100vh
+  position: absolute
+  z-index: 1
+
+.lockServicePop
+  position: absolute
+  background-color: rgb(199, 199, 204)
+  border-radius: 1em
+  display: inline-block
+  height: 80vh
+  width: 60vw
+  z-index: 2
+  margin-left: 20vw
+  margin-top: 2vh
 </style>
