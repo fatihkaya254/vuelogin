@@ -1,9 +1,9 @@
 <template lang="pug">
 div
   Navbar
-  .lspWrapper(v-show="popup" @click="popup = false")
-    .lockServicePop(v-show="popup")
-      LockService
+  .lockServicePop(v-show="popup")
+    .close(@click="popup = false") x
+    LockService
   HomePageCharts
   ServiceList
 </template>
@@ -65,4 +65,12 @@ body
   z-index: 2
   margin-left: 20vw
   margin-top: 2vh
+
+.close
+  position: absolute
+  right: 0
+  margin-right: 18px
+  margin-top: 10px
+  cursor: pointer
+
 </style>

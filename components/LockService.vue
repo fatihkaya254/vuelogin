@@ -1,7 +1,7 @@
 <template lang="pug">
 .lockingContainer
     .packageName
-        | Haftada 1 Gün Özel Ders
+        | {{a}}
     .packageDescription
         | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis posuere arcu, nec mattis massa interdum eget. Nam eleifend eros a velit suscipit, bibendum condimentum augue maximus. Quisque egestas massa in arcu tincidunt, et ullamcorper est hendrerit. Nunc quis metus quis sem egestas aliquam. In convallis luctus tincidunt. Cras ut libero sit amet turpis scelerisque pellentesque ac id justo. Phasellus semper eget massa at vulputate. Donec et iaculis mi, sit amet pulvinar ex. Vivamus ac nunc vel mauris fermentum ultricies. Integer a neque vehicula, tincidunt orci nec, convallis tellus. Suspendisse semper blandit nisi vitae cursus. Morbi sit amet neque sit amet turpis volutpat consequat. Praesent et enim nec ante euismod hendrerit sed et nibh.
     .packagePrice
@@ -26,6 +26,7 @@ export default {
 
   data() {
     return {
+        a: this.package()[this.lockedPackage()],
         selectedBranch: "none",
         selectedGrade: "none",
         ourhost:  process.env.OUR_URL,
@@ -33,7 +34,7 @@ export default {
   },
   methods: {
     ...mapActions("economics", ["getPackages"]),
-    ...mapGetters("economics", ["package"]),
+    ...mapGetters("economics", ["package", "lockedPackage"]),
     ...mapActions("branches", [ "getBranches"]),
     ...mapActions("students", ["getGrades"]),
     ...mapGetters("students", ["grade"]),

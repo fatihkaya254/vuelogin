@@ -7,5 +7,8 @@ export default {
     },
     purchase(vuexContext) {
         return vuexContext.purchase
+    },
+    lockedPackage(vuexContext) {
+        return vuexContext.lockedPackage
     }
 };

@@ -39,7 +39,7 @@
                     | {{ onePackage.description }}
                 .fee
                     | {{ onePackage.fee }}₺
-                .packageButton
+                .packageButton(@click="selectPackage(onePackage._id)")
                     | İncele
 </template>
 
@@ -56,9 +56,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions("economics", ["getPackages"]),
+    ...mapActions("economics", ["getPackages", "setLockedPackage"]),
     ...mapGetters("economics", ["package"]),
-    
+    selectPackage(selectedPackage){
+        this.setLockedPackage(selectedPackage)
+    }
   },
   created() {
     this.getPackages();

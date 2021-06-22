@@ -48,5 +48,9 @@ export default {
       console.log(res.data.purchase);
       vuexContext.dispatch("getPurchases");
     });
+  },
+
+  setLockedPackage(vuexContext, lockedPackage){
+    vuexContext.commit("setLockedPackage", lockedPackage);
   }
 };
