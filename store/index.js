@@ -10,6 +10,7 @@ export const state = () => ({
   toForm: false,
   authKey: null,
   user: null,
+  packagePop: false,
 })
 
 
@@ -17,6 +18,9 @@ export const mutations = {
 
   setAuthkey(state, authKey) {
     state.authKey = authKey
+  },
+  setPackagePop(state, status) {
+    state.packagePop = status
   },
   clearAuthkey(state) {
     state.authKey = null
@@ -98,7 +102,9 @@ export const actions = {
     vuexContext.commit("setUser", user);
   },
 
-
+  setPackagePop(vuexContext, status) {
+    vuexContext.commit("setPackagePop", status);
+  },
 
   generatePasscode({ commit, dispatch, state }, authData) {
     this.$axios
@@ -174,6 +180,10 @@ export const getters = {
   },
   getAuthkey(state) {
     return state.authKey;
+  },
+  
+  getPackagePop(state) {
+    return state.packagePop;
   },
   getUser(state) {
     return state.user;

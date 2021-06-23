@@ -1,8 +1,8 @@
 <template lang="pug">
 div
   Navbar
-  .lockServicePop(v-show="popup")
-    .close(@click="popup = false") x
+  .lockServicePop(v-show="getPackagePop()")
+    .close(@click="closePop()") x
     LockService
   HomePageCharts
   ServiceList
@@ -13,10 +13,10 @@ import Navbar from "@/components/Navbar.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 import ServiceList from "@/components/ServiceList.vue";
 import LockService from "@/components/LockService.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      popup: true,
     };
   },
   middleware: ["session-control", "homeAuth"],
@@ -25,6 +25,13 @@ export default {
     Navbar,
     ServiceList,
     LockService
+  },
+  methods: {
+    ...mapActions(["setPackagePop"]),
+    ...mapGetters(["getPackagePop"]),
+    closePop(){
+      this.setPackagePop(false)
+    }
   }
 };
 </script>
@@ -56,7 +63,7 @@ body
   z-index: 1
 
 .lockServicePop
-  position: absolute
+  position: fixed
   background-color: rgb(199, 199, 204)
   border-radius: 1em
   display: inline-block
@@ -72,5 +79,4 @@ body
   margin-right: 18px
   margin-top: 10px
   cursor: pointer
-
 </style>

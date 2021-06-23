@@ -9,6 +9,6 @@ export default {
     state.purchases = purchases;
   },
   setLockedPackage(state, lockedPackage) {
-    state.lockedPackage = lockedPackage;
+    state.lockedPackage = state.package[lockedPackage];
   }
 };

@@ -1,12 +1,12 @@
 <template lang="pug">
 .lockingContainer
     .packageName
-        | {{a}}
+        | {{lockedPackage().name}}
     .packageDescription
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam venenatis posuere arcu, nec mattis massa interdum eget. Nam eleifend eros a velit suscipit, bibendum condimentum augue maximus. Quisque egestas massa in arcu tincidunt, et ullamcorper est hendrerit. Nunc quis metus quis sem egestas aliquam. In convallis luctus tincidunt. Cras ut libero sit amet turpis scelerisque pellentesque ac id justo. Phasellus semper eget massa at vulputate. Donec et iaculis mi, sit amet pulvinar ex. Vivamus ac nunc vel mauris fermentum ultricies. Integer a neque vehicula, tincidunt orci nec, convallis tellus. Suspendisse semper blandit nisi vitae cursus. Morbi sit amet neque sit amet turpis volutpat consequat. Praesent et enim nec ante euismod hendrerit sed et nibh.
+        | {{lockedPackage().description}}
     .packagePrice
-        | 900₺
-    .packageBranch
+        | {{lockedPackage().fee}}₺
+    .packageBranch(v-if="lockedPackage().scope == 'private'")
         | Branş Seçiminizi Yapınız
         select(@change="onChangeGrade($event)")
             option Sınıf
@@ -14,8 +14,14 @@
         select(@change="onChangeBranch($event)")
             option Branş
             option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade") {{branch.branchName}}
-    .getIt
-        | Eğitimi Al
+    .getItName(v-if="selectedGrade != 'none' && selectedBranch != 'none'")
+        | {{grade()[selectedGrade].gradeName}} {{branch()[selectedBranch].branchName}}
+    .getIt(v-if="lockedPackage().scope == 'private'" @click="takeService()")
+        | Ders Al
+    .getIt(v-if="lockedPackage().scope == 'exam'" @click="takeExam()")
+        | Deneme Sınavı Al
+    .getItGroup(v-if="lockedPackage().scope == 'group'")
+        | Online Satış İçin Uygun Değil
 </template>
 
 <script>
@@ -26,7 +32,6 @@ export default {
 
   data() {
     return {
-        a: this.package()[this.lockedPackage()],
         selectedBranch: "none",
         selectedGrade: "none",
         ourhost:  process.env.OUR_URL,
@@ -41,9 +46,18 @@ export default {
     ...mapGetters("branches", ["branch"]),
     onChangeGrade(event) {
         this.selectedGrade = event.target.value
+        this.selectedBranch = "none"
     },
     onChangeBranch(event) {
         this.selectedBranch = event.target.value
+    },
+    takeService(){
+        if (this.selectedBranch == 'none' || this.selectedGrade == 'none') {
+            alert('Sınıf ve Branş Seçimi Yapınız')
+        }
+    },
+    takeExam(){
+        
     }
   },
   created() {
@@ -123,4 +137,26 @@ export default {
     &:hover
         background-color: black
         color: white    
+
+.getItGroup
+    position: absolute
+    bottom: 0
+    right: 0
+    margin: 50px
+    width: 180px
+    height: 27px
+    text-align: center
+    padding-top: 4px
+    cursor: pointer
+.getItName
+    position: absolute
+    bottom: 0
+    right: 0
+    margin: 50px
+    margin-bottom: 100px
+    width: 180px
+    height: 27px
+    text-align: center
+    padding-top: 4px
+    cursor: pointer
 </style>

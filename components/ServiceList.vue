@@ -51,15 +51,18 @@ export default {
 
   data() {
     return {
-        where: "everywhere",
-        ourhost:  process.env.OUR_URL,
+      where: "everywhere",
+      ourhost: process.env.OUR_URL
     };
   },
   methods: {
     ...mapActions("economics", ["getPackages", "setLockedPackage"]),
     ...mapGetters("economics", ["package"]),
-    selectPackage(selectedPackage){
-        this.setLockedPackage(selectedPackage)
+    ...mapActions(["setPackagePop"]),
+    ...mapGetters(["getPackagePop"]),
+    selectPackage(selectedPackage) {
+      this.setLockedPackage(selectedPackage);
+      this.setPackagePop(true);
     }
   },
   created() {
@@ -97,7 +100,7 @@ export default {
     margin-top: 36px
     border: 0.75px solid black
     border-radius: 1em
-    padding: 16px 
+    padding: 16px
     display: inline-block
     white-space: pre-wrap
 
@@ -108,9 +111,9 @@ export default {
     float: left
     transition: all 0.3s ease
     border-radius: 1em
-    
+
     &:hover
-        background-color: white    
+        background-color: white
 .title
     margin-top: 12px
     font-weight: 500
@@ -129,7 +132,7 @@ export default {
 .button
     margin: auto
     margin-top: 25px
-    padding-top: 5px 
+    padding-top: 5px
     font-size: 11pt
     width: 120px
     height: 30px
@@ -139,11 +142,11 @@ export default {
     cursor: pointer
     &:hover
         background-color: black
-        color: white    
+        color: white
 .packageButton
     margin: auto
     margin-top: 8px
-    padding-top: 5px 
+    padding-top: 5px
     font-size: 11pt
     width: 120px
     height: 30px
@@ -153,7 +156,7 @@ export default {
     cursor: pointer
     &:hover
         background-color: black
-        color: white    
+        color: white
 .close
     position: absolute
     float: right
@@ -170,7 +173,7 @@ export default {
     height: 10%
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     font-size: 11pt
-    
+
 .packageDescription
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     height: 42%
@@ -192,11 +195,10 @@ export default {
     background: #ffffff
     border-radius: 1em
 
-::-webkit-scrollbar-thumb 
+::-webkit-scrollbar-thumb
     background: #000
     border-radius: 1em
 
-::-webkit-scrollbar-thumb:hover 
+::-webkit-scrollbar-thumb:hover
     background: #555
-
 </style>
