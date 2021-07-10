@@ -9,9 +9,9 @@ export default {
   putPackages(vuexContext, packages) {
     vuexContext.commit("setPackages", packages);
   },
-  addPackages: function(vuexContext, packages) {
-    this.$axios.post("/addPackages", { packages: packages }).then(res => {
-      console.log(res.data.packages);
+  addPackage: function(vuexContext, thepackage) {
+    this.$axios.post("/addPackage", { package: thepackage }).then(res => {
+      console.log(res.data.package);
       vuexContext.dispatch("getPackages");
     });
   },
@@ -37,7 +37,7 @@ export default {
     return this.$axios.get(`${process.env.OUR_HOST}/purchases`).then(res => {
       console.log(res);
       let purchases = res.data;
-      vuexContext.dispatch("putGurchases", purchases);
+      vuexContext.dispatch("putPurchases", purchases);
     });
   },
   putPurchases(vuexContext, purchases) {

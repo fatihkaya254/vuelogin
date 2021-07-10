@@ -21,21 +21,31 @@ const purchaseSchema = mongoose.Schema({
     },
     endDate:{
         type: Date,
-        required: true
     },
     fee:{
         type: Number,
         required: true
+    },
+    weeklyPrivateLesson:{
+        type: Number,
+    },
+    oncePrivateLesson:{
+        type: Number,
+    },
+    weeklyExam:{
+        type: Number,
+    },
+    onceExam:{
+        type: Number,
     },
     installment:{
         type: Number,
         required: true
     },
     branch:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref:'branch',
     }
-    
 })
 
 const Purchase = mongoose.model('purchase', purchaseSchema)

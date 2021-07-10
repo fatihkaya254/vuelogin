@@ -5,7 +5,7 @@ export default {
   setPayments(state, payment) {
     state.payment = payment;
   },
-  setPurchasess(state, purchases) {
+  setPurchases(state, purchases) {
     state.purchases = purchases;
   },
   setLockedPackage(state, lockedPackage) {

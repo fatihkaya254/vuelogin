@@ -22,16 +22,36 @@ const packageSchema = mongoose.Schema({
         enum: ["private", "group", "exam"],
         required: true
     },
-    privateLessonCount:{
-        type: Number,
-        required: true
-    },
     condition:{
         type: String,
         enum: ["private", "group", "none"],
         required: true
     },
-    
+    weeklyPrivateLesson:{
+        type: Number,
+        required: true
+    },
+    oncePrivateLesson:{
+        type: Number,
+        required: true
+    },
+    weeklyExam:{
+        type: Number,
+        required: true
+    },
+    onceExam:{
+        type: Number,
+        required: true
+    },
+    installability:{
+        type: Boolean,
+        required: true
+    },
+    affordability:{
+        type: Boolean,
+        default: true,
+        required: true
+    }
 })
 
 const Package = mongoose.model('package', packageSchema)

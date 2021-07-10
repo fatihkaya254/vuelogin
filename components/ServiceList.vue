@@ -8,8 +8,8 @@
                 img(:src=" ourhost + '/1623829187137-60af68f37cec651040567312.jpg'"  v-show="this.$store.getters.userPic")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            .button(@click="where = 'group'")
-                | Detaylar
+            .button(@click="openAndClose('group')")
+                |  {{ openclose }}
         .service(v-if="where == 'private' || where == 'everywhere'")
             .title
                 | Özel Dersler
@@ -17,8 +17,8 @@
                 img(:src=" ourhost + '/1623750685816-60af68f37cec651040567312.jpeg'"  v-show="this.$store.getters.userPic")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            .button(@click="where = 'private'")
-                | Detaylar
+            .button(@click="openAndClose('private')")
+                |  {{ openclose }}
         .service(v-if="where == 'exam' || where == 'everywhere'")
             .title
                 | Sınavlar
@@ -26,14 +26,12 @@
                 img(:src=" ourhost + '/1623829187137-60af68f37cec651040567312.jpg'"  v-show="this.$store.getters.userPic")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-            .button(@click="where = 'exam'")
-                | Detaylar
+            .button(@click="openAndClose('exam')")
+                |  {{ openclose }}
         .packageWrapper(v-if="where != 'everywhere'")
-            .close(@click="where = 'everywhere'")
-                | x
             .packages(v-for="onePackage in package()" v-if="onePackage.scope == where")
                 | {{ onePackage.name }}
-                .quota
+                .quota(v-if="onePackage.classroomQuota != 1")
                     | {{ onePackage.classroomQuota }}
                 .packageDescription
                     | {{ onePackage.description }}
@@ -52,7 +50,8 @@ export default {
   data() {
     return {
       where: "everywhere",
-      ourhost: process.env.OUR_URL
+      ourhost: process.env.OUR_URL,
+      openclose: "Detaylar"
     };
   },
   methods: {
@@ -63,6 +62,15 @@ export default {
     selectPackage(selectedPackage) {
       this.setLockedPackage(selectedPackage);
       this.setPackagePop(true);
+    },
+    openAndClose(where){
+        if (this.where == where) {
+            this.where = 'everywhere'
+            this.openclose = "Detaylar"
+        }else{
+            this.where = where
+            this.openclose = "Kapat"
+        }
     }
   },
   created() {

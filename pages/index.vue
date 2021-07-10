@@ -2,7 +2,6 @@
 div
   Navbar
   .lockServicePop(v-show="getPackagePop()")
-    .close(@click="closePop()") x
     LockService
   HomePageCharts
   ServiceList
@@ -29,9 +28,6 @@ export default {
   methods: {
     ...mapActions(["setPackagePop"]),
     ...mapGetters(["getPackagePop"]),
-    closePop(){
-      this.setPackagePop(false)
-    }
   }
 };
 </script>
@@ -73,10 +69,5 @@ body
   margin-left: 20vw
   margin-top: 2vh
 
-.close
-  position: absolute
-  right: 0
-  margin-right: 18px
-  margin-top: 10px
-  cursor: pointer
+
 </style>
