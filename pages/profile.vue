@@ -24,13 +24,13 @@
                     | 4,46
             NuxtLink(:to="'/profile/userInfo'", class="nuxt-link active") 
                 p Kullanıcı Bilgileri
+            NuxtLink(:to="'/profile/myPackages'", class="nuxt-link") 
+                p Paketler
             NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
-                p Sınavlar
-            NuxtLink(:to="'/profile/skillGraph'", class="nuxt-link") 
                 p Dersler
             NuxtLink(:to="'/profile/pastLesson'", class="nuxt-link") 
                 p Ödevler
-            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link active") 
+            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
                 p Gelişim Grafikleri
             NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
                 p Öğrenme Süreci

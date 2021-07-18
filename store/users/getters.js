@@ -10,6 +10,9 @@ export default {
     getGenerated(state){
         return state.isGenerated
     },
+    getMyPurchase(state){
+        return state.myPurchases
+    },
     getChangeNumberMessage(state){
         return state.changeNumberMessage
     },

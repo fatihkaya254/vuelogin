@@ -202,5 +202,19 @@ export default {
         console.log(res.data.teacherBrach);
         vuexContext.dispatch("getTeacherBraches");
       });
-  }
+  },
+
+  getMyPurchases(vuexContext, id) {
+    return this.$axios
+      .post(`${process.env.OUR_HOST}/myPurchases`, { id: id})
+      .then(res => {
+        console.log(res);
+        let myPurchases = res.data;
+        vuexContext.dispatch("putMyPurchases", myPurchases);
+      });
+  },
+  putMyPurchases(vuexContext, myPurchases) {
+    vuexContext.commit("setMyPurchases", myPurchases);
+  },
+
 };

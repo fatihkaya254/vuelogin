@@ -123,6 +123,21 @@ export default {
     ...mapGetters(["getAuthkey"]),
     ...mapGetters("branches", ["branch"]),
     closePop(){
+      this.selectedBranch = "none",
+      this.selectedGrade = "none",
+      this.selectedBranch1 = "none",
+      this.selectedGrade1 = "none",
+      this.selectedBranch2 = "none",
+      this.selectedGrade2 = "none",
+      this.selectedBranch3 = "none",
+      this.selectedGrade3 = "none",
+      this.selectedBranch4 = "none",
+      this.selectedGrade4 = "none",
+      this.selectedBranch5 = "none",
+      this.selectedGrade5 = "none",
+      this.selectedBranch6 = "none",
+      this.selectedGrade6 = "none",
+      this.life = 1,
       this.setPackagePop(false)
     },
     onChangeLife(event) {

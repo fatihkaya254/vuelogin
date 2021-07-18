@@ -31,6 +31,9 @@ export default {
     },
     setChangeNumberMessage(state, changes){
       state.changeNumberMessage = changes
+    },    
+    setMyPurchases(state, changes){
+      state.myPurchases = changes
     }
 
   };

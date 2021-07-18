@@ -19,6 +19,14 @@ const purchaseSchema = mongoose.Schema({
         type: Date,
         required: true
     },
+    packageName:{
+        type: String,
+        required: true
+    },
+    packageDesc:{
+        type: String,
+        required: true
+    },
     endDate:{
         type: Date,
     },

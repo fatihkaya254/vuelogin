@@ -202,6 +202,7 @@ app.get("/payments", Payment.getAllPayments);
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
+app.post("/myPurchases", Purchase.getMyPurchases);
 
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //

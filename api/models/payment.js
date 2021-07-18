@@ -11,6 +11,11 @@ const paymentSchema = mongoose.Schema({
         ref:'user',
         required: true
     },
+    parent:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'user',
+        required: true
+    },
     paymentTotal:{
         type: Number,
         required: true
