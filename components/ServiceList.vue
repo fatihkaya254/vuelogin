@@ -5,7 +5,7 @@
             .title
                 | Grup Dersler
             .image
-                img(:src=" ourhost + '/1623829187137-60af68f37cec651040567312.jpg'"  v-show="this.$store.getters.userPic")
+                img(src="../assets/1627295589115-60fe8e1cab5d0c361cf39509.jpg")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
             .button(@click="openAndClose('group')")
@@ -14,7 +14,7 @@
             .title
                 | Özel Dersler
             .image
-                img(:src=" ourhost + '/1623750685816-60af68f37cec651040567312.jpeg'"  v-show="this.$store.getters.userPic")
+                img(src="../assets/1627295591933-60fe8e1cab5d0c361cf39509.jpg")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
             .button(@click="openAndClose('private')")
@@ -23,7 +23,7 @@
             .title
                 | Sınavlar
             .image
-                img(:src=" ourhost + '/1623829187137-60af68f37cec651040567312.jpg'"  v-show="this.$store.getters.userPic")
+                img(src="../assets/1627295593645-60fe8e1cab5d0c361cf39509.jpg")
             .description
                 | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
             .button(@click="openAndClose('exam')")
@@ -103,10 +103,9 @@ export default {
 .packages
     width: 180px
     height: 280px
-    //background-color: #7fdeb9
+    background-color: white
     margin: 16px
     margin-top: 36px
-    border: 0.75px solid black
     border-radius: 1em
     padding: 16px
     display: inline-block
@@ -119,9 +118,9 @@ export default {
     float: left
     transition: all 0.3s ease
     border-radius: 1em
-
+    background-color: rgba(255, 255, 255, 0.7)
     &:hover
-        background-color: white
+        background-color: rgba(255, 255, 255, 1)
 .title
     margin-top: 12px
     font-weight: 500
@@ -132,6 +131,8 @@ export default {
 
     & img
         height: 150px
+        width: 90%
+        object-fit: cover
 .description
     margin: 12px
     font-size: 11pt
