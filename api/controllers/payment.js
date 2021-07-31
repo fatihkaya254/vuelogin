@@ -1,4 +1,5 @@
 import Payment from "../models/payment"
+import axios from "axios";
 
 exports.newPayment = async(req,res) => {
     let paymentInfo = req.body.payment
@@ -25,12 +26,12 @@ exports.getMyPayments = async (req, res) => {
       .then(res => {
           id = res.data.user._id;
       });
-      Payment.find({ parent: id })
-      .populate({ path: "branch", populate: { path: "grade" } })
+      Payment.find({ user: id })
+      .populate({ path: "purchase" })
       .then(payments => {
         var paymentMap = {};
         payments.forEach(function(paymentInfo) {
-          paymentMap[paymentInfo._id] = paymentInfo;
+            paymentMap[paymentInfo._id] = paymentInfo;
         });
         res.send(paymentMap);
       });

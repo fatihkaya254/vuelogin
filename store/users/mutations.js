@@ -34,6 +34,18 @@ export default {
     },    
     setMyPurchases(state, changes){
       state.myPurchases = changes
+    },
+    setMyPayments(state, changes){
+      for (const [key, value] of Object.entries(changes)) {
+        let datetime = value.paymentDate
+        let date = datetime.split("-")
+        let year = date[0]
+        let month = date[1]
+        let day = date[2].charAt(0) + date[2].charAt(1)
+        let newDate=  day + "." + month + "." + year;
+        changes[key].paymentDate = newDate
+      }
+      state.myPayments = changes
     }
 
   };

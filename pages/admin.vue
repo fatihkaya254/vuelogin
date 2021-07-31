@@ -35,6 +35,8 @@
                 p Paketler
             NuxtLink(:to="'/admin/purchases'", class="nuxt-link") 
                 p Satın Alımlar
+            NuxtLink(:to="'/admin/payments'", class="nuxt-link") 
+                p Ödemeler
             NuxtLink(:to="'/admin/schools-courses'", class="nuxt-link") 
                 p Okul ve Kurslar
             NuxtLink(:to="'/admin/groups'", class="nuxt-link") 

@@ -217,4 +217,17 @@ export default {
     vuexContext.commit("setMyPurchases", myPurchases);
   },
 
+  getMyPayments(vuexContext, id) {
+    return this.$axios
+      .post(`${process.env.OUR_HOST}/myPayments`, { id: id})
+      .then(res => {
+        console.log(res);
+        let myPayments = res.data;
+        vuexContext.dispatch("putMyPayments", myPayments);
+      });
+  },
+  putMyPayments(vuexContext, myPayments) {
+    vuexContext.commit("setMyPayments", myPayments);
+  },
+
 };

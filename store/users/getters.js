@@ -12,6 +12,9 @@ export default {
     },
     getMyPurchase(state){
         return state.myPurchases
+    },    
+    getMyPayment(state){
+        return state.myPayments
     },
     getChangeNumberMessage(state){
         return state.changeNumberMessage

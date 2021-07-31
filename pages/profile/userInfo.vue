@@ -32,6 +32,7 @@ div
       input(type="submit" value="Google Hesabınızı Bağlayın" @click="googleRemote()" v-if="!isGoogleConnected()")
       input(type="submit" value="Google Bağlantınızı Kaldırın" @click="googleDisconnect()" v-if="isGoogleConnected()")
       GoogleLogin(
+          style="opacity: 0;"
           ref="googleA",
           type="submit",
           :params="params",

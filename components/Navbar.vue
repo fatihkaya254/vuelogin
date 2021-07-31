@@ -29,17 +29,26 @@ header
           )
           .error(v-if="this.$store.state.numberInvalid") 
             | Telefon numarası hatalı.
-          GoogleLogin(
+          div(
             class="outAuth"
             type="submit",
             v-if="this.$store.state.toForm",
-            :key="google",
-            v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid",
-            :params="params",
-            :renderParams="renderParams",
-            :onSuccess="onSuccess",
-            :onFailure="onFailure"
+            value="Google",
+            key="apple2",
+            v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid"
           )
+            GoogleLogin(
+              style="opacity: 0;",
+              ref="googleAuth"
+              type="submit",
+              v-if="this.$store.state.toForm",
+              :key="google",
+              v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid",
+              :params="params",
+              :renderParams="renderParams",
+              :onSuccess="onSuccess",
+              :onFailure="onFailure"
+            )
           .googleText(
             v-show="!this.$store.state.phoneIsValid && !this.$store.state.smsValid",
             v-if="this.$store.state.toForm",
@@ -478,7 +487,10 @@ header
   position: absolute
   margin-top: -28px
   margin-left: $ortadaKuyuVar + 75
-
+  -webkit-user-select: none       
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
 
   & button
     height: 40px

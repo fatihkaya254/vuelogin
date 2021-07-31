@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-    h4 Öğrenciler
+    h4 Paketler
     .listContainer
         ul
             li( v-for="thepackage in package() ")
@@ -150,12 +150,13 @@ ul
 .listContainer
     margin-top: 50px
     overflow: auto
-    width: 400px
+    width: 40%
     height: 600px
     float: left
     margin: 20px
     padding: 10px
 .updateUser
+    width: 40%
     float: left
     margin: 20px
     padding: 10px

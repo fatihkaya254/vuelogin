@@ -197,6 +197,7 @@ app.get("/packages", Package.getAllPackages);
 //--------------------------------------------  Payment -------------------------------------------- //
 app.post("/addPayment", Payment.newPayment);
 app.get("/payments", Payment.getAllPayments);
+app.post("/myPayments", Payment.getMyPayments);
 
 
 //--------------------------------------------  Purchase -------------------------------------------- //
