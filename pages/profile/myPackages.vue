@@ -3,22 +3,24 @@
     .card(v-for="purchase in getMyPurchase()")
         p {{purchase.packageName}}
         p {{purchase.packageDesc}}
-        p(v-if="purchase.student != undefined") {{purchase.student.name}} {{purchase.student.surname}}
+        .studentButton(@click="getStudentInfo(purchase._id)")
+            p(v-if="purchase.student != undefined") {{purchase.student.name}} {{purchase.student.surname}}
         p Toplam Ücret: {{purchase.fee}}₺
         p(v-if="purchase.installment > 1") Taksit Tutarı: {{purchase.fee/purchase.installment}}₺
         div(v-for="branch in purchase.branch")
-           p {{branch.grade.gradeName}} {{branch.branchName}}
+            p {{branch.grade.gradeName}} {{branch.branchName}}
         br
         div(v-for="payment in getMyPayment()" v-show="payment.purchase._id == purchase._id")
             p Ödeme: {{payment.paymentTotal}}₺ | {{payment.paymentDate}}
-    .studentInfo
+    .studentInfo(v-if="profilePop")
         .profilePhoto
-          img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+          img(:src=" ourhost + studentPhoto" v-show="studentPhoto != '' ")
+          img(src="../../assets/basic-profile.png" v-show="studentPhoto == '' ")
         .profileContent
-          p fatih kaya
-          p 0502340403043
-          p fatihkata@gkfl.cpdf
-          p 23.03.2003
+          p {{ studentName }}
+          p {{ studentPhone }}
+          p {{ studentMail }}
+          p {{ studentBirthDate }}
 
 </template>
 
@@ -28,6 +30,12 @@ import payment from "../../components/payment.vue"
 export default {
   data() {
     return {
+      profilePop: false,
+      studentName: "",
+      studentPhone: "",
+      studentMail: "",
+      studentBirthDate: "",
+      studentPhoto: "",
       file: "",
       name: "",
       ourhost:  process.env.OUR_URL,
@@ -37,6 +45,25 @@ export default {
     ...mapGetters("users", ["getMyPurchase", "getMyPayment"]),
     ...mapActions("users", ["getMyPurchases", "getMyPayments"]),
     ...mapGetters(["getAuthkey"]),
+    getStudentInfo(id){
+      let purchases = this.getMyPurchase()
+      if (purchases[id].student != undefined) {
+        this.studentName = purchases[id].student.name + " " +  purchases[id].student.surname
+        this.studentPhone = purchases[id].student.phone
+        this.studentMail = purchases[id].student.email
+        this.studentPhoto = purchases[id].student.profilePic
+        if (purchases[id].student.birthDay != undefined) {
+          let datetime = purchases[id].student.birthDay
+          let date = datetime.split("-")
+          let year = date[0]
+          let month = date[1]
+          let day = date[2].charAt(0) + date[2].charAt(1)
+          let newDate =  day + "." + month + "." + year;
+          this.studentBirthDate = newDate
+        }
+        this.profilePop = true
+      }
+    }
   },
   watch: {
 
@@ -56,9 +83,16 @@ export default {
   $gray4: rgb(209, 209, 214)
   $gray6-dark: rgb(28, 28, 30)
 
+  .studentButton
+    margin: 5px 0px 5px 0px
+    font-weight: 600
+    cursor: pointer
+    &:hover
+      font-weight: 800
   .profileContent
-    background-color: white
-
+    text-align: center
+    line-height: 2em
+    
   .studentInfo
     padding: 10px
     border-radius: 1em
@@ -66,7 +100,7 @@ export default {
     z-index: 3
     left: 150px
     top: 50px
-    width: 300px
+    width: 200px
     background-color: $gray4
 
   .cardContainer
@@ -87,7 +121,7 @@ export default {
     border-radius: 50%
     margin: auto
     margin-top: 20px
-    margin-bottom: 6px
+    margin-bottom: 20px
     cursor: pointer
     & img
         height: 72px
