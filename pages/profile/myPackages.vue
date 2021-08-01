@@ -3,13 +3,23 @@
     .card(v-for="purchase in getMyPurchase()")
         p {{purchase.packageName}}
         p {{purchase.packageDesc}}
+        p(v-if="purchase.student != undefined") {{purchase.student.name}} {{purchase.student.surname}}
         p Toplam Ücret: {{purchase.fee}}₺
         p(v-if="purchase.installment > 1") Taksit Tutarı: {{purchase.fee/purchase.installment}}₺
         div(v-for="branch in purchase.branch")
            p {{branch.grade.gradeName}} {{branch.branchName}}
+        br
         div(v-for="payment in getMyPayment()" v-show="payment.purchase._id == purchase._id")
-            p {{payment.paymentTotal}}₺ | {{payment.paymentDate}}
-        
+            p Ödeme: {{payment.paymentTotal}}₺ | {{payment.paymentDate}}
+    .studentInfo
+        .profilePhoto
+          img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+        .profileContent
+          p fatih kaya
+          p 0502340403043
+          p fatihkata@gkfl.cpdf
+          p 23.03.2003
+
 </template>
 
 <script>
@@ -20,7 +30,7 @@ export default {
     return {
       file: "",
       name: "",
-
+      ourhost:  process.env.OUR_URL,
     };
   },
   methods: {
@@ -40,6 +50,25 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+  $gray: rgb(142, 142, 147)
+  $gray2: rgb(174, 174, 178)
+  $gray6: rgb(242, 242, 247)
+  $gray4: rgb(209, 209, 214)
+  $gray6-dark: rgb(28, 28, 30)
+
+  .profileContent
+    background-color: white
+
+  .studentInfo
+    padding: 10px
+    border-radius: 1em
+    position: absolute
+    z-index: 3
+    left: 150px
+    top: 50px
+    width: 300px
+    background-color: $gray4
+
   .cardContainer
     overflow: auto
     height: 80%
@@ -51,6 +80,19 @@ export default {
     margin-bottom: 15px
     position: relative
     margin: 5px
+
+  .profilePhoto
+    height: 72px
+    width: 72px
+    border-radius: 50%
+    margin: auto
+    margin-top: 20px
+    margin-bottom: 6px
+    cursor: pointer
+    & img
+        height: 72px
+        width: 72px
+        border-radius: 50%
 
   ::-webkit-scrollbar
     width: 5px

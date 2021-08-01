@@ -64,7 +64,8 @@ exports.getMyPurchases = async (req, res) => {
         id = res.data.user._id;
     });
   Purchase.find({ parent: id })
-    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "branch", populate: { path: "grade" }})
+    .populate({path: "student"})
     .then(purchases => {
       var purchaseMap = {};
       purchases.forEach(function(purchaseInfo) {
