@@ -13,6 +13,8 @@
         div(v-for="payment in getMyPayment()" v-show="payment.purchase._id == purchase._id")
             p Ödeme: {{payment.paymentTotal}}₺ | {{payment.paymentDate}}
     .studentInfo(v-if="profilePop")
+        .close(@click="closeStudentInfo()")
+          p Kapat
         .profilePhoto
           img(:src=" ourhost + studentPhoto" v-show="studentPhoto != '' ")
           img(src="../../assets/basic-profile.png" v-show="studentPhoto == '' ")
@@ -63,6 +65,14 @@ export default {
         }
         this.profilePop = true
       }
+    },
+    closeStudentInfo(){      
+        this.studentName = ""
+        this.studentPhone = ""
+        this.studentMail = ""
+        this.studentPhoto = ""
+        this.studentBirthDate = ""
+        this.profilePop = false
     }
   },
   watch: {
@@ -100,7 +110,7 @@ export default {
     z-index: 3
     left: 150px
     top: 50px
-    width: 200px
+    min-width: 200px
     background-color: $gray4
 
   .cardContainer
@@ -114,6 +124,15 @@ export default {
     margin-bottom: 15px
     position: relative
     margin: 5px
+
+  .close
+    text-align: center
+    padding: 4px
+    font-size: 12pt
+    cursor: pointer
+
+    &:hover
+      font-weight: 700
 
   .profilePhoto
     height: 72px

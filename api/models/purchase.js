@@ -53,6 +53,10 @@ const purchaseSchema = mongoose.Schema({
     branch:{
         type: [mongoose.Schema.Types.ObjectId],
         ref:'branch',
+    },
+    grade:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref:'grade',
     }
 })
 

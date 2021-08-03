@@ -3,23 +3,15 @@ div
     h4 Öğrenciler
     .listContainer
         ul
-            li( v-for="student in this.$store.state.students.student ")
-                .card( @click="hookRole( student._id)")
-                    p {{ student._id }}
-                    p {{ student.roleName }}
-                    p {{ student.roleDescripton }}
-    .updateUser
-    label Rol Adı 
-    input(type="text" v-model="name")
-    br
-    label Açıklaması 
-    input(type="text" v-model="descripton")
-    br
-    input(type="submit" @click="throwAddRole")
+            li( v-for="purchase in  this.purchase()" v-if="purchase.student != undefined")
+                .card()
+                    p {{ purchase.student.name }} {{ purchase.student.surname}}
+                    div(v-for="branch in purchase.branch")
+                      p {{ branch.grade.gradeName }} {{ branch.branchName }}
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -29,18 +21,17 @@ export default {
     };
   },
   methods: {
-    ...mapActions("students", ["getStudents", "addStudent"]),
-    throwAddRole: function(){
-      this.addRole({ roleDescripton: this.descripton, roleName: this.name})
-    },
-    hookRole: function(id) {
-      this.id = this.$store.state.users.role[id]._id;
-      this.name = this.$store.state.users.role[id].roleName;
-      this.descripton = this.$store.state.users.role[id].roleDescripton;
-    }
+    ...mapGetters("economics", ["purchase"]),
+    ...mapActions("economics", ["getPurchases"]),
   },
-  mounted() {
-    this.getStudents();
+  async mounted() {
+    await this.getPurchases();
+    let purchaseList = this.purchase()
+    for (const [key, value] of Object.entries(purchaseList)) {
+      if (value.student != undefined) {
+        console.log(value.student.name);
+      }
+    }
   }
 };
 </script>
@@ -50,7 +41,6 @@ ul
     list-style-type: none
 .card
     width: 240px
-    height: 120px
     border: 1px solid black
     border-radius: 1em
     margin: 20px

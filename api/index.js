@@ -10,14 +10,12 @@ import EducationBack from "./controllers/educationBack";
 import Exam from "./controllers/exam";
 import Grade from "./controllers/grade";
 import Group from "./controllers/group";
-import GroupStudent from "./controllers/groupStudent";
 import Parent from "./controllers/parent";
 import ParentShip from "./controllers/parentShip";
 import Question from "./controllers/question";
 import QuestionSubtopic from "./controllers/questionSubtopic";
 import SchoolCourse from "./controllers/schoolCourse";
 import SendedSMS from "./controllers/sendedSMS";
-import Student from "./controllers/student";
 import StudentAnswer from "./controllers/studentAnswer";
 import Subject from "./controllers/subject";
 import SubjectProcess from "./controllers/subjectProcess";
@@ -167,11 +165,6 @@ app.get("/grades", Grade.getAllGrades);
 app.post("/addGroup", Group.newGroup);
 app.get("/groups", Group.getAllGroups);
 
-//--------------------------------------------  GROUP STUDENTS -------------------------------------------- //
-app.post("/addGroupStudent", GroupStudent.newGroupStudent);
-app.get("/groupStudents", GroupStudent.getAllGroupStudents);
-
-
 //--------------------------------------------  PARENTS -------------------------------------------- //
 app.post("/addParent", Parent.newParent);
 app.get("/parents", Parent.getAllParents);
@@ -214,9 +207,6 @@ app.get("/schoolCourses", SchoolCourse.getAllSchoolCourses);
 app.post("/addSendedSMS", SendedSMS.newSendedSMS);
 app.get("/sendedSMSes", SendedSMS.getAllSendedSMSes);
 
-//--------------------------------------------  STUDENT -------------------------------------------- //
-app.post("/addStudent", Student.newStudent);
-app.get("/students", Student.getAllStudents);
 
 //--------------------------------------------  STUDENT ANSWER -------------------------------------------- //
 app.post("/addStudentAnswer", StudentAnswer.newStudentAnswer);

@@ -45,15 +45,17 @@ exports.newPurchase = async (req, res) => {
 };
 
 exports.getAllPurchases = async (req, res) => {
-  Purchase.find({}, function(err, purchases) {
-    var purchaseMap = {};
-
-    purchases.forEach(function(purchaseInfo) {
-      purchaseMap[purchaseInfo._id] = purchaseInfo;
+  Purchase.find()
+    .populate({ path: "branch", populate: { path: "grade" }})
+    .populate({path: "student"})
+    .sort('student')
+    .then(purchases => {
+      var purchaseMap = {};
+      purchases.forEach(function(purchaseInfo) {
+        purchaseMap[purchaseInfo._id] = purchaseInfo;
+      });
+      res.send(purchaseMap);
     });
-
-    res.send(purchaseMap);
-  });
 };
 
 exports.getMyPurchases = async (req, res) => {
