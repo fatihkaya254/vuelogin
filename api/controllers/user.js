@@ -131,7 +131,7 @@ exports.auth = async (req, res) => {
         console.log(err.message);
       } else {
         //console.log("id: " + decodedToken.id);
-        const userInfo = await User.findById(decodedToken.id);
+        const userInfo = await User.findById(decodedToken.id).populate('role')
         //console.log("userinfobeforeid: " + userInfo);
         res.status(201).json({ user: userInfo });
       }

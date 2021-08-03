@@ -25,9 +25,16 @@ const userSchema = mongoose.Schema({
     appleId: {
         type: String,
     },
+    adress: {
+        type: String,
+    },
     role:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'role'
+    },
+    grade:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'grade'
     },
     createdAt: { 
         type: Date, 
