@@ -1,9 +1,10 @@
 import mongoose from 'mongoose'
 
 const schoolCourseSchema = mongoose.Schema({
-    SchoolCourseName: {
+    schoolCourseName: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
 })
 

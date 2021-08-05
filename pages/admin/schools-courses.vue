@@ -25,25 +25,31 @@ export default {
     };
   },
   mounted() {
-    this.getEducationBacks()
+    this.getEducationBacks();
   },
   methods: {
     ...mapActions("users", ["getEducationBacks", "addSchoolCourse"]),
+    ...mapActions("students", ["addSchoolCourse"]),
+
     hookUser: function(id) {
       this.id = this.$store.state.users.user[id]._id;
       this.name = this.$store.state.users.user[id].name;
     },
-    throwAddSchoolCourse: function(){
-      this.addRole({ SchoolCourseName: this.name})
+    throwAddSchoolCourse: function() {
+      this.addRole({ SchoolCourseName: this.name });
     },
-    roleName: function(id){
-        if (this.$store.state.users.role[id] != null || this.$store.state.users.role[id] != undefined) {
-            return this.$store.state.users.role[id].roleName
-        } else {
-            return "Rol Yok"
-        }
-    }
-  }
+    roleName: function(id) {
+      if (
+        this.$store.state.users.role[id] != null ||
+        this.$store.state.users.role[id] != undefined
+      ) {
+        return this.$store.state.users.role[id].roleName;
+      } else {
+        return "Rol Yok";
+      }
+    },
+  },
+  mounted() {}
 };
 </script>
 

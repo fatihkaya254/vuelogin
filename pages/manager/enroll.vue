@@ -8,50 +8,74 @@
     .infoLine
       label
           | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+      input(type="text" placeholder="İsim" v-model="name")
     .infoLine
       label
           | Soyisim
-      input(type="text" placeholder="İsim" v-model="phone")
+      input(type="text" placeholder="Soyisim" v-model="surname")
     .infoLine
       label
-          | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+          | Doğum Tarihi
+      input(type="date" v-model="date")
     .infoLine
       label
-          | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+          | Adres
+      input(type="text" placeholder="Adres" v-model="adress")
     .infoLine
       label
-          | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+          | E-Posta
+      input(type="text" placeholder="E-Posta" v-model="email")
     .infoLine
       label
-          | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+          | Okul
+      select(v-model="school")
+            option(v-for="sc in schoolCourse()" :value="sc._id") {{sc.schoolCourseName}}
     .infoLine
       label
-          | İsim
-      input(type="text" placeholder="İsim" v-model="phone")
+          | Sınıf
+      select(v-model="selectedGrade" )
+            option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
+    .infoLine
+      input(type="submit" value="Kaydet" @click="enroll()")
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      id: null,
       name: "",
       phoneLength: 11,
       surname: "",
       phone: "",
-      roleId: null,
+      date: "",
+      adress: "",
+      email: "",
+      school: "",
+      selectedGrade: "",
     };
   },
   mounted() {
-
+    this.getGrades();
+    this.getSchoolCourses();
   },
   methods: {
-
+    ...mapActions("students", ["getGrades", "getSchoolCourses"]),
+    ...mapActions("users", ["addUser"]),
+    ...mapGetters("students", ["grade", "schoolCourse"]),
+    enroll: function () {
+      let newUser = {}
+      if (this.name != "") newUser.name = this.name
+      if (this.surname != "") newUser.surname = this.surname
+      if (this.phone != "") newUser.phone = this.phone
+      if (this.date != "") newUser.birthDay = this.date
+      if (this.adress != "") newUser.adress = this.adress
+      if (this.email != "") newUser.email = this.email
+      if (this.selectedGrade != "") newUser.grade = this.selectedGrade
+      if (this.school != "") newUser.school = this.school
+      
+      this.addUser(newUser)
+    }
   },
   watch: {
     phone(value) {
@@ -62,7 +86,7 @@ export default {
       if (this.phoneNumber.length == this.phoneLength) {
         alert(this.phoneNumber);
       }
-    }
+    },
   },
 };
 </script>
@@ -76,6 +100,29 @@ export default {
     padding-top: 8px
     height: 40px
     border-bottom: 0.75px solid gray
+
+  select
+    float: right
+    margin-right: 20%
+    height: 28px
+    margin-top: -8px
+    border: none
+    width: 50%
+    padding-left: 16px
+    padding-right: 16px
+    border-radius: 1em
+
+  option
+    float: right
+    margin-right: 20%
+    height: 28px
+    margin-top: -8px
+    border: none
+    min-width: 50%
+    -webkit-appearance: none
+    padding-left: 16px
+    padding-right: 16px
+    border-radius: 1em
 
   input
     float: right
@@ -91,8 +138,6 @@ export default {
 
     &:focus
       -webkit-appearance: none
-
-
 
     &[type="submit"]
       background-color: black

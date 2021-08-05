@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 const userSchema = mongoose.Schema({
     phone: {
         type: Number,
+        unique: true,
     },
     email: {
         type: String,
@@ -35,6 +36,10 @@ const userSchema = mongoose.Schema({
     grade:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'grade'
+    },    
+    school:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'schoolCourse'
     },
     createdAt: { 
         type: Date, 

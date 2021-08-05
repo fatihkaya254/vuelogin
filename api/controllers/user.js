@@ -315,3 +315,9 @@ exports.getUserRole = async (req, res) => {
       console.log(err);
     })
 };
+
+exports.newUser = async(req,res) => {
+  let user = req.body.user
+  const newuser = await User.create(user)
+  res.status(201).json({ user: newuser})
+}

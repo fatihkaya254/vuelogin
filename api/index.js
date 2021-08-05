@@ -131,6 +131,7 @@ app.get("/getUserRole", User.getUserRole);
 app.put("/updateProfile", User.update);
 app.get("/users", User.getAll);
 app.put("/changePhoneCheck", User.changePhoneCheck);
+app.post("/addUser", User.newUser);
 
 //--------------------------------------------  ROLES -------------------------------------------- //
 app.post("/addRole", Role.newRole);

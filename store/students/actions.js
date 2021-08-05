@@ -60,7 +60,7 @@ export default {
       .then(res => {
         console.log(res);
         let schoolCourses = res.data;
-        vuexContext.dispatch("putsShoolCourses", schoolCourses);
+        vuexContext.dispatch("putSchoolCourses", schoolCourses);
       });
   },
   putSchoolCourses(vuexContext, schoolCourses) {

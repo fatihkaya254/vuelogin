@@ -9,7 +9,7 @@ export default {
         state.groupStudent = groupStudent
     },
     setSchoolCourses(state, schoolCourses) {
-        state.schoolCourses = schoolCourses
+        state.schoolCourse = schoolCourses
     },
     setStudents(state, students) {
         state.students = students
