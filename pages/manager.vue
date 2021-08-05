@@ -17,16 +17,15 @@
                         p
                             | Değiştir
                 h4
-                    | {{ userName() }} {{userSurname()}}
+                    | {{ userName() }} {{ userSurname() }}
                 h5
                     | 12. Sınıf
                 h5
                     | 4,46
             NuxtLink(:to="'/manager/enroll'", class="nuxt-link active") 
-                p Kullanıcı Bilgileri
+                p Kullanıcı Kaydı
         .content
             nuxt-child
-            
 </template>
 
 <script>
