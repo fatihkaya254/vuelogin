@@ -21,8 +21,6 @@ import Subject from "./controllers/subject";
 import SubjectProcess from "./controllers/subjectProcess";
 import SubjectProgress from "./controllers/subjectProgress";
 import SubTopic from "./controllers/subtopic";
-import Teacher from "./controllers/teacher";
-import TeacherBranch from "./controllers/teacherBranch";
 import Test from "./controllers/test";
 import TestQuestion from "./controllers/testQuestion";
 import WaitingSMS from "./controllers/waitingSMS";
@@ -232,14 +230,6 @@ app.get("/subTopics", SubTopic.getAllSubTopics);
 app.get("/subTopicsDetails", SubTopic.getFamilyTree);
 app.put("/updateSubTopic", SubTopic.update);
 app.put("/deleteSubTopic", SubTopic.delete);
-
-//--------------------------------------------  TEACHER -------------------------------------------- //
-app.post("/addTeacher", Teacher.newTeacher);
-app.get("/teachers", Teacher.getAllTeachers);
-
-//--------------------------------------------  TEACHER BRANCH -------------------------------------------- //
-app.post("/addTeacherBranch", TeacherBranch.newTeacherBranch);
-app.get("/teacherBranches", TeacherBranch.getAllTeacherBranches);
 
 //--------------------------------------------  TEST -------------------------------------------- //
 app.post("/addTest", Test.newTest);

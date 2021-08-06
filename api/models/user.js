@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 const userSchema = mongoose.Schema({
     phone: {
         type: Number,
-        unique: true,
     },
     email: {
         type: String,
@@ -37,6 +36,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'grade'
     },    
+    branch:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref:'branch'
+    },   
     school:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'schoolCourse'
@@ -46,6 +49,7 @@ const userSchema = mongoose.Schema({
         default: Date.now 
     }
 })
+userSchema.index({ phone: 1 }, { unique: true })
 
 const User = mongoose.model('user', userSchema)
 

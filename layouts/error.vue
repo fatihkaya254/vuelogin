@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Nuxt />
+    Böyle Bir Sayfa Yok
   </div>
 </template>
 

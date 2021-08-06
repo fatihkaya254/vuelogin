@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const groupSchema = mongoose.Schema({
+const lessonSchema = mongoose.Schema({
     groupName: {
         type: String,
         required: true
@@ -15,8 +15,8 @@ const groupSchema = mongoose.Schema({
     }
 })
 
-const Group = mongoose.model('group', groupSchema)
+const Lesson = mongoose.model('lesson', lessonSchema)
 
 
 
-export default Group
+export default Lesson
