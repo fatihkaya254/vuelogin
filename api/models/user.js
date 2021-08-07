@@ -49,7 +49,7 @@ const userSchema = mongoose.Schema({
         default: Date.now 
     }
 })
-userSchema.index({ phone: 1 }, { unique: true })
+userSchema.index({ phone: 1 }, { unique: true,  partialFilterExpression: { phone: { $exists: true } } })
 
 const User = mongoose.model('user', userSchema)
 

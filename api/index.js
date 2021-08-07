@@ -5,11 +5,12 @@ import User from "./controllers/user";
 import Branch from "./controllers/branch";
 import Role from "./controllers/role";
 import BranchProcess from "./controllers/branchProcess";
-import BranchProgress from "./controllers/branchProgress";
+import Classroom from "./controllers/classroom";
 import EducationBack from "./controllers/educationBack";
 import Exam from "./controllers/exam";
 import Grade from "./controllers/grade";
 import Group from "./controllers/group";
+import Lesson from "./controllers/Lesson";
 import Parent from "./controllers/parent";
 import ParentShip from "./controllers/parentShip";
 import Question from "./controllers/question";
@@ -19,7 +20,6 @@ import SendedSMS from "./controllers/sendedSMS";
 import StudentAnswer from "./controllers/studentAnswer";
 import Subject from "./controllers/subject";
 import SubjectProcess from "./controllers/subjectProcess";
-import SubjectProgress from "./controllers/subjectProgress";
 import SubTopic from "./controllers/subtopic";
 import Test from "./controllers/test";
 import TestQuestion from "./controllers/testQuestion";
@@ -144,9 +144,9 @@ app.put("/deleteBranch", Branch.delete);
 app.post("/addBranchProcess", BranchProcess.newBranchProcess);
 app.get("/branchProcesses", BranchProcess.getAllBranchProcesses);
 
-//--------------------------------------------  BRANCH PROGRESS -------------------------------------------- //
-app.post("/addBranchProgress", BranchProgress.newBranchProgress);
-app.get("/branchProgresses", BranchProgress.getAllBranchProgresses);
+//--------------------------------------------  CLASSROOM -------------------------------------------- //
+app.post("/addClassroom", Classroom.newClassroom);
+app.get("/classrooms", Classroom.getAllClassrooms);
 
 //--------------------------------------------  EDUCATİON BACKGROUND -------------------------------------------- //
 app.post("/addEducationBack", EducationBack.newEducationBack);
@@ -220,9 +220,9 @@ app.put("/deleteSubject", Subject.delete);
 app.post("/addSubjectProcess", SubjectProcess.newSubjectProcess);
 app.get("/subjectProcesses", SubjectProcess.getAllSubjectProcesses);
 
-//--------------------------------------------  SUBJECT PROGRESS-------------------------------------------- //
-app.post("/addSubjectProgress", SubjectProgress.newSubjectProgress);
-app.get("/subjectProgresses", SubjectProgress.getAllSubjectProgresses);
+//--------------------------------------------  LESSON-------------------------------------------- //
+app.post("/addLesson", Lesson.newLesson);
+app.get("/lessons", Lesson.getAllLessons);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);

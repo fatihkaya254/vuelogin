@@ -29,11 +29,13 @@
       label
           | Okul
       select(v-model="school")
+            option(value="") Yok
             option(v-for="sc in schoolCourse()" :value="sc._id") {{sc.schoolCourseName}}
     .infoLine
       label
           | Sınıf
       select(v-model="selectedGrade" )
+            option(value="") Yok
             option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
     .infoLine
       input(type="submit" value="Kaydet" @click="enroll()")
