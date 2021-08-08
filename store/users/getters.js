@@ -19,4 +19,7 @@ export default {
     getChangeNumberMessage(state){
         return state.changeNumberMessage
     },
+    teacher(state){
+        return state.teacher
+    },
   };

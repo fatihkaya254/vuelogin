@@ -9,6 +9,10 @@ const lessonSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    status: {
+        type: Number,
+        required: true
+    },
     branch:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'branch'

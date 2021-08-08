@@ -128,8 +128,10 @@ app.post("/auth", User.auth);
 app.get("/getUserRole", User.getUserRole);
 app.put("/updateProfile", User.update);
 app.get("/users", User.getAll);
+app.get("/teachers", User.getTeachers);
 app.put("/changePhoneCheck", User.changePhoneCheck);
 app.post("/addUser", User.newUser);
+app.post("/getOneUser", User.getOneUser);
 
 //--------------------------------------------  ROLES -------------------------------------------- //
 app.post("/addRole", Role.newRole);

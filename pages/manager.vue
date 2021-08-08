@@ -22,8 +22,12 @@
                     | 12. Sınıf
                 h5
                     | 4,46
-            NuxtLink(:to="'/manager/enroll'", class="nuxt-link active") 
+            NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
                 p Kullanıcı Kaydı
+            NuxtLink(:to="'/manager/addTeacher'", class="nuxt-link") 
+                p Öğretmen Ekle
+            NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
+                p Öğretmenler
         .content
             nuxt-child
 </template>

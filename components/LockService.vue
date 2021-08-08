@@ -117,10 +117,10 @@ export default {
     ...mapActions(["setPackagePop"]),
     ...mapActions("economics", ["getPackages", "addPurchase"]),
     ...mapGetters("economics", ["package", "lockedPackage"]),
+    ...mapGetters(["getAuthkey"]),
     ...mapActions("branches", ["getBranches"]),
     ...mapActions("students", ["getGrades"]),
     ...mapGetters("students", ["grade"]),
-    ...mapGetters(["getAuthkey"]),
     ...mapGetters("branches", ["branch"]),
     closePop(){
       this.selectedBranch = "none",

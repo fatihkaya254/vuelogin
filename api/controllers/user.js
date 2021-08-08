@@ -289,7 +289,18 @@ exports.update = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  User.find({}, function(err, users) {
+  User.find().then(users => {
+    var userMap = {};
+    users.forEach(function(user) {
+      userMap[user._id] = user;
+    });
+
+    res.send(userMap);
+  });
+};
+// belirli bir branşı aramak için $elemMatch : { $eq: "60a38a65252c3e2968a6e0f7"}
+exports.getTeachers = async (req, res) => {
+  User.find({ 'branch' : { $exists: true, $ne: null, $ne: [] } }).then(users => {
     var userMap = {};
     users.forEach(function(user) {
       userMap[user._id] = user;
@@ -320,4 +331,14 @@ exports.newUser = async(req,res) => {
   let user = req.body.user
   const newuser = await User.create(user)
   res.status(201).json({ user: newuser})
+}
+
+exports.getOneUser = async (req, res) => {
+  let phone = req.body.phone;
+      try {
+        const userInfo = await User.findOne({'phone': phone}).populate({ path: "branch", populate: { path: "grade" }})
+        res.status(201).json({ user: userInfo });
+      } catch (error) { 
+        res.status(201).json({ user: null });
+      }
 }
