@@ -129,7 +129,7 @@ a.nuxt-link-active
     height: 100vh
     width: 100vw
     background-color: black
-    background-image: url("http://192.168.1.54:8000/profileBackground.jpg")
+    //background-image: url("http://192.168.1.54:8000/profileBackground.jpg")
     background-repeat: no-repeat
     background-size: cover
     background-position: center

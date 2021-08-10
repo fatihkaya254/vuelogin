@@ -73,6 +73,8 @@ export default {
     });
   },
 
+
+
   getBranchProgresses(vuexContext) {
     return this.$axios
       .get(`${process.env.OUR_HOST}/branchProgresses`)
@@ -183,24 +185,24 @@ export default {
     });
   },
 
-  getTeacherBraches(vuexContext) {
+  getTeacherBranches(vuexContext) {
     return this.$axios
-      .get(`${process.env.OUR_HOST}/teacherBraches`)
+      .get(`${process.env.OUR_HOST}/teacherBranches`)
       .then(res => {
         console.log(res);
-        let teacherBraches = res.data;
-        vuexContext.dispatch("putTeacherBraches", teacherBraches);
+        let teacherBranches = res.data;
+        vuexContext.dispatch("putTeacherBranches", teacherBranches);
       });
   },
-  putTeacherBraches(vuexContext, teacherBraches) {
-    vuexContext.commit("setTeacherBraches", teacherBraches);
+  putTeacherBranches(vuexContext, teacherBranches) {
+    vuexContext.commit("setTeacherBranches", teacherBranches);
   },
   addTeacherBrach: function(vuexContext, teacherBrach) {
     this.$axios
       .post("/addTeacherBrach", { teacherBrach: teacherBrach })
       .then(res => {
         console.log(res.data.teacherBrach);
-        vuexContext.dispatch("getTeacherBraches");
+        vuexContext.dispatch("getTeacherBranches");
       });
   },
 
@@ -230,4 +232,24 @@ export default {
     vuexContext.commit("setMyPayments", myPayments);
   },
 
+  getTeachersLessons(vuexContext, id) {
+    return this.$axios.post("/teacherLessons", {teacher: id}).then(res => {
+      let veri = res.data;
+      console.log(veri);
+      vuexContext.dispatch("putTeachersLessons", veri);
+    });
+  },
+  putTeachersLessons(vuexContext, veri) {
+    vuexContext.commit("setTeachersLessons", veri);
+  },
+  addTeacherLessons: function(vuexContext, data) {
+    console.log(data);
+    const lesson = data.lesson
+    const status = data.status
+    this.$axios.post("/addLesson", { lesson, status }).then(res => {
+      console.log(res.data.message);
+      vuexContext.dispatch("getTeachersLessons", data.lesson.teacher);
+
+    });
+  },
 };

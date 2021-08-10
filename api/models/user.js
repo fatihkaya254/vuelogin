@@ -28,6 +28,9 @@ const userSchema = mongoose.Schema({
     adress: {
         type: String,
     },
+    mainBranch: {
+        type: String,
+    },
     role:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'role'

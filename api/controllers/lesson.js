@@ -2,12 +2,27 @@ import Lesson from "../models/lesson"
 
 exports.newLesson = async(req,res) => {
     let lesson = req.body.lesson
-    console.log('api lesson: ' + lesson);
+    let status = req.body.status
     try {
-        const newlesson = await Lesson.create(lesson)
-        res.status(201).json({ lesson: newlesson})
+        const lessonInfo = await Lesson.findOne(lesson)
+        if (lessonInfo) {
+            try {
+                const newLesson = await Lesson.findOneAndUpdate(lesson, {status: status})
+                res.status(201).json({lesson: newLesson})
+            } catch (error) {
+                res.status(400).json({ message: error})
+            }
+        } else {
+            try {
+                lesson.status = status
+                const newlesson = await Lesson.create(lesson)
+                res.status(201).json({ lesson: newlesson})
+            } catch (error) {
+                res.status(400).json({ message: error})
+            }
+        }
     } catch (error) {
-        res.status(400).json({ dublicate: Object.keys(error.keyPattern)[2]})
+        res.status(400).json({ message: error})
     }
 }
 
@@ -21,4 +36,23 @@ exports.getAllLessons = async (req,res) =>{
     
         res.send(lessonMap);  
     });
+}
+
+exports.teacherLessons = async (req, res) =>{
+    let teacher = req.body.teacher
+    Lesson.find({teacher})    
+    .then(users => {
+        if (users != null) {
+            var userMap = {};
+            users.forEach(function(user) {
+              userMap[user.day+'-'+user.hour] = user.status;
+            });
+            res.send(userMap);
+        } else {
+            res.status(200).json({message: "null"})
+        }
+      })
+      .catch((err)=> {
+        console.log(err);
+      })
 }

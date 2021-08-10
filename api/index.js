@@ -225,6 +225,7 @@ app.get("/subjectProcesses", SubjectProcess.getAllSubjectProcesses);
 //--------------------------------------------  LESSON-------------------------------------------- //
 app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
+app.post("/teacherLessons", Lesson.teacherLessons);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);

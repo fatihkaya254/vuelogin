@@ -35,6 +35,9 @@ export default {
     setMyPurchases(state, changes){
       state.myPurchases = changes
     },
+    setTeachersLessons(state, changes){
+      state.teachersLessons = changes
+    },
     setMyPayments(state, changes){
       for (const [key, value] of Object.entries(changes)) {
         let datetime = value.paymentDate

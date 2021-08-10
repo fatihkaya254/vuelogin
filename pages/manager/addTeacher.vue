@@ -7,6 +7,10 @@
         input(type="text" placeholder="Telefon numarası" v-model="phone" :maxlength="phoneLength")
     .infoLine(v-show="id != ''")
         label
+            | {{ mainBranchLabel }}
+        input(type="text" placeholder="Matematik Öğretmeni" v-model="mainBranch")
+    .infoLine(v-show="id != ''")
+        label
             img(:src=" ourhost + photo" v-show="photo != ''")       
         p {{ name }} {{ surname }} {{ id }}
     .infoLine(v-show="id != ''")
@@ -48,6 +52,8 @@ export default {
       photo: "",
       adress: "",
       email: "",
+      mainBranchLabel: "Ana Branş",
+      mainBranch: "",
       ourhost: process.env.OUR_URL,
       selectedGrade: ""
     };
@@ -71,9 +77,10 @@ export default {
           })
           .then(res => {
             this.id = res.data.user._id;
-            this.name = res.data.user.name;
-            this.surname = res.data.user.surname;
-            this.photo = res.data.user.profilePic;
+            if(res.data.user.name != undefined)this.name = res.data.user.name;
+            if(res.data.user.surname != undefined)this.surname = res.data.user.surname;
+            if(res.data.user.profilePic != undefined) this.photo = res.data.user.profilePic;
+            if(res.data.user.mainBranch != undefined) this.mainBranchLabel = res.data.user.mainBranch;
             if (res.data.user.branch != undefined)
               this.branches = res.data.user.branch;
           });
@@ -81,13 +88,13 @@ export default {
         console.log(error);
       }
     },
-    updateUser: async function() {
+    updateUser: async function(where, value) {
       try {
         await axios
           .put(`${process.env.OUR_HOST}/updateProfile`, {
             id: this.id,
-            where: "branch",
-            value: this.branches
+            where: where,
+            value: value
           })
           .then(res => {
             console.log(res.message);
@@ -101,13 +108,13 @@ export default {
       console.log(index);
       if (index > -1) {
         this.branches.splice(index, 1);
-        this.updateUser();
+        this.updateUser('branch', this.branches);
       }
     },
     addBranch: async function() {
       const branch = this.selectedBranch
       this.branches.push(branch)
-      await this.updateUser();
+      await this.updateUser('branch', this.branches);
       this.getUser()
     },
     onChangeGrade(event) {
@@ -128,6 +135,11 @@ export default {
       if (this.phoneNumber.length == this.phoneLength) {
         this.getUser();
       }
+    },
+    mainBranch(value) {
+      var words = value.split(" ")
+      if(words[1] == "Öğretmeni") this.updateUser('mainBranch', this.mainBranch)
+      this.getUser()
     }
   }
 };

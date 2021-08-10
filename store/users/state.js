@@ -10,6 +10,7 @@ export default () => ({
     teacherBranch: [],
     myPurchases: [],
     myPayments: [],
+    teachersLessons: [],
     isGenerated : false,
     changeNumberMessage: "Doğrulama Kodu"
   });

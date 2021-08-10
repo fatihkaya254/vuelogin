@@ -22,4 +22,7 @@ export default {
     teacher(state){
         return state.teacher
     },
+    teachersLessons(state){
+        return state.teachersLessons
+    },
   };
