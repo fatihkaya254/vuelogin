@@ -82,8 +82,6 @@ export default {
       if (this.teachersLessons()[day+'-'+hour] == 2) {
         status = 0
       }
-      console.log(status);
-      console.log(this.id);
       await this.addTeacherLessons({lesson, status})
     },
     updateUser: async function() {

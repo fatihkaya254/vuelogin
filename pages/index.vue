@@ -3,6 +3,7 @@ div
   Navbar
   .lockServicePop(v-show="getPackagePop()")
     LockService
+  TeacherList
   HomePageCharts
   ServiceList
 </template>
@@ -11,6 +12,7 @@ div
 import Navbar from "@/components/Navbar.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 import ServiceList from "@/components/ServiceList.vue";
+import TeacherList from "@/components/TeacherList.vue";
 import LockService from "@/components/LockService.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -23,7 +25,8 @@ export default {
     HomePageCharts,
     Navbar,
     ServiceList,
-    LockService
+    LockService,
+    TeacherList
   },
   methods: {
     ...mapActions(["setPackagePop"]),
