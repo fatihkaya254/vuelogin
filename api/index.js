@@ -198,6 +198,7 @@ app.post("/myPayments", Payment.getMyPayments);
 app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
 app.post("/myPurchases", Purchase.getMyPurchases);
+app.get("/studentLessons", Purchase.getStudentPurchases);
 
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
@@ -226,6 +227,7 @@ app.get("/subjectProcesses", SubjectProcess.getAllSubjectProcesses);
 app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
 app.post("/teacherLessons", Lesson.teacherLessons);
+app.post("/branchLessons", Lesson.branchLessons);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);
