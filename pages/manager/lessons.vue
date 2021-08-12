@@ -8,7 +8,7 @@
                 | {{branch.grade.gradeName}} {{branch.branchName}}
     .schedule
         .column(v-for="(n, day) in 7") {{days[day]}}
-          .row(v-for="(n, hour) in 24" v-show) {{branchLessons[day+"-"+hour]}}
+          .row(v-for="(n, hour) in 24" v-show="branchLessons[day+"-"+hour] == 2") {{branchLessons[day+"-"+hour]}}
 
 </template>
 
