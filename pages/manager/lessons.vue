@@ -1,20 +1,27 @@
 <template lang="pug">
 .container
     .students
-        .names(v-for="lesson in studentLessons")
+        .names(v-for="lesson in studentLessons" )
             p {{lesson.student.name}} {{lesson.student.surname}}
-            p {{lesson.packageName}}
-            .lessons(v-for="branch in lesson.branch" @click="getBranchLessons(branch._id)")
+            p {{lesson.packageName}} 
+            .lessons(v-for="branch in lesson.branch" @click="getBranchLessons(branch._id, lesson.student._id)")
                 | {{branch.grade.gradeName}} {{branch.branchName}}
     .schedule
-        .column(v-for="(n, day) in 7") {{days[day]}}
-          .row(v-for="(n, hour) in 24" v-show="branchLessons[day+"-"+hour] == 2") {{branchLessons[day+"-"+hour]}}
-
+      .column  
+        .row(v-for="lesson in lessonTeachers" v-show="lesson.status != 0" )
+          .infoes(@click="setLesson(lesson._id)")
+            .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
+            .linePhoto
+              img(:src=" ourhost + lesson.teacher.profilePic" v-show="lesson.teacher.profilePic")
+          .infoes(v-if="lesson.student != undefined && lesson.student != null" :style="{ color: warnings[lesson._id] }")
+            .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.student.name}} {{lesson.student.surname}} 
+            .linePhoto
+              img(:src=" ourhost + lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
 </template>
 
 <script>
 import axios from "axios";
-import Vue from 'vue'
+import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
@@ -61,6 +68,8 @@ export default {
         "22:00",
         "23:00"
       ],
+      branch: "",
+      student: "",
       phoneLength: 11,
       surname: "",
       phone: "",
@@ -72,11 +81,18 @@ export default {
       ourhost: process.env.OUR_URL,
       selectedGrade: "",
       studentLessons: [],
-      branchLessons: {}
+      settedStudentLessons: {},
+      lessonTeachers: {},
+      warnings: {}
     };
   },
-  mounted() {
-    this.getAllLessons();
+  async mounted() {
+    await this.getAllLessons();
+    await this.getAllSettedLessons();
+    for(const collector in this.settedStudentLessons){
+      var judge = this.removeRigth(this.settedStudentLessons[collector].student, this.settedStudentLessons[collector].branch);
+      this.warnings[collector] = judge
+    }
   },
   methods: {
     ...mapActions("users", ["addUser"]),
@@ -90,18 +106,73 @@ export default {
         console.log(error);
       }
     },
-    getBranchLessons: async function(branchId) {
+    getAllSettedLessons: async function() {
+      try {
+        await axios
+          .get(`${process.env.OUR_HOST}/allStudentLessons`)
+          .then(res => {
+            this.settedStudentLessons = res.data;
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    removeRigth: function(student, branch) {
+      console.log(student + " " + branch);
+      for (const lesson in this.studentLessons) {
+        if (this.studentLessons[lesson].student._id == student) {
+          for (const branches in this.studentLessons[lesson].branch) {
+            if (this.studentLessons[lesson].branch[branches]._id == branch) {
+              Vue.delete(this.studentLessons[lesson].branch, branches);
+              console.log(this.studentLessons);
+              return "green"
+            }
+          }
+        }
+      }
+      return "red"
+    },
+    getBranchLessons: async function(branchId, studentId) {
+      this.branch = branchId;
+      this.student = studentId;
+      this.lessonTeachers = {};
+      this.lessonStatus = {};
       try {
         await axios
           .post(`${process.env.OUR_HOST}/branchLessons`, {
             branch: branchId
           })
           .then(res => {
-            this.branchLessons = {}
-            for (const property in res.data) {
-              Vue.set( this.branchLessons, property,  res.data[property].status);
+            console.log(res.data);
+            for (const index in res.data) {
+              Vue.set(this.lessonTeachers, index, res.data[index]);
             }
-            console.log(this.branchLessons);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    setLesson: function(lessonId) {
+      var branch = this.branch;
+      var id = lessonId;
+      var student = this.student;
+      this.changeLesson({ id, branch, student });
+      this.removeRigth(student, branch)
+      this.branch = ""
+      this.student = ""
+    },
+    emptyLesson: function(lessonId) {
+      var branch = null;
+      var id = lessonId;
+      var student = null;
+      this.changeLesson({ id, branch, student });
+    },
+    changeLesson: async function(changes) {
+      try {
+        await axios
+          .put(`${process.env.OUR_HOST}/updateLesson`, changes)
+          .then(res => {
+            Vue.set(this.lessonTeachers, res.data._id, res.data);
           });
       } catch (error) {
         console.log(error);
@@ -130,7 +201,8 @@ export default {
     padding: 4px
 
 .schedule
-    height: 60vh
+    height: 70vh
+    width: 40%
     overflow: auto
     display: flex
     flex-direction: row
@@ -143,7 +215,8 @@ export default {
 
 .column
     height: 80%
-    width: 12%
+    min-width: 400px
+    width: 100%
     margin: 1%
     text-align: center
     float: left
@@ -152,13 +225,33 @@ export default {
     padding-bottom: 16px
     padding-top: 16px
 .row
-    height: 20px
     width: 80%
     border-radius: 1em
     border: 1px solid black
     margin: auto
     margin-top: 16px
     font-size: 14px
+    display: flex
+    flex-direction: column
+
+
+.infoes
+    display: flex
+    flex-direction: row
+    margin: 8px
+.linePhoto
+    height: 24px
+    width: 24px
+    border-radius: 50%
+    margin: auto
+    transition: all 0.5s ease
+    & img
+        height: 24px
+        width: 24px
+        border-radius: 50%
+        transition: all 0.5s ease
+.lessonInfo
+    width: 70%
 
 ::-webkit-scrollbar
     height: 10px

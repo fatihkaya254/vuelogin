@@ -228,6 +228,8 @@ app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
 app.post("/teacherLessons", Lesson.teacherLessons);
 app.post("/branchLessons", Lesson.branchLessons);
+app.put("/updateLesson", Lesson.update);
+app.get("/allStudentLessons", Lesson.allStudentLessons);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);

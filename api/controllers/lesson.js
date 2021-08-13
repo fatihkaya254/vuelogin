@@ -63,12 +63,62 @@ exports.branchLessons = async (req, res) => {
   let branch = req.body.branch;
   Lesson.find()
     .populate({ path: "teacher", match: { branch: branch } }) // şarta uymayanlarda null değeri dönüyor
+    .populate({ path: "student" })
+    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "group" })
+    .sort({ day: 1, hour: 1 })
     .then(lessons => {
       var lessonMap = {};
       lessons.forEach(function(lesson) {
-        if (lesson.teacher != null)
-          lessonMap[lesson.day + "-" + lesson.hour] = lesson;
+        if (lesson.teacher != null) {
+          lessonMap[lesson._id] = lesson;
+        }
       });
       res.send(lessonMap);
     });
 };
+
+exports.allStudentLessons = async (req, res) => {
+  Lesson.find({ 'student' : { $exists: true, $ne: null } })
+  .select('student branch')
+  .then(lessons => {
+    var lessonMap = {};
+    lessons.forEach(function(lesson) {
+      lessonMap[lesson._id] = lesson;
+    });
+
+    res.send(lessonMap);
+  });
+}
+
+exports.update = async (req, res) => {
+  console.log("uo");
+  let id = req.body.id;
+  let branch = req.body.branch;
+  let student = req.body.student;
+  try {
+    const changedUser = await Lesson.findByIdAndUpdate(
+      { _id: id },
+      { student, branch },
+      { new: true }
+    )
+      .populate({ path: "teacher"})
+      .populate({ path: "student" })
+      .populate({ path: "branch", populate: { path: "grade" } })
+      .populate({ path: "group" });
+    res.send(changedUser);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+
+/*
+{
+    category: 'some_category',
+    $or: [
+        { doSomething: { $exists: false } },
+        { doSomething: false }
+    ]
+}
+*/
