@@ -212,6 +212,7 @@ export default {
     margin-top: 8px
     border-left: 0.75px solid black
     padding: 4px
+    transition: all 0.5s ease
 
 .column
     height: 80%
