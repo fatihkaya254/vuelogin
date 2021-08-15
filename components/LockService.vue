@@ -21,7 +21,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch($event)")
                 option(:value="selectedBranch") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade") {{branch.branchName}}
         .packageSubBranch(v-if="lockedPackage().weeklyPrivateLesson > 1")
             br
             | 2. Branş Seçiminizi Yapınız 
@@ -30,7 +30,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch2($event)" )
                 option(value="0") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade2") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade2") {{branch.branchName}}
         .packageSubBranch(v-if="lockedPackage().weeklyPrivateLesson > 2")
             br
             | 3. Branş Seçiminizi Yapınız 
@@ -39,7 +39,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch3($event)" )
                 option(value="0") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade3") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade3") {{branch.branchName}}
         .packageSubBranch(v-if="lockedPackage().weeklyPrivateLesson > 3")
             br
             | 4. Branş Seçiminizi Yapınız 
@@ -48,7 +48,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch4($event)" )
                 option(value="0") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade4") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade4") {{branch.branchName}}
         .packageSubBranch(v-if="lockedPackage().weeklyPrivateLesson > 4")
             br
             | 5. Branş Seçiminizi Yapınız 
@@ -57,7 +57,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch5($event)" )
                 option(value="0") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade5") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade5") {{branch.branchName}}
         .packageSubBranch(v-if="lockedPackage().weeklyPrivateLesson > 5")
             br
             | 6. Branş Seçiminizi Yapınız 
@@ -66,7 +66,7 @@
                 option(v-for="grade in grade()" :value="grade._id") {{grade.gradeName}}
             select(@change="onChangeBranch6($event)")
                 option(value="0") Branş
-                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade6") {{branch.branchName}}
+                option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade6") {{branch.branchName}}
     .getItName(v-if="selectedGrade != 'none' && selectedBranch != 'none'" style="margin-bottom: 100px")
         | {{grade()[selectedGrade].gradeName}} {{branch()[selectedBranch].branchName}}
     .getItName(v-if="selectedGrade2 != 'none' && selectedBranch2 != 'none'" style="margin-bottom: 130px")

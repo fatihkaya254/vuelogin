@@ -68,7 +68,7 @@ export default {
         "22:00",
         "23:00"
       ],
-      branch: "",
+      selectedBranch: "",
       student: "",
       phoneLength: 11,
       surname: "",
@@ -95,8 +95,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions("users", ["addUser"]),
-    ...mapGetters("students", ["grade", "schoolCourse"]),
+    ...mapActions("branches", ["getBranches"]),
+    ...mapGetters("branches", ["branch"]),
     getAllLessons: async function() {
       try {
         await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
@@ -133,7 +133,7 @@ export default {
       return "red"
     },
     getBranchLessons: async function(branchId, studentId) {
-      this.branch = branchId;
+      this.selectedBranch = branchId;
       this.student = studentId;
       this.lessonTeachers = {};
       this.lessonStatus = {};
@@ -153,19 +153,20 @@ export default {
       }
     },
     setLesson: function(lessonId) {
-      var branch = this.branch;
+      var branch = this.selectedBranch;
       var id = lessonId;
       var student = this.student;
       this.changeLesson({ id, branch, student });
       this.removeRigth(student, branch)
-      this.branch = ""
+      this.selectedBranch = ""
       this.student = ""
     },
-    emptyLesson: function(lessonId) {
+    emptyLesson: async function(lessonId) {
       var branch = null;
       var id = lessonId;
       var student = null;
-      this.changeLesson({ id, branch, student });
+      await this.changeLesson({ id, branch, student });
+      this.getAllLessons();
     },
     changeLesson: async function(changes) {
       try {
