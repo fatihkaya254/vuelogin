@@ -79,20 +79,35 @@ exports.branchLessons = async (req, res) => {
 };
 
 exports.allStudentLessons = async (req, res) => {
-  Lesson.find({ 'student' : { $exists: true, $ne: null } })
-  .select('student branch')
+  Lesson.find({ student: { $exists: true, $ne: null, $ne: undefined } })
+    .select("student branch")
+    .then(lessons => {
+      var lessonMap = {};
+      lessons.forEach(function(lesson) {
+        lessonMap[lesson._id] = lesson;
+      });
+
+      res.send(lessonMap);
+    });
+};
+
+exports.getTodaysForTeacher = async (req, res) => {
+  const teacher = req.body.teacher;
+  const day = req.body.day;
+  Lesson.find({ teacher, day })
+  .populate({ path: "student" })
+  .populate({ path: "branch", populate: { path: "grade" } })
+  .populate({ path: "group" })
   .then(lessons => {
     var lessonMap = {};
     lessons.forEach(function(lesson) {
       lessonMap[lesson._id] = lesson;
     });
-
     res.send(lessonMap);
   });
-}
+};
 
 exports.update = async (req, res) => {
-  console.log("uo");
   let id = req.body.id;
   let branch = req.body.branch;
   let student = req.body.student;
@@ -102,7 +117,7 @@ exports.update = async (req, res) => {
       { student, branch },
       { new: true }
     )
-      .populate({ path: "teacher"})
+      .populate({ path: "teacher" })
       .populate({ path: "student" })
       .populate({ path: "branch", populate: { path: "grade" } })
       .populate({ path: "group" });
@@ -111,7 +126,6 @@ exports.update = async (req, res) => {
     res.status(400).json({ message: error });
   }
 };
-
 
 /*
 {

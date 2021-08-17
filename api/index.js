@@ -230,6 +230,7 @@ app.post("/teacherLessons", Lesson.teacherLessons);
 app.post("/branchLessons", Lesson.branchLessons);
 app.put("/updateLesson", Lesson.update);
 app.get("/allStudentLessons", Lesson.allStudentLessons);
+app.post("/getTeacherToday", Lesson.getTodaysForTeacher);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);
