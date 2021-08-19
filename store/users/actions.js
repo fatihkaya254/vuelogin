@@ -252,4 +252,18 @@ export default {
 
     });
   },
+
+
+  getTeachersDaily(vuexContext, data) {
+    return this.$axios.post(`${process.env.OUR_HOST}/getTeacherToday`, {
+      teacher: data.teacher,
+      day: data.day
+    }).then(res => {
+      let teachersDaily = res.data;
+      vuexContext.dispatch("putTeachersDaily", teachersDaily);
+    });
+  },
+  putTeachersDaily(vuexContext, teachersDaily) {
+    vuexContext.commit("setTeachersDaily", teachersDaily);
+  },
 };
