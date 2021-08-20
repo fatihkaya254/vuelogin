@@ -120,9 +120,6 @@ export default {
     onChangeBranch(event) {
       this.selectedBranch = this.branch()[event.target.value];
       console.log(this.selectedBranch);
-    },
-    setHours(){
-
     }
   },
   watch: {
