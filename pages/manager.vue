@@ -28,6 +28,8 @@
                 p Öğretmen Ekle
             NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
                 p Öğretmenler
+            NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 
+                p Ders Programı
         .content
             nuxt-child
 </template>

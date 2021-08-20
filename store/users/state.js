@@ -8,6 +8,7 @@ export default () => ({
     subjectProgress: [],
     teacher: [],
     teacherBranch: [],
+    teachersDaily: [],
     myPurchases: [],
     myPayments: [],
     teachersLessons: [],

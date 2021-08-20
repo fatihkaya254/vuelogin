@@ -13,7 +13,7 @@ div
                 | {{ grade.gradeName }} 
               .accordionContent(v-show="collapseGrade[grade._id]")
                 ul
-                    li( v-for="branch in branch()" v-if="branch.grade == grade._id")
+                    li( v-for="branch in branch()" v-if="branch.grade._id == grade._id")
                         .card(@click="move($event, branch._id)")
                            | ·{{ branch.branchName }}
                     li 

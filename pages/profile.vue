@@ -22,7 +22,9 @@
                     | 12. Sınıf
                 h5
                     | 4,46
-            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link active") 
+            NuxtLink(:to="'/profile/lessons'", class="nuxt-link", v-if="isTeacher()") 
+                p( v-if="isTeacher()") Günlük Program
+            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
                 p Kullanıcı Bilgileri
             NuxtLink(:to="'/profile/myPackages'", class="nuxt-link") 
                 p Paketler
@@ -30,14 +32,6 @@
                 p Dersler
             NuxtLink(:to="'/profile/pastLesson'", class="nuxt-link") 
                 p Ödevler
-            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
-                p Gelişim Grafikleri
-            NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
-                p Öğrenme Süreci
-            NuxtLink(:to="'/profile/skillGraph'", class="nuxt-link") 
-                p Yorum/Puanlar
-            NuxtLink(:to="'/profile/pastLesson'", class="nuxt-link") 
-                p Hedefler
         .content
             nuxt-child
             
@@ -73,7 +67,8 @@ export default {
       "userBirthDay",
       "userImage",
       "userBirthDayForInput",
-      "userGoogleId"
+      "userGoogleId",
+      "isTeacher"
     ]),
     sendFile: async function() {
       const file = this.$refs.file.files[0];

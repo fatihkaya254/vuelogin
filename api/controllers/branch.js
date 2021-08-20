@@ -8,7 +8,9 @@ exports.newBranch = async(req,res) => {
 }
 
 exports.getAllBranches = async (req,res) =>{
-    Branch.find({}, function(err, branches) {
+    Branch.find()
+    .populate('grade')
+    .then(branches => {
         var branchMap = {};
     
         branches.forEach(function(branch) {

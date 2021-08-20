@@ -25,4 +25,7 @@ export default {
     teachersLessons(state){
         return state.teachersLessons
     },
+    teachersDaily(state){
+        return state.teachersDaily
+    },
   };

@@ -24,7 +24,7 @@
             | Branş
         select(@change="onChangeBranch($event)")
             option(:value="selectedBranch") Branş
-            option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade == selectedGrade") {{branch.branchName}}
+            option(v-for="branch in branch()" :value="branch._id" v-if="branch.grade._id == selectedGrade") {{branch.branchName}}
     .infoLine(v-show="id != ''")
         input(type="submit" value="Ekle" @click="addBranch()")
     .wholeBranches

@@ -292,4 +292,22 @@ export const getters = {
     }
   },
 
+  userBranch(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.branch;
+    }
+  },
+
+  isTeacher(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      if (user.branch.length > 0 && user.branch != null && user.branch != undefined) {
+          return true
+      } else {
+          return false
+      }
+    }
+  },
+
 }

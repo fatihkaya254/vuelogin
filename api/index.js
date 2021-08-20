@@ -4,13 +4,14 @@ import mongoose from "mongoose";
 import User from "./controllers/user";
 import Branch from "./controllers/branch";
 import Role from "./controllers/role";
-import BranchProcess from "./controllers/branchProcess";
+import BranchTopicSubtopic from "./controllers/branchTopicSubtopic";
 import Classroom from "./controllers/classroom";
 import EducationBack from "./controllers/educationBack";
 import Exam from "./controllers/exam";
 import Grade from "./controllers/grade";
 import Group from "./controllers/group";
 import Lesson from "./controllers/Lesson";
+import LessonRecord from "./controllers/LessonRecord";
 import Parent from "./controllers/parent";
 import ParentShip from "./controllers/parentShip";
 import Question from "./controllers/question";
@@ -36,7 +37,7 @@ import path from "path";
 
 
   var corsOptions = {
-  origin: "http://localhost:8000",
+  origin: process.env.OUR_HOST,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
@@ -143,8 +144,7 @@ app.get("/branches", Branch.getAllBranches);
 app.put("/updateBranch", Branch.update);
 app.put("/deleteBranch", Branch.delete);
 //--------------------------------------------  BRANCH PROCESS -------------------------------------------- //
-app.post("/addBranchProcess", BranchProcess.newBranchProcess);
-app.get("/branchProcesses", BranchProcess.getAllBranchProcesses);
+app.post("/branchProcess", BranchTopicSubtopic.getBranchProcess);
 
 //--------------------------------------------  CLASSROOM -------------------------------------------- //
 app.post("/addClassroom", Classroom.newClassroom);
@@ -198,6 +198,7 @@ app.post("/myPayments", Payment.getMyPayments);
 app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
 app.post("/myPurchases", Purchase.getMyPurchases);
+app.get("/studentLessons", Purchase.getStudentPurchases);
 
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
@@ -226,6 +227,14 @@ app.get("/subjectProcesses", SubjectProcess.getAllSubjectProcesses);
 app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
 app.post("/teacherLessons", Lesson.teacherLessons);
+app.post("/branchLessons", Lesson.branchLessons);
+app.put("/updateLesson", Lesson.update);
+app.get("/allStudentLessons", Lesson.allStudentLessons);
+app.post("/getTeacherToday", Lesson.getTodaysForTeacher);
+
+//--------------------------------------------  LESSONRECORD-------------------------------------------- //
+app.post("/addLessonRecord", LessonRecord.newLessonRecord);
+app.post("/dailyTeacherRecords", LessonRecord.dailyTeacherRecords);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);

@@ -13,7 +13,7 @@ div
               div(@click="openClose(grade._id)" :class="[collapseGrade[grade._id] ? 'accordionTittle accordionTittleOpen' : 'accordionTittle']")
                 | {{ grade.gradeName }} 
               .accordionContent(v-show="collapseGrade[grade._id]")
-                    li( v-for="branch in branch()" v-if="branch.grade == grade._id")
+                    li( v-for="branch in branch()" v-if="branch.grade._id == grade._id")
                         div(@click="openCloseBranch(branch._id)" :class="[collapseBranch[branch._id] ? 'accordionTittle accordionTittleOpen' : 'accordionTittle']")
                            | ·{{ branch.branchName }}
                         .accordionContent(v-show="collapseBranch[branch._id]")
