@@ -1,15 +1,33 @@
 <template lang="pug">
 div
-  .aboutDay {{dateOfDay}} {{dayNames[day]}}
+  .aboutDay {{dateOfDay}} {{dayNames[day]}} 
+    
   .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null") 
+
     .linePhoto
       img(:src=" ourhost + lessonsPhotos[lesson._id]" v-show="lessonsPhotos[lesson._id]")
     .lessonInfoes
       .clock {{ hours[lesson.hour] }} 
       .branch {{ lessonsBranches[lesson._id] }}
       .student {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
-    input(type="submit" @click="addLessonRecord(lesson._id)" v-if="lessonRecords[findMyRecord(lesson._id)] == undefined") 
+      .changeRecord(@click="clickOnLesson(lesson._id)") Düzenle
 
+  .changeHours(v-show="id != ''")
+    .close(@click="close()")
+    .topBar 
+      .branch {{ lessonsBranches[id] }}
+      .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
+      .backgroundPhotoOverlay
+      .backgroundPhoto
+        img(:src=" ourhost + lessonsPhotos[id]" v-show="lessonsPhotos[id]")
+    .subTopics
+      .subjectName(v-for="(topic, index) in this.branchProcess[braid]") {{branchSubjects[index].subjectName}}
+        div( v-for="subtopic in topic" )
+          label(:for="subtopic._id" class="rounded-checkbox") 
+            input(type="checkbox" :id="subtopic._id" :value="subtopic._id" v-model="recordSubtopics" ) 
+            span(class="rounded-checkbox__outer")
+              span(class="rounded-checkbox__inner")
+            p {{subtopic.subTopicName}}
 </template>
 
 <script>
@@ -19,6 +37,8 @@ export default {
     return {
       profilePop: false,
       studentPhone: "",
+      id: "",
+      braid: "",
       studentMail: "",
       studentBirthDate: "",
       studentPhoto: "",
@@ -26,13 +46,18 @@ export default {
       name: "",
       day: "",
       lessons: {},
+      recordSubtopics: [],
       lessonsStudents: [],
       lessonsStudentId: [],
       lessonsGroupId: [],
       lessonsPhotos: [],
       lessonsGroups: [],
       lessonsBranches: [],
+      lessonsBranchId: [],
       lessonRecords: [],
+      branchProcess: [],
+      branchSubjects: [],
+      branchSubTopics: [],
       turkDays: [6, 0, 1, 2, 3, 4, 5],
       hours: [
         "00:00",
@@ -105,8 +130,13 @@ export default {
       "userImage",
       "userBirthDayForInput",
       "userGoogleId",
-      "isTeacher"
+      "isTeacher",
+      "userBranch"
     ]),
+    close: function () {
+      this.recordSubtopics =[]
+      this.id = ""
+    },
     setDates: function() {
       this.teacher = this.userId();
       const now = new Date();
@@ -140,6 +170,7 @@ export default {
         .then(res => {
           console.log(res);
         });
+      this.getLessonRecords();
     },
     getLessonRecords: function() {
       const teacher = this.teacher;
@@ -155,6 +186,17 @@ export default {
           this.lessonRecords = res.data;
         });
     },
+    getSubTopics: function() {
+      this.$axios
+        .post(`${process.env.OUR_HOST}/branchProcess`, {
+          branch : this.userBranch()
+        })
+        .then(res => {
+          this.branchProcess = res.data.branchMap;
+          this.branchSubjects = res.data.subjectMap;
+          this.branchSubTopics = res.data.branchSubtopics;
+        });
+    },
     dealCards: function() {
       for (const index in this.teachersDaily()) {
         if (
@@ -167,6 +209,11 @@ export default {
             this.teachersDaily()[index].branch["grade"].gradeName +
               " " +
               this.teachersDaily()[index].branch.branchName
+          );
+          this.$set(
+            this.lessonsBranchId,
+            index,
+            this.teachersDaily()[index].branch._id
           );
         }
         if (this.teachersDaily()[index].student != undefined) {
@@ -208,6 +255,15 @@ export default {
           return index;
         }
       }
+    },
+    clickOnLesson: function(lesson) {
+      if (this.findMyRecord(lesson)) {
+        this.id = lesson
+        this.braid = this.lessonsBranchId[lesson]
+        console.log(this.id);
+      } else {
+        this.addLessonRecord(lesson)
+      }
     }
   },
   watch: {},
@@ -216,7 +272,9 @@ export default {
     await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
     this.getLessonRecords();
     this.dealCards();
+    this.getSubTopics()
   }
+  // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };
 </script>
 
@@ -226,6 +284,16 @@ $somon: #FFB6A3
 $white: #F7F3F0
 $greenBlue: #AAB8BB
 $ligthGreen: #C4D7D1
+
+.subTopics
+  margin: 20px
+  height: 300px
+  overflow: auto
+  border: 0.5px solid black
+  border-radius: 1em
+
+.subjectName
+  margin: 15px
 
 .lessonInfoes
   display: flex
@@ -237,7 +305,18 @@ $ligthGreen: #C4D7D1
   text-align: center
   padding: 5px
   border-radius: 1em
-
+.changeRecord
+  width: 100px
+  background-color: $darkGreen
+  color: $white
+  text-align: center
+  padding: 5px
+  border-radius: 1em
+  margin-left: 20px
+  cursor: pointer
+  &:hover
+    color: black
+    background-color: $somon
 .branch
   text-align: center
   padding: 5px
@@ -256,7 +335,31 @@ $ligthGreen: #C4D7D1
   margin: auto
   margin-top: 15px
   border-radius: 1em
-
+.changeHours
+    top:0
+    right: 0
+    height: 100%
+    width: 100%
+    position: fixed
+    z-index: 3
+    background-color: white
+.close
+    margin: 15px
+    position: absolute
+    z-index: 4
+    height: 13px
+    width: 13px
+    border-radius: 50%
+    background-color: #ff605c
+    &:hover
+      height: 15px
+      width: 15px
+      
+.topBar
+    width: 100%
+    height: 60px
+    text-align: center
+    padding: 20px
 .aboutDay
   background-color: $darkGreen
   color: $white
@@ -277,7 +380,26 @@ $ligthGreen: #C4D7D1
       width: 48px
       border-radius: 50%
       transition: all 0.5s ease
+.backgroundPhotoOverlay
+  position: fixed
+  z-index: -1
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  background-color: rgba(252, 252, 252, 0.8)
 
+.backgroundPhoto
+  position: fixed
+  z-index: -2
+  width: 100%
+  border-radius: 50%
+  transition: all 0.5s ease
+  top: 0
+  left: 0
+  & img
+      width:100%
+      transition: all 0.5s ease
 ::-webkit-scrollbar
   width: 5px
   border-radius: 1em
@@ -292,4 +414,57 @@ $ligthGreen: #C4D7D1
 
 ::-webkit-scrollbar-thumb:hover
   background: #555
+
+@mixin box-shadow($shad) 
+  -webkit-box-shadow: $shad
+  -moz-box-shadow: $shad
+  box-shadow: $shad
+
+@mixin transition($transition) 
+  -moz-transition:    $transition
+  -o-transition:      $transition
+  -webkit-transition: $transition
+  transition:         $transition
+
+
+
+.rounded-checkbox
+  $heigth: 22px
+  
+  display: flex
+  flex-wrap: wrap
+  gap: 12px
+  padding: 3px
+  border-radius: $heigth
+  input[type="checkbox"]
+    display: none
+    &:checked + .rounded-checkbox__outer
+      background-color: green
+      .rounded-checkbox__inner
+        left: 38%
+      
+    
+  
+  &__outer
+    width: $heigth*2
+    height: $heigth
+    border-radius: $heigth
+    background-color: #f67676
+    display: block
+    @include box-shadow(inset 0 0 10px rgba(#000, 0.4))
+    position: relative
+    @include transition(background-color 0.3s)
+  
+  &__inner
+    position: absolute
+    left: 2%
+    top: 4%
+    height: 92%
+    width: 60%
+    background-color: #efedea
+    border-radius: $heigth
+    @include transition(left 0.3s)
+    @include box-shadow(inset 0 -1px 2px rgba(#000, 0.4))
+  
+
 </style>

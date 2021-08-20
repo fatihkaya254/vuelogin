@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import User from "./controllers/user";
 import Branch from "./controllers/branch";
 import Role from "./controllers/role";
-import BranchProcess from "./controllers/branchProcess";
+import BranchTopicSubtopic from "./controllers/branchTopicSubtopic";
 import Classroom from "./controllers/classroom";
 import EducationBack from "./controllers/educationBack";
 import Exam from "./controllers/exam";
@@ -144,8 +144,7 @@ app.get("/branches", Branch.getAllBranches);
 app.put("/updateBranch", Branch.update);
 app.put("/deleteBranch", Branch.delete);
 //--------------------------------------------  BRANCH PROCESS -------------------------------------------- //
-app.post("/addBranchProcess", BranchProcess.newBranchProcess);
-app.get("/branchProcesses", BranchProcess.getAllBranchProcesses);
+app.post("/branchProcess", BranchTopicSubtopic.getBranchProcess);
 
 //--------------------------------------------  CLASSROOM -------------------------------------------- //
 app.post("/addClassroom", Classroom.newClassroom);

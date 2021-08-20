@@ -292,6 +292,13 @@ export const getters = {
     }
   },
 
+  userBranch(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.branch;
+    }
+  },
+
   isTeacher(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
