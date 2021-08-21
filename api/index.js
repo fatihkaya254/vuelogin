@@ -235,6 +235,8 @@ app.post("/getTeacherToday", Lesson.getTodaysForTeacher);
 //--------------------------------------------  LESSONRECORD-------------------------------------------- //
 app.post("/addLessonRecord", LessonRecord.newLessonRecord);
 app.post("/dailyTeacherRecords", LessonRecord.dailyTeacherRecords);
+app.post("/findLessonRecord", LessonRecord.findOne);
+app.put("/updateLessonRecord", LessonRecord.update);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);

@@ -1,17 +1,17 @@
 <template lang="pug">
 div
   .aboutDay {{dateOfDay}} {{dayNames[day]}} 
-    
-  .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null") 
-
-    .linePhoto
-      img(:src=" ourhost + lessonsPhotos[lesson._id]" v-show="lessonsPhotos[lesson._id]")
-    .lessonInfoes
-      .clock {{ hours[lesson.hour] }} 
-      .branch {{ lessonsBranches[lesson._id] }}
-      .student {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
-      .changeRecord(@click="clickOnLesson(lesson._id)") Düzenle
-
+  .lessonContainer  
+    .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null") 
+      .linePhoto
+        img(:src=" ourhost + lessonsPhotos[lesson._id]" v-show="lessonsPhotos[lesson._id]")
+      .lessonInfoes
+        .clock {{ hours[lesson.hour] }} 
+        .branch {{ lessonsBranches[lesson._id] }}
+        .student {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
+        .changeRecord(@click="clickOnLesson(lesson._id)" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}
+      .lessonInfoes
+        .student(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined") {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
   .changeHours(v-show="id != ''")
     .close(@click="close()")
     .topBar 
@@ -28,6 +28,22 @@ div
             span(class="rounded-checkbox__outer")
               span(class="rounded-checkbox__inner")
             p {{subtopic.subTopicName}}
+    .lastHomework {{preHomework()}}
+    .homeworkStatus(v-if="preHomework() != ''")
+      .not(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
+        | Yapılmadı
+      .half(:style="[homeworkStatus == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 2")
+        | Eksik
+      .done(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
+        | Tam
+    .nextHomework
+      .infoLine
+        label
+            | Bir Sonraki Ödev
+        input(type="text" placeholder="Ödev" v-model="nextHomework")
+    .apply
+      .infoLine
+        input(type="submit" value="Onayla" @click="updateRecord()")
 </template>
 
 <script>
@@ -35,6 +51,10 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      preRecord: {},
+      recordId: "",
+      nextHomework: "yok",
+      homeworkStatus: "",
       profilePop: false,
       studentPhone: "",
       id: "",
@@ -45,6 +65,7 @@ export default {
       file: "",
       name: "",
       day: "",
+      smsText: "",
       lessons: {},
       recordSubtopics: [],
       lessonsStudents: [],
@@ -134,8 +155,10 @@ export default {
       "userBranch"
     ]),
     close: function () {
-      this.recordSubtopics =[]
+      this.recordSubtopics = []
       this.id = ""
+      this.homeworkStatus = ""
+      this.nextHomework = ""
     },
     setDates: function() {
       this.teacher = this.userId();
@@ -158,6 +181,7 @@ export default {
       record.lesson = lesson;
       record.teacher = this.teacher;
       record.student = this.lessonsStudentId[lesson];
+      record.branch = this.lessonsBranchId[lesson];
       if (this.lessonsGroupId[lesson] != undefined)
         record.group = this.lessonsGroupId[lesson];
       var month = now.getMonth() + 1;
@@ -258,12 +282,83 @@ export default {
     },
     clickOnLesson: function(lesson) {
       if (this.findMyRecord(lesson)) {
+        const record = this.findMyRecord(lesson)
+        console.log(this.lessonRecords[ record].subTopics);
+        console.log(lesson);
+        this.recordSubtopics = this.lessonRecords[record].subTopics
+        this.nextHomework = this.lessonRecords[record].homework
+        this.recordId = this.findMyRecord(lesson)
         this.id = lesson
         this.braid = this.lessonsBranchId[lesson]
         console.log(this.id);
+        this.findPreRecord(lesson)
       } else {
         this.addLessonRecord(lesson)
+        this.getLessonRecords();
       }
+    },
+    preHomework: function () {
+      if (this.preRecord == null || this.preRecord == undefined) {
+        return ""
+      }else{
+        return this.preRecord.homework
+      }
+    },
+    homeworkStatusConvert: async function (stat) {
+      if (stat == 1) return "yapılmadı"
+      if (stat == 2) return "eksik"
+      if (stat == 3) return "tam yapıldı"
+      return "-"
+    },
+    updateRecord: async function () {
+      const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus)
+      const id = this.recordId
+      var preId = ""
+      if(this.preRecord != undefined) preId = this.preRecord._id
+      const subTopics = this.recordSubtopics
+      var homework = "yok"
+      if(this.nextHomework != undefined) homework = this.nextHomework
+      const sms = this.lessonsStudents[this.id]+", " + this.hours[this.teachersDaily()[this.id].hour] +", " + this.lessonsBranches[this.id] + ", önceki derste verilen ödev: " + homeworkS +", bir sonraki ödev: " + homework +", " + this.userName() + " " + this.userSurname()
+      const homeworkStatus = this.homeworkStatus
+      await this.$axios
+        .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+          id, changes: {subTopics, homework, sms}
+        })
+        .then(res => {
+          console.log(res);
+        });
+      await this.$axios
+        .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+          id:preId, changes: {homeworkStatus}
+        })
+        .then(res => {
+          console.log(res);
+        });
+      this.getLessonRecords();
+      this.close();
+    },
+    findPreRecord: async function (lesson) {
+      const record = this.findMyRecord(lesson)
+      const conditions = {}
+      const student =  this.lessonsStudentId[lesson]
+      const group = this.lessonsGroupId[lesson]
+      if(student != '' && student != undefined && student != null) conditions.student = student
+      if(group != '' && group != undefined && group != null) conditions.group = group
+      conditions._id = {$ne: record}
+      conditions.branch = this.lessonsBranchId[lesson]
+      conditions.teacher = this.userId()
+      console.log('co');
+      console.log(conditions);
+      await this.$axios
+        .post(`${process.env.OUR_HOST}/findLessonRecord`, {
+          conditions
+        })
+        .then(res => {
+          this.preRecord = res.data.preRecord
+          if (res.data.preRecord != null) {
+            this.homeworkStatus = this.preRecord.homeworkStatus
+          }
+        });
     }
   },
   watch: {},
@@ -285,6 +380,80 @@ $white: #F7F3F0
 $greenBlue: #AAB8BB
 $ligthGreen: #C4D7D1
 
+.apply
+  padding: 1px
+.infoLine
+  margin: auto
+  margin-top: 10px
+  padding-top: 8px
+  height: 40px
+  border-bottom: 0.75px solid gray
+  width: 80%
+  & input
+    float: right
+    margin-right: 20%
+    height: 28px
+    margin-top: -8px
+    border: none
+    min-width: 50%
+    -webkit-appearance: none
+    padding-left: 16px
+    padding-right: 16px
+    border-radius: 1em
+
+    &:focus
+      -webkit-appearance: none
+
+
+
+    &[type="submit"]
+      background-color: black
+      color: white
+
+      &:hover
+        cursor: pointer
+
+.homeworkStatus
+  width: 100%
+  display: flex
+  gap: 20px
+  padding: 20px
+
+.lastHomework
+  text-align: center
+  padding-left: 20px
+  padding-right: 20px
+.not
+  border: 0.5px solid gray
+  border-radius: 1em
+  width: 100%
+  text-align: center
+  height: 30px
+  padding: 5px
+  cursor: pointer
+.half
+  border: 0.5px solid gray
+  width: 100%
+  border-radius: 1em
+  text-align: center
+  padding: 5px
+  height: 30px
+  cursor: pointer
+.done
+  border: 0.5px solid gray
+  width: 100%
+  border-radius: 1em
+  text-align: center
+  height: 30px
+  padding: 5px
+  cursor: pointer
+
+
+.lessonContainer  
+  height: 400px
+  overflow: auto
+  padding: 50px
+  height: 60vh
 .subTopics
   margin: 20px
   height: 300px
@@ -367,7 +536,7 @@ $ligthGreen: #C4D7D1
   padding: 5px
 
 .linePhoto
-  position: fixed
+  position: relative
   z-index: 1
   margin-top: -48px
   margin-left: -48px
