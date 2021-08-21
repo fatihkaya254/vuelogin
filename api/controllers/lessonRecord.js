@@ -20,3 +20,25 @@ exports.dailyTeacherRecords = async (req, res) => {
         res.send(lessonMap);
       });
 };
+
+exports.update = async (req, res) => {
+  let id = req.body.id
+  let changes = req.body.changes
+  try {
+    LessonRecord.findByIdAndUpdate({_id : id}, changes, ()=>{
+          res.status(200).json({
+              message:"updated"
+          })
+      })
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+exports.findOne = async (req, res) => {
+  let conditions = req.body.conditions
+  console.log("conditions");
+  console.log(conditions);
+  const preRecord = await LessonRecord.findOne(conditions).sort({ recordDate: -1 })
+  res.status(201).json({preRecord})
+}

@@ -11,13 +11,14 @@ const lessonRecordchema = mongoose.Schema({
     },
     homework: {
         type: String,
+        default: "",
     },
     sms: {
         type: String,
     },
     smsApp: {
-        type: Boolean,
-        default: false,
+        type: Number,
+        default: 0,
     },
     homeworkStatus: {
         type: Number,
@@ -26,6 +27,10 @@ const lessonRecordchema = mongoose.Schema({
     lesson: {
         type:mongoose.Schema.Types.ObjectId,
         ref:'lesson'
+    },
+    branch: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'branch'
     },
     subTopics:{
         type: [mongoose.Schema.Types.ObjectId],
