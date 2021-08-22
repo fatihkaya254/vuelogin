@@ -87,12 +87,9 @@ export default {
     };
   },
   async mounted() {
+    await this.getBranchLessons(undefined, undefined);
     await this.getAllLessons();
     await this.getAllSettedLessons();
-    for(const collector in this.settedStudentLessons){
-      var judge = this.removeRigth(this.settedStudentLessons[collector].student, this.settedStudentLessons[collector].branch);
-      this.warnings[collector] = judge
-    }
   },
   methods: {
     ...mapActions("branches", ["getBranches"]),
@@ -101,6 +98,8 @@ export default {
       try {
         await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
           this.studentLessons = res.data;
+          console.log("res.data");
+          console.log(res.data);
         });
       } catch (error) {
         console.log(error);
@@ -112,6 +111,15 @@ export default {
           .get(`${process.env.OUR_HOST}/allStudentLessons`)
           .then(res => {
             this.settedStudentLessons = res.data;
+          })
+          .then(() => {
+            for (const collector in this.settedStudentLessons) {
+              var judge = this.removeRigth(
+                this.settedStudentLessons[collector].student,
+                this.settedStudentLessons[collector].branch
+              );
+              this.warnings[collector] = judge;
+            }
           });
       } catch (error) {
         console.log(error);
@@ -125,31 +133,46 @@ export default {
             if (this.studentLessons[lesson].branch[branches]._id == branch) {
               Vue.delete(this.studentLessons[lesson].branch, branches);
               console.log(this.studentLessons);
-              return "green"
+              return "green";
             }
           }
         }
       }
-      return "red"
+      return "red";
     },
     getBranchLessons: async function(branchId, studentId) {
-      this.selectedBranch = branchId;
-      this.student = studentId;
-      this.lessonTeachers = {};
-      this.lessonStatus = {};
-      try {
-        await axios
-          .post(`${process.env.OUR_HOST}/branchLessons`, {
-            branch: branchId
-          })
-          .then(res => {
-            console.log(res.data);
-            for (const index in res.data) {
-              Vue.set(this.lessonTeachers, index, res.data[index]);
-            }
-          });
-      } catch (error) {
-        console.log(error);
+      if (branchId == undefined) {
+        try {
+          await axios
+            .post(`${process.env.OUR_HOST}/wholeBranchLessons`, {})
+            .then(res => {
+              console.log(res.data);
+              for (const index in res.data) {
+                Vue.set(this.lessonTeachers, index, res.data[index]);
+              }
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        this.selectedBranch = branchId;
+        this.student = studentId;
+        this.lessonTeachers = {};
+        this.lessonStatus = {};
+        try {
+          await axios
+            .post(`${process.env.OUR_HOST}/branchLessons`, {
+              branch: branchId
+            })
+            .then(res => {
+              console.log(res.data);
+              for (const index in res.data) {
+                Vue.set(this.lessonTeachers, index, res.data[index]);
+              }
+            });
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
     setLesson: function(lessonId) {
@@ -157,16 +180,17 @@ export default {
       var id = lessonId;
       var student = this.student;
       this.changeLesson({ id, branch, student });
-      this.removeRigth(student, branch)
-      this.selectedBranch = ""
-      this.student = ""
+      this.removeRigth(student, branch);
+      this.selectedBranch = "";
+      this.student = "";
     },
     emptyLesson: async function(lessonId) {
       var branch = null;
       var id = lessonId;
       var student = null;
       await this.changeLesson({ id, branch, student });
-      this.getAllLessons();
+      await this.getAllLessons();
+      await this.getAllSettedLessons();
     },
     changeLesson: async function(changes) {
       try {
