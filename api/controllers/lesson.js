@@ -78,6 +78,24 @@ exports.branchLessons = async (req, res) => {
     });
 };
 
+exports.wholeBranchLessons = async (req, res) => {
+  Lesson.find()
+    .populate({ path: "teacher" }) // şarta uymayanlarda null değeri dönüyor
+    .populate({ path: "student" })
+    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "group" })
+    .sort({ day: 1, hour: 1 })
+    .then(lessons => {
+      var lessonMap = {};
+      lessons.forEach(function(lesson) {
+        if (lesson.teacher != null) {
+          lessonMap[lesson._id] = lesson;
+        }
+      });
+      res.send(lessonMap);
+    });
+};
+
 exports.allStudentLessons = async (req, res) => {
   Lesson.find({ student: { $exists: true, $ne: null, $ne: undefined } })
     .select("student branch")
