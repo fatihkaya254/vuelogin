@@ -10,8 +10,8 @@ import EducationBack from "./controllers/educationBack";
 import Exam from "./controllers/exam";
 import Grade from "./controllers/grade";
 import Group from "./controllers/group";
-import Lesson from "./controllers/Lesson";
-import LessonRecord from "./controllers/LessonRecord";
+import Lesson from "./controllers/lesson";
+import LessonRecord from "./controllers/lessonRecord";
 import Parent from "./controllers/parent";
 import ParentShip from "./controllers/parentShip";
 import Question from "./controllers/question";
@@ -37,7 +37,7 @@ import path from "path";
 
 
   var corsOptions = {
-  origin: process.env.OUR_HOST,
+  origin: process.env.OUR_URL,
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
