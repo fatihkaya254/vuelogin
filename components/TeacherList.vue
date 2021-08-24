@@ -102,10 +102,7 @@ export default {
     issetDay(day){
       let condition = false 
       for (let i = 0; i < 24; i++) {
-        console.log(day+'-'+i);
-        console.log(this.teachersLessons()[day+'-'+i]);
         if (this.teachersLessons()[day+'-'+i]==2) {
-          console.log(day+'-'+i);
           condition = true
         }
       }
@@ -152,7 +149,8 @@ export default {
 
 
 .days
-    height: 100%
+    overflow: auto
+    height: 385px
     width: 100%
     margin-left: 5px
     text-align: center
@@ -236,7 +234,7 @@ export default {
 
 ::-webkit-scrollbar
     height: 10px
-    width: 2px
+    width: 0px
     border-radius: 1em
 ::-webkit-scrollbar-track
     background: #ffffff

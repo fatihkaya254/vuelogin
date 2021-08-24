@@ -1,7 +1,7 @@
 export default {
     getSendedSMSes(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/sendedSMSes`).then(res => {
-        console.log(res);
+        console.log(res.status);
         let sendedSMSes = res.data
         vuexContext.dispatch("putSendedSMSes", sendedSMSes)
       });
@@ -20,7 +20,7 @@ export default {
     
       getWaitingSMSes(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/waitingSMSes`).then(res => {
-        console.log(res);
+        console.log(res.status);
         let waitingSMSes = res.data
         vuexContext.dispatch("putWaitingSMSes", waitingSMSes)
       });

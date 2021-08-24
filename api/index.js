@@ -199,6 +199,7 @@ app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
 app.post("/myPurchases", Purchase.getMyPurchases);
 app.get("/studentLessons", Purchase.getStudentPurchases);
+app.put("/addStudentOnPurchase", Purchase.addStudent);
 
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //

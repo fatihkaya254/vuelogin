@@ -1,7 +1,7 @@
 export default {
   getPackages(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/packages`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let packages = res.data;
       vuexContext.dispatch("putPackages", packages);
     });
@@ -18,7 +18,7 @@ export default {
 
   getPayments(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/payments`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let payments = res.data;
       vuexContext.dispatch("putPayments", payments);
     });
@@ -35,7 +35,7 @@ export default {
 
   getPurchases(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/purchases`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let purchases = res.data;
       vuexContext.dispatch("putPurchases", purchases);
     });

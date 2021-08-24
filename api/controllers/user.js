@@ -31,7 +31,6 @@ exports.generateCode = async (req, res) => {
       }
     })
     .then(async resp => {
-      console.log("res: " + resp.status);
       if (resp.status == 200) {
         res.status(201).json({
           smsStatus: "success"
@@ -41,7 +40,6 @@ exports.generateCode = async (req, res) => {
       }
     })
     .catch(resp => {
-      console.log(resp.response.status);
       if (resp.response.status == 452) {
         res.status(201).json({
           smsStatus: "numberInvalid"
@@ -65,25 +63,19 @@ exports.generateCode = async (req, res) => {
 };
 
 exports.authCode = async (req, res) => {
-  console.log("sa");
   const enteredCode = req.body.code;
-  console.log(enteredCode);
   const phoneNumber = req.body.phone;
   try {
     const auth = { phone: phoneNumber, code: enteredCode };
     const authInfo = await PhoneAuth.findOne(auth);
     if (authInfo) {
-      console.log("yes");
       const userInfo = await User.findOne({ phone: phoneNumber });
-      console.log("yes1");
       if (userInfo) {
-        console.log("yes2");
         const token = createToken(userInfo._id);
         res
           .status(201)
           .json({ auth: true, userInfo: userInfo, authKey: token });
       } else {
-        console.log("yes3");
         const NewUser = { phone: phoneNumber };
         const createdUser = await User.create(NewUser);
         const token = createToken(createdUser._id);
@@ -98,7 +90,6 @@ exports.authCode = async (req, res) => {
 };
 
 exports.authGoogle = async (req, res) => {
-  console.log("sa google");
   const googleId = req.body.googleId;
   const name = req.body.name;
   const surname = req.body.surname;
@@ -106,13 +97,10 @@ exports.authGoogle = async (req, res) => {
   const profilePic = req.body.profilePic;
   try {
     const userInfo = await User.findOne({ googleId: googleId });
-    console.log("yes1");
     if (userInfo) {
-      console.log("yes2");
       const token = createToken(userInfo._id);
       res.status(201).json({ auth: true, userInfo: userInfo, authKey: token });
     } else {
-      console.log("yes3");
       const NewUser = { googleId, name, surname, email, profilePic };
       const createdUser = await User.create(NewUser);
       const token = createToken(createdUser._id);
@@ -238,14 +226,12 @@ async function generateSMS(phone) {
       }
     })
     .then(async resp => {
-      console.log("res: " + resp.status);
       if (resp.status == 200) {
       } else {
         console.log("habu rizeye emicen vefat etti");
       }
     })
     .catch(resp => {
-      console.log(resp.response.status);
       if (resp.response.status == 452) {
       }
     });
@@ -270,7 +256,6 @@ exports.update = async (req, res) => {
   let where = req.body.where;
   let value = req.body.value;
   if (where != "phone") {
-    console.log("id: " + id + " where: " + where + " Value: " + value);
     try {
       User.findByIdAndUpdate({ _id: id }, { [where]: value }, () => {
         res.status(200).json({

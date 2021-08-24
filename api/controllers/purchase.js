@@ -78,19 +78,39 @@ exports.getMyPurchases = async (req, res) => {
 exports.getStudentPurchases = async (req, res) => {
   var now = new Date();
   var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  Purchase.find({
-    student: { $exists: true, $ne: null, $ne: undefined },
-    endDate: { $gte: startOfToday }
-  })
-    .select("student branch packageName")
-    .populate({ path: "branch", populate: { path: "grade" } })
-    .populate("student", "name surname")
-    .sort("student")
-    .then(purchases => {
-      var purchaseMap = {};
-      purchases.forEach(function(purchaseInfo) {
-        purchaseMap[purchaseInfo._id] = purchaseInfo;
-      });
-      res.send(purchaseMap);
-    });
+  try {
+    Purchase.find({
+      student: { $exists: true, $ne: null, $ne: undefined },
+      endDate: { $gte: startOfToday }
+    })
+      .select("student branch packageName")
+      .populate({ path: "branch", populate: { path: "grade" } })
+      .populate("student", "name surname")
+      .sort("student")
+      .then(purchases => {
+        var purchaseMap = {};
+        purchases.forEach(function(purchaseInfo) {
+          purchaseMap[purchaseInfo._id] = purchaseInfo;
+        });
+        res.send(purchaseMap);
+      });    
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+exports.addStudent = async (req, res) => {
+  const student = req.body.student
+  const id = req.body.purchase
+  try {
+    Purchase.findByIdAndUpdate({ _id: id }, { student }, () => {
+      res.status(200).json({
+        message: "updated"
+      })
+    })
+    res.status(200)
+  } catch (error) {
+    console.log(error);
+    res.status(400)
+  }
+}

@@ -25,7 +25,7 @@ export default {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         if (res.data.message == "generated") {
           vuexContext.commit("setChangeNumberMessage", "Doğrulama Kodu");
           vuexContext.commit("setGenerated", "true");
@@ -46,7 +46,7 @@ export default {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         if (res.data.message == "alreadyUsed") {
           vuexContext.commit("setChangeNumberMessage", "Bu Numara Kullanılmaktadır");
         } else {
@@ -151,7 +151,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/subjectProgresses`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let subjectProgresses = res.data;
         vuexContext.dispatch("putSubjectProgresses", subjectProgresses);
       });
@@ -170,7 +170,7 @@ export default {
 
   getTeachers(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/teachers`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let teachers = res.data;
       vuexContext.dispatch("putTeachers", teachers);
     });
@@ -189,7 +189,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/teacherBranches`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let teacherBranches = res.data;
         vuexContext.dispatch("putTeacherBranches", teacherBranches);
       });
@@ -210,7 +210,7 @@ export default {
     return this.$axios
       .post(`${process.env.OUR_HOST}/myPurchases`, { id: id})
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let myPurchases = res.data;
         vuexContext.dispatch("putMyPurchases", myPurchases);
       });
@@ -223,7 +223,7 @@ export default {
     return this.$axios
       .post(`${process.env.OUR_HOST}/myPayments`, { id: id})
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let myPayments = res.data;
         vuexContext.dispatch("putMyPayments", myPayments);
       });

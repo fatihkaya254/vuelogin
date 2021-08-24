@@ -37,8 +37,6 @@ exports.update = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   let conditions = req.body.conditions
-  console.log("conditions");
-  console.log(conditions);
   const preRecord = await LessonRecord.findOne(conditions).sort({ recordDate: -1 })
   res.status(201).json({preRecord})
 }
