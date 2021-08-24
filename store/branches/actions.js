@@ -1,7 +1,7 @@
 export default {
     getBranches(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/branches`).then(res => {
-        console.log(res);
+        console.log(res.status);
         let branches = res.data
         vuexContext.dispatch("putBranches", branches)
       });
@@ -21,7 +21,6 @@ export default {
         let id = changes.id
         let where = changes.where
         let value = changes.value
-        console.log('value in store: ' + value);
         this.$axios
         .put(
           "/updateBranch",
@@ -29,7 +28,7 @@ export default {
           { withCredentials: true, credentials: "include" }
         )
         .then(res => {
-          console.log(res);
+          console.log(res.status);
           vuexContext.dispatch("getBranches")
         });
       },
@@ -51,7 +50,7 @@ export default {
     
       getBranchProcesses(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/branchProcesses`).then(res => {
-        console.log(res);
+        console.log(res.status);
         let branchProcesses = res.data
         vuexContext.dispatch("putBranchProcesses", branchProcesses)
       });
@@ -74,7 +73,6 @@ export default {
     
       getSubjects(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subjects`).then(res => {
-        console.log(res);
         let subjects = res.data
         vuexContext.dispatch("putSubjects", subjects)
       });
@@ -86,7 +84,7 @@ export default {
         this.$axios
           .post("/addSubject", { subject: subject })
           .then(res => {
-            console.log(res.data.subject)
+            console.log(res.status)
             vuexContext.dispatch("getSubjects")
           });
       },
@@ -102,7 +100,7 @@ export default {
           { withCredentials: true, credentials: "include" }
         )
         .then(res => {
-          console.log(res);
+          console.log(res.status);
           vuexContext.dispatch("getSubjects")
         });
       },
@@ -124,7 +122,6 @@ export default {
 
       getSubjectProcesses(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subjectProcesses`).then(res => {
-        console.log(res);
         let subjectProcesses = res.data
         vuexContext.dispatch("putSubjectProcesses", subjectProcesses)
       });
@@ -143,7 +140,6 @@ export default {
 
       getSubTopics(vuexContext) {
         return this.$axios.get(`${process.env.OUR_HOST}/subtopics`).then(res => {
-        console.log(res);
         let subtopics = res.data
         vuexContext.dispatch("putSubTopics", subtopics)
       });
@@ -171,7 +167,7 @@ export default {
           { withCredentials: true, credentials: "include" }
         )
         .then(res => {
-          console.log(res);
+          console.log(res.status);
           vuexContext.dispatch("getSubTopics")
         });
       },

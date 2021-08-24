@@ -1,7 +1,7 @@
 export default {
   getExams(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/exams`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let exams = res.data;
       vuexContext.dispatch("putExams", exams);
     });
@@ -18,7 +18,7 @@ export default {
 
   getQuestions(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/questions`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let questions = res.data;
       vuexContext.dispatch("putQuestions", questions);
     });
@@ -52,7 +52,7 @@ export default {
         { withCredentials: true, credentials: "include" }
       )
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         vuexContext.dispatch("getQuestions");
       });
   },
@@ -73,7 +73,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/questionSubtopics`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let questionSubtopics = res.data;
         vuexContext.dispatch("putQuestionSubtopics", questionSubtopics);
       });
@@ -94,7 +94,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/studentAnswers`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let studentAnswers = res.data;
         vuexContext.dispatch("putStudentAnswers", studentAnswers);
       });
@@ -113,7 +113,7 @@ export default {
 
   getTests(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/tests`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let tests = res.data;
       vuexContext.dispatch("putTests", tests);
     });
@@ -132,7 +132,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/testQuestions`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let testQuestions = res.data;
         vuexContext.dispatch("putTestQuestions", testQuestions);
       });

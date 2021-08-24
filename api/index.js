@@ -199,6 +199,7 @@ app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
 app.post("/myPurchases", Purchase.getMyPurchases);
 app.get("/studentLessons", Purchase.getStudentPurchases);
+app.put("/addStudentOnPurchase", Purchase.addStudent);
 
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
@@ -228,6 +229,7 @@ app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
 app.post("/teacherLessons", Lesson.teacherLessons);
 app.post("/branchLessons", Lesson.branchLessons);
+app.post("/wholeBranchLessons", Lesson.wholeBranchLessons);
 app.put("/updateLesson", Lesson.update);
 app.get("/allStudentLessons", Lesson.allStudentLessons);
 app.post("/getTeacherToday", Lesson.getTodaysForTeacher);

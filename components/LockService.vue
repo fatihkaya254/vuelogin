@@ -199,7 +199,7 @@ export default {
         branches.push(this.selectedBranch5);
       if ((this.selectedBranch6 != "none") & (this.selectedGrade6 != "none"))
         branches.push(this.selectedBranch6);
-      if (branches.length != this.lockedPackage().weeklyPrivateLesson) {
+      if (branches.length != this.lockedPackage().weeklyPrivateLesson && this.lockedPackage().weeklyPrivateLesson != 0) {
         alert( this.lockedPackage().weeklyPrivateLesson + " Sınıf ve Branş Seçimi Yapmanız Gerekmektedir");
       } 
       else if (branches.length != this.lockedPackage().oncePrivateLesson && this.lockedPackage().oncePrivateLesson != 0) {
@@ -209,6 +209,7 @@ export default {
         let purchase = { package: this.lockedPackage()._id, branches, life: this.life, authkey: this.getAuthkey()}
         this.addPurchase(purchase)
       }
+      this.$router.push("/profile/myPackages")
     },
     takeExam() {}
   },

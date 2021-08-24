@@ -17,7 +17,6 @@ exports.getBranchProcess = async (req, res) => {
   subjects.forEach(async function(subject) {
     subjectMap[subject._id] = subject;
   });
-  console.log(subjectMap[Object.keys(subjectMap)[0]]);
   subjectMap[subjectMap[Object.keys(subjectMap)[0]].branch] = {branch: "zzz"}
 
   var prebranch = "";
@@ -34,8 +33,6 @@ exports.getBranchProcess = async (req, res) => {
       branchSubtopics[subtopic._id] = subtopic;
     });
     if (prebranch != newBranch && prebranch != "") {
-      console.log(prebranch);
-      console.log(newBranch);
       branchMap[prebranch] = subjectMapOther;
       subjectMapOther = {};
     } else {

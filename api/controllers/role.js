@@ -2,7 +2,6 @@ import Role from "../models/role"
 
 exports.newRole = async(req,res) => {
     let role = req.body.role
-    console.log('api role: ' + role);
     const newrole = await Role.create(role)
     res.status(201).json({ role: newrole})
 }

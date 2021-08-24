@@ -1,7 +1,7 @@
 export default {
   getGrades(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/grades`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let grades = res.data;
       vuexContext.dispatch("putGrades", grades);
     });
@@ -18,7 +18,7 @@ export default {
 
   getGroups(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/groups`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let groups = res.data;
       vuexContext.dispatch("putGroups", groups);
     });
@@ -37,7 +37,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/groupStudents`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let groupStudents = res.data;
         vuexContext.dispatch("putGroupStudents", groupStudents);
       });
@@ -58,7 +58,7 @@ export default {
     return this.$axios
       .get(`${process.env.OUR_HOST}/schoolCourses`)
       .then(res => {
-        console.log(res);
+        console.log(res.status);
         let schoolCourses = res.data;
         vuexContext.dispatch("putSchoolCourses", schoolCourses);
       });
@@ -77,7 +77,7 @@ export default {
 
   getStudents(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/students`).then(res => {
-      console.log(res);
+      console.log(res.status);
       let students = res.data;
       vuexContext.dispatch("putStudents", students);
     });

@@ -11,7 +11,7 @@
       .getLesson
         | Özel Ders Al
     .schedule
-      .days(v-for="(n, day) in 7")
+      .days(v-for="(n, day) in 7" v-show="issetDay(day)")
         p {{days[day]}}
         .row(v-for="(n, hour) in 24" @click="" v-show="teachersLessons()[day+'-'+hour] == 2")  {{hours[hour]}}
   .teacherLine
@@ -98,6 +98,15 @@ export default {
       this.name = myTeacher.name;
       this.surname = myTeacher.surname;
       if (myTeacher.profilePic) this.photo = myTeacher.profilePic;
+    },
+    issetDay(day){
+      let condition = false 
+      for (let i = 0; i < 24; i++) {
+        if (this.teachersLessons()[day+'-'+i]==2) {
+          condition = true
+        }
+      }
+      return condition
     }
   },
   watch: {
@@ -140,7 +149,8 @@ export default {
 
 
 .days
-    height: 100%
+    overflow: auto
+    height: 385px
     width: 100%
     margin-left: 5px
     text-align: center
@@ -224,7 +234,7 @@ export default {
 
 ::-webkit-scrollbar
     height: 10px
-    width: 2px
+    width: 0px
     border-radius: 1em
 ::-webkit-scrollbar-track
     background: #ffffff
