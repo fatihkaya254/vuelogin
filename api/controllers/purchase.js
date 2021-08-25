@@ -37,7 +37,7 @@ exports.newPurchase = async (req, res) => {
       weeklyExam: thatPackage.weeklyExam,
       onceExam: thatPackage.onceExam,
       installment: life,
-      branch: branch
+      branch: branch,
     };
     const newPurchase = await Purchase.create(creatingPurchase);
     res.status(201).json({ purchase: newPurchase });
