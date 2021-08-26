@@ -24,10 +24,14 @@
                     | 4,46
             NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
                 p Kullanıcı Kaydı
+            NuxtLink(:to="'/manager/purchase'", class="nuxt-link") 
+                p Paket Yükle
             NuxtLink(:to="'/manager/addTeacher'", class="nuxt-link") 
                 p Öğretmen Ekle
             NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
                 p Öğretmenler
+            NuxtLink(:to="'/manager/groups'", class="nuxt-link") 
+                p Gruplar
             NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 
                 p Ders Programı
         .content

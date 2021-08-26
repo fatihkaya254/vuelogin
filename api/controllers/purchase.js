@@ -2,6 +2,13 @@ import Purchase from "../models/purchase";
 import Package from "../models/package";
 import axios from "axios";
 
+
+exports.adminPurchase = async(req,res) => {
+  let purchase = req.body.purchase
+  const newPurchase = await Purchase.create(purchase)
+  res.status(201).json({ newPurchase: newPurchase})
+}
+
 exports.newPurchase = async (req, res) => {
   let purchase = req.body.purchase;
   let purshasedPackage = purchase.package;
@@ -86,6 +93,31 @@ exports.getStudentPurchases = async (req, res) => {
       .select("student branch packageName")
       .populate({ path: "branch", populate: { path: "grade" } })
       .populate("student", "name surname")
+      .sort("student")
+      .then(purchases => {
+        var purchaseMap = {};
+        purchases.forEach(function(purchaseInfo) {
+          purchaseMap[purchaseInfo._id] = purchaseInfo;
+        });
+        res.send(purchaseMap);
+      });    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getGroupStudentPurchases = async (req, res) => {
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  try {
+    Purchase.find({
+      groupRight: true,
+      student: { $exists: true, $ne: null, $ne: undefined },
+      endDate: { $gte: startOfToday }
+    })
+      .select("student branch packageName")
+      .populate("student", "name surname")
+      .populate("grade")
       .sort("student")
       .then(purchases => {
         var purchaseMap = {};
