@@ -33,7 +33,9 @@
             NuxtLink(:to="'/manager/groups'", class="nuxt-link") 
                 p Gruplar
             NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 
-                p Ders Programı
+                p Özel Dersler
+            NuxtLink(:to="'/manager/groupLessons'", class="nuxt-link") 
+                p Grup Dersleri
         .content
             nuxt-child
 </template>

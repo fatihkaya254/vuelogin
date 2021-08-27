@@ -122,7 +122,7 @@ exports.getGroupStudentPurchases = async (req, res) => {
       .then(purchases => {
         var purchaseMap = {};
         purchases.forEach(function(purchaseInfo) {
-          purchaseMap[purchaseInfo._id] = purchaseInfo;
+          purchaseMap[purchaseInfo.student._id] = purchaseInfo;
         });
         res.send(purchaseMap);
       });    

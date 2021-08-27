@@ -94,6 +94,7 @@ export default {
     await this.getGrades();
     await this.getRights();
     await this.getGroups();
+    this.judge();
   },
   methods: {
     ...mapActions("branches", ["getBranches"]),
@@ -119,7 +120,17 @@ export default {
         } catch (error) {
           console.log(error);
         }
-        this.getGroups();
+        await this.getGroups();
+        this.judge();
+      }
+    },
+    judge: function() {
+      for (const gr in this.group()) {
+        var students = this.group()[gr].student;
+        for (const st in students) {
+          this.$delete(this.groupRights, students[st]);
+          console.log(students[st]);
+        }
       }
     },
     removeStu: async function(group, student) {
@@ -145,21 +156,8 @@ export default {
         console.log(error);
       }
       this.getGroups();
-    },
-    removeRigth: function(student, branch) {
-      console.log(student + " " + branch);
-      for (const lesson in this.studentLessons) {
-        if (this.studentLessons[lesson].student._id == student) {
-          for (const branches in this.studentLessons[lesson].branch) {
-            if (this.studentLessons[lesson].branch[branches]._id == branch) {
-              Vue.delete(this.studentLessons[lesson].branch, branches);
-              console.log(this.studentLessons);
-              return "green";
-            }
-          }
-        }
-      }
-      return "red";
+      this.getRights();
+      this.judge();
     },
     addGroup: async function() {
       try {
@@ -173,6 +171,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      await this.getGroups();
     },
     getRights: async function() {
       try {
@@ -182,8 +181,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      for(const right in this.groupRights){
-          Vue.set( this.students, this.groupRights[right].student._id, this.groupRights[right].student.name + " " + this.groupRights[right].student.surname);
+      for (const right in this.groupRights) {
+        Vue.set(
+          this.students,
+          this.groupRights[right].student._id,
+          this.groupRights[right].student.name +
+            " " +
+            this.groupRights[right].student.surname
+        );
       }
     },
     setLesson: function(lessonId) {

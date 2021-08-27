@@ -249,8 +249,14 @@ export default {
         const student = this.studentId
         const branch = branches
         const packagee = this.packageId
-        const purchaseDate = this.purchaseDate
-        const endDate = this.tett
+        const purchaseDate = new Date(this.purchaseDate)
+        var life = parseInt(this.life)
+        var endDate = new Date()
+        if (this.tett != "") {
+          endDate = new Date(this.tett)   
+        } else {
+          endDate.setMonth(purchaseDate.getMonth()+life)  
+        }
         var fee = this.package()[this.packageId].fee
         if (this.newFee != '' && this.newFee != undefined ) {
             fee = this.newFee
@@ -269,7 +275,10 @@ export default {
         const oncePrivateLesson = this.package()[this.packageId].weeklyPrivateLesson
         const weeklyExam = this.package()[this.packageId].weeklyPrivateLesson
         const onceExam = this.package()[this.packageId].weeklyPrivateLesson
-        const installment = this.installment
+        var installment = this.installment
+        if (life != 1) {
+          installment = life
+        }
         const purchase = {
             packageName,
             packageDesc,

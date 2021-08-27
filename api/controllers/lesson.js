@@ -1,3 +1,4 @@
+import Branch from "../models/branch";
 import Lesson from "../models/lesson";
 
 exports.newLesson = async (req, res) => {
@@ -20,10 +21,14 @@ exports.newLesson = async (req, res) => {
         const newlesson = await Lesson.create(lesson);
         res.status(201).json({ lesson: newlesson });
       } catch (error) {
+        console.log("1");
+        console.log(error);
         res.status(400).json({ message: error });
       }
     }
   } catch (error) {
+    console.log("2");
+    console.log(error);
     res.status(400).json({ message: error });
   }
 };
@@ -113,34 +118,41 @@ exports.getTodaysForTeacher = async (req, res) => {
   const teacher = req.body.teacher;
   const day = req.body.day;
   Lesson.find({ teacher, day })
-  .populate({ path: "student" })
-  .populate({ path: "branch", populate: { path: "grade" } })
-  .populate({ path: "group" })
-  .then(lessons => {
-    var lessonMap = {};
-    lessons.forEach(function(lesson) {
-      lessonMap[lesson._id] = lesson;
+    .populate({ path: "student" })
+    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "group" })
+    .then(lessons => {
+      var lessonMap = {};
+      lessons.forEach(function(lesson) {
+        lessonMap[lesson._id] = lesson;
+      });
+      res.send(lessonMap);
     });
-    res.send(lessonMap);
-  });
 };
 
 exports.update = async (req, res) => {
   let id = req.body.id;
   let branch = req.body.branch;
   let student = req.body.student;
+  let group = req.body.group;
+  let updates = {};
+  if (group == undefined && branch != undefined)
+    updates = { student, branch, $unset: { group } };
+  if (student == undefined && branch != undefined)
+    updates = { group, branch, $unset: { student } };
+  if (branch == undefined) updates = { $unset: { student, branch, group } };
+
   try {
-    const changedUser = await Lesson.findByIdAndUpdate(
-      { _id: id },
-      { student, branch },
-      { new: true }
-    )
+    const changedUser = await Lesson.findByIdAndUpdate({ _id: id }, updates, {
+      new: true
+    })
       .populate({ path: "teacher" })
       .populate({ path: "student" })
       .populate({ path: "branch", populate: { path: "grade" } })
       .populate({ path: "group" });
     res.send(changedUser);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: error });
   }
 };

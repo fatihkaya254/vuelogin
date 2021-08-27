@@ -1,14 +1,16 @@
 <template lang="pug">
 .container
     .students
-        .names(v-for="lesson in studentLessons" )
-            p {{lesson.student.name}} {{lesson.student.surname}}
-            p {{lesson.packageName}} 
-            .lessons(v-for="branch in lesson.branch" @click="getBranchLessons(branch._id, lesson.student._id)")
-                | {{branch.grade.gradeName}} {{branch.branchName}}
+        .row(v-for="groups in group()")
+          .infoes 
+            .lessonInfo {{groups.groupName}} 
+          .infoes(v-for="branch in branch()" v-show="branch.grade._id == groups.grade")
+            .lessonInfoL(@click="setGroup(groups._id, branch._id)") {{branch.grade.gradeName}}  {{branch.branchName}}
+          .infoes(v-for="student in groups.student" @click="removeStu(groups._id, student)")
+            .lessonInfo(style="color: #88B0BF") {{students[student]}}
     .schedule
       .column  
-        .row(v-for="lesson in lessonTeachers" v-show="lesson.status != 0" )
+        .row(v-for="lesson in lessonTeachers" v-show="lesson.status != 0" :style="{ backgroundColor: colorsofhour[lesson.hour % 2] }")
           .infoes(@click="setLesson(lesson._id)")
             .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
             .linePhoto
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       colors: ["white", "#ffbd44", "#00ca4e"],
+      colorsofhour: ["#F7F3F0", "#EAE4F2"],
       selectedBranch: "none",
       selectedGrade: "none",
       name: "",
@@ -73,7 +76,7 @@ export default {
         "23:00"
       ],
       selectedBranch: "",
-      student: "",
+      mygroup: "",
       phoneLength: 11,
       surname: "",
       phone: "",
@@ -81,10 +84,13 @@ export default {
       photo: "",
       adress: "",
       email: "",
+      addingGroup: "",
+      addingBranch: "",
       mainBranch: "",
       ourhost: process.env.OUR_URL,
       selectedGrade: "",
       studentLessons: [],
+      students: [],
       settedStudentLessons: {},
       lessonTeachers: {},
       warnings: {}
@@ -94,10 +100,20 @@ export default {
     await this.getBranchLessons(undefined, undefined);
     await this.getAllLessons();
     await this.getAllSettedLessons();
+    await this.getGroups();
+    await this.getRights();
+    await this.getGrades();
+    await this.getBranches();
   },
   methods: {
     ...mapActions("branches", ["getBranches"]),
     ...mapGetters("branches", ["branch"]),
+    ...mapActions("students", ["getGrades", "getGroups"]),
+    ...mapGetters("students", ["grade", "group"]),
+    setGroup: function (group, branch) {
+      this.addingGroup = group
+      this.addingBranch = branch
+    },
     getAllLessons: async function() {
       try {
         await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
@@ -107,6 +123,24 @@ export default {
         });
       } catch (error) {
         console.log(error);
+      }
+    },
+    getRights: async function() {
+      try {
+        await axios.get(`${process.env.OUR_HOST}/groupRights`).then(res => {
+          this.groupRights = res.data;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      for (const right in this.groupRights) {
+        Vue.set(
+          this.students,
+          this.groupRights[right].student._id,
+          this.groupRights[right].student.name +
+            " " +
+            this.groupRights[right].student.surname
+        );
       }
     },
     getAllSettedLessons: async function() {
@@ -180,13 +214,12 @@ export default {
       }
     },
     setLesson: function(lessonId) {
-      var branch = this.selectedBranch;
+      var branch = this.addingBranch;
       var id = lessonId;
-      var student = this.student;
-      this.changeLesson({ id, branch, student });
-      this.removeRigth(student, branch);
-      this.selectedBranch = "";
-      this.student = "";
+      var group = this.addingGroup;
+      this.changeLesson({ id, branch, group });
+      this.addingGroup = "";
+      this.addingBranch = "";
     },
     emptyLesson: async function(lessonId) {
       var branch = undefined;
@@ -197,7 +230,7 @@ export default {
       await this.getAllSettedLessons();
     },
     changeLesson: async function(changes) {
-      console.log('chang');
+      console.log("chang");
       console.log(changes);
       try {
         await axios
@@ -290,6 +323,11 @@ export default {
 .lessonInfo
     width: 70%
 
+.lessonInfoL
+    width: 70%
+    cursor: pointer
+    &:hover
+        font-weight: 700
 ::-webkit-scrollbar
     height: 10px
     width: 2px
