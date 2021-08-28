@@ -263,7 +263,7 @@ export default {
           this.$set(
             this.lessonsGroups,
             index,
-            this.teachersDaily()[index].student.groupName
+            this.teachersDaily()[index].group.groupName
           );
           this.$set(
             this.lessonsGroupId,
@@ -280,7 +280,7 @@ export default {
         }
       }
     },
-    clickOnLesson: function(lesson) {
+    clickOnLesson: async function(lesson) {
       if (this.findMyRecord(lesson)) {
         const record = this.findMyRecord(lesson)
         console.log(this.lessonRecords[ record].subTopics);
@@ -293,7 +293,7 @@ export default {
         console.log(this.id);
         this.findPreRecord(lesson)
       } else {
-        this.addLessonRecord(lesson)
+        await this.addLessonRecord(lesson)
         this.getLessonRecords();
       }
     },
