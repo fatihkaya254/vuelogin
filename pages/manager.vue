@@ -22,6 +22,8 @@
                     | 12. Sınıf
                 h5
                     | 4,46
+            NuxtLink(:to="'/manager/sms'", class="nuxt-link active" active) 
+                p SMS
             NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
                 p Kullanıcı Kaydı
             NuxtLink(:to="'/manager/purchase'", class="nuxt-link") 

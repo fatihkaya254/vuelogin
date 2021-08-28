@@ -9,10 +9,11 @@ div
         .clock {{ hours[lesson.hour] }} 
         .branch {{ lessonsBranches[lesson._id] }}
         .student {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
-        .changeRecord(@click="clickOnLesson(lesson._id)" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}
-      .lessonInfoes
+        .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}
+      .lessonInfoesSMS
         .student(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined") {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
-  .changeHours(v-show="id != ''")
+        .changeRecord(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != 2" @click="appSMS(findMyRecord(lesson._id), lessonRecords[findMyRecord(lesson._id)].smsApp, lesson._id )" ) {{lessonRecords[findMyRecord(lesson._id)].smsApp ? 'SMS Onay Kaldır' : 'SMS Onayla'}}
+  .changeHours(v-show="private")
     .close(@click="close()")
     .topBar 
       .branch {{ lessonsBranches[id] }}
@@ -44,6 +45,39 @@ div
     .apply
       .infoLine
         input(type="submit" value="Onayla" @click="updateRecord()")
+  // --------------------------------- Grup Kartı Bundan Sonra
+  .changeHours(v-show="gPop")
+    .close(@click="close()")
+    .topBar 
+      .branch {{ LGBranchName }}
+      .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
+      .backgroundPhotoOverlay
+      .backgroundPhoto
+        img(:src=" ourhost + lessonsPhotos[id]" v-show="lessonsPhotos[id]")
+    .subTopics
+      .subjectName(v-for="(topic, index) in this.branchProcess[LGBranchId]") {{branchSubjects[index].subjectName}}
+        div( v-for="subtopic in topic" )
+          label(:for="subtopic._id" class="rounded-checkbox") 
+            input(type="checkbox" :id="subtopic._id" :value="subtopic._id" v-model="recordSubtopics" ) 
+            span(class="rounded-checkbox__outer")
+              span(class="rounded-checkbox__inner")
+            p {{subtopic.subTopicName}}
+    .lastHomework
+    .homeworkStatus(v-for="stua in LGGs")  {{students[stua]}}
+      .not(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 1")
+        | Yapılmadı
+      .half(:style="[LGHomeworkStatus[stua] == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 2")
+        | Eksik
+      .done(:style="[LGHomeworkStatus[stua] == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 3")
+        | Tam
+    .nextHomework
+      .infoLine
+        label
+            | Bir Sonraki Ödev
+        input(type="text" placeholder="Ödev" v-model="nextHomework")
+    .apply
+      .infoLine
+        input(type="submit" value="Onayla" @click="updateGroupRecord()")
 </template>
 
 <script>
@@ -51,10 +85,21 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      homeworkStatus: "",
+      nextHomework: "yok",
+      LGGs: [],
+      LGHomeworkStatus: [],
+      LGBranchName: "",
+      lessonHour: "",
+      LGId: "",
+      LGPreHomework: "",
+      LGBranchId: "",
+      smsText: "",
+      private: false,
+      gPop: false,
+      students: [],
       preRecord: {},
       recordId: "",
-      nextHomework: "yok",
-      homeworkStatus: "",
       profilePop: false,
       studentPhone: "",
       id: "",
@@ -65,8 +110,9 @@ export default {
       file: "",
       name: "",
       day: "",
-      smsText: "",
       lessons: {},
+      groupRecords: {},
+      groupPres: [],
       recordSubtopics: [],
       lessonsStudents: [],
       lessonsStudentId: [],
@@ -131,6 +177,7 @@ export default {
       ],
       studentName: "",
       dateOfDay: "",
+      groupRights: [],
       ourhost: process.env.OUR_URL
     };
   },
@@ -141,6 +188,10 @@ export default {
       "getMyPayments",
       "getTeachersDaily"
     ]),
+    ...mapActions("branches", ["getBranches"]),
+    ...mapGetters("branches", ["branch"]),
+    ...mapActions("students", ["getGrades", "getGroups"]),
+    ...mapGetters("students", ["grade", "group"]),
     ...mapGetters([
       "userId",
       "userName",
@@ -154,11 +205,60 @@ export default {
       "isTeacher",
       "userBranch"
     ]),
-    close: function () {
-      this.recordSubtopics = []
-      this.id = ""
-      this.homeworkStatus = ""
-      this.nextHomework = ""
+    close: function() {
+      this.recordSubtopics = [];
+      this.id = "";
+      this.homeworkStatus = "";
+      this.nextHomework = "";
+      this.private = false;
+      this.gPop = false;
+      homeworkStatus = "";
+      nextHomework = "yok";
+      LGGs = [];
+      LGHomeworkStatus = [];
+      LGBranchName = "";
+      lessonHour = "";
+      LGId = "";
+      LGPreHomework = "";
+      LGBranchId = "";
+      smsText = "";
+    },
+    appSMS: async function(id, stat, lesson) {
+      const myLesson = this.teachersDaily()[lesson];
+      this.findMyGroupRecords(lesson);
+      if (myLesson.group != undefined) {
+        for (const stu in this.group()[myLesson.group._id].student) {
+          console.log(
+            this.groupRecords[this.group()[myLesson.group._id].student[stu]]._id
+          );
+          const recordId = this.groupRecords[
+            this.group()[myLesson.group._id].student[stu]
+          ]._id;
+          let newStat = "1";
+          if (stat) newStat = "0";
+          await this.$axios
+            .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+              id: recordId,
+              changes: { smsApp: newStat }
+            })
+            .then(res => {
+              console.log(res);
+            });
+        }
+      } else {
+        let newStat = "1";
+        if (stat) newStat = "0";
+        console.log(newStat);
+        await this.$axios
+          .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+            id,
+            changes: { smsApp: newStat }
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+      this.start();
     },
     setDates: function() {
       this.teacher = this.userId();
@@ -182,19 +282,32 @@ export default {
       record.teacher = this.teacher;
       record.student = this.lessonsStudentId[lesson];
       record.branch = this.lessonsBranchId[lesson];
-      if (this.lessonsGroupId[lesson] != undefined)
-        record.group = this.lessonsGroupId[lesson];
       var month = now.getMonth() + 1;
       record.recordDate = now.getFullYear() + "-" + month + "-" + now.getDate();
+      if (this.lessonsGroupId[lesson] != undefined) {
+        record.group = this.lessonsGroupId[lesson];
+        const groupStudents = this.group()[record.group].student;
+        for (const stu in groupStudents) {
+          record.student = groupStudents[stu];
+          this.$axios
+            .post(`${process.env.OUR_HOST}/addLessonRecord`, {
+              lessonRecord: record
+            })
+            .then(res => {
+              console.log(res);
+            });
+        }
+      } else {
+        this.$axios
+          .post(`${process.env.OUR_HOST}/addLessonRecord`, {
+            lessonRecord: record
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
       console.log(record);
-      this.$axios
-        .post(`${process.env.OUR_HOST}/addLessonRecord`, {
-          lessonRecord: record
-        })
-        .then(res => {
-          console.log(res);
-        });
-      this.getLessonRecords();
+      this.start();
     },
     getLessonRecords: function() {
       const teacher = this.teacher;
@@ -213,7 +326,7 @@ export default {
     getSubTopics: function() {
       this.$axios
         .post(`${process.env.OUR_HOST}/branchProcess`, {
-          branch : this.userBranch()
+          branch: this.userBranch()
         })
         .then(res => {
           this.branchProcess = res.data.branchMap;
@@ -280,94 +393,264 @@ export default {
         }
       }
     },
-    clickOnLesson: async function(lesson) {
+    findMyGroupRecords: function(lesson) {
+      var indexes = [];
+      for (const index in this.lessonRecords) {
+        if (this.lessonRecords[index].lesson == lesson) {
+          indexes[this.lessonRecords[index].student] = this.lessonRecords[
+            index
+          ];
+        }
+      }
+      this.groupRecords = indexes;
+    },
+    clickOnLesson: async function(lesson, h) {
+      this.lessonHour = this.hours[h];
       if (this.findMyRecord(lesson)) {
-        const record = this.findMyRecord(lesson)
-        console.log(this.lessonRecords[ record].subTopics);
-        console.log(lesson);
-        this.recordSubtopics = this.lessonRecords[record].subTopics
-        this.nextHomework = this.lessonRecords[record].homework
-        this.recordId = this.findMyRecord(lesson)
-        this.id = lesson
-        this.braid = this.lessonsBranchId[lesson]
-        console.log(this.id);
-        this.findPreRecord(lesson)
+        if (
+          this.lessonRecords[this.findMyRecord(lesson)].student ==
+            this.lessonsStudentId[lesson] &&
+          this.lessonRecords[this.findMyRecord(lesson)].branch ==
+            this.lessonsBranchId[lesson]
+        ) {
+          const record = this.findMyRecord(lesson);
+          this.recordSubtopics = this.lessonRecords[record].subTopics;
+          this.nextHomework = this.lessonRecords[record].homework;
+          this.recordId = this.findMyRecord(lesson);
+          this.id = lesson;
+          this.private = true;
+          this.braid = this.lessonsBranchId[lesson];
+          console.log(this.id);
+          this.findPreRecord(lesson);
+          console.log("a");
+        } else if (
+          this.lessonRecords[this.findMyRecord(lesson)].group ==
+            this.lessonsGroupId[lesson] &&
+          this.lessonRecords[this.findMyRecord(lesson)].branch ==
+            this.lessonsBranchId[lesson]
+        ) {
+          this.id = lesson;
+          await this.findMyGroupRecords(lesson);
+          for (const les in this.groupRecords) {
+            await this.findGroupPreRecord(this.groupRecords[les]._id, les);
+          }
+          for (const pre in this.groupPres) {
+            this.$set(
+              this.LGHomeworkStatus,
+              this.groupPres[pre].student,
+              this.groupPres[pre].homeworkStatus
+            );
+          }
+          const theRecord = this.groupRecords[
+            Object.keys(this.groupRecords)[0]
+          ];
+          this.recordSubtopics = theRecord.subTopics;
+          this.nextHomework = theRecord.homework;
+          this.LGId = theRecord.group;
+          this.LGGs = this.group()[this.LGId].student;
+          this.LGBranchId = theRecord.branch;
+          this.LGBranchName =
+            this.branch()[this.LGBranchId].grade.gradeName +
+            " " +
+            this.branch()[this.LGBranchId].branchName;
+          this.gPop = true;
+        } else {
+          await this.addLessonRecord(lesson);
+          this.start();
+          console.log("b");
+        }
       } else {
-        await this.addLessonRecord(lesson)
-        this.getLessonRecords();
+        await this.addLessonRecord(lesson);
+        this.start();
+        console.log("c");
       }
     },
-    preHomework: function () {
+    preHomework: function() {
       if (this.preRecord == null || this.preRecord == undefined) {
-        return ""
-      }else{
-        return this.preRecord.homework
+        return "";
+      } else {
+        return this.preRecord.homework;
       }
     },
-    homeworkStatusConvert: async function (stat) {
-      if (stat == 1) return "yapılmadı"
-      if (stat == 2) return "eksik"
-      if (stat == 3) return "tam yapıldı"
-      return "-"
+    homeworkStatusConvert: async function(stat) {
+      if (stat == 1) return "yapılmadı";
+      if (stat == 2) return "eksik";
+      if (stat == 3) return "tam yapıldı";
+      return "-";
     },
-    updateRecord: async function () {
-      const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus)
-      const id = this.recordId
-      var preId = ""
-      if(this.preRecord != undefined) preId = this.preRecord._id
-      const subTopics = this.recordSubtopics
-      var homework = "yok"
-      if(this.nextHomework != undefined) homework = this.nextHomework
-      const sms = this.lessonsStudents[this.id]+", " + this.hours[this.teachersDaily()[this.id].hour] +", " + this.lessonsBranches[this.id] + ", önceki derste verilen ödev: " + homeworkS +", bir sonraki ödev: " + homework +", " + this.userName() + " " + this.userSurname()
-      const homeworkStatus = this.homeworkStatus
+    updateRecord: async function() {
+      const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus);
+      const id = this.recordId;
+      var preId = "";
+      if (this.preRecord != undefined) preId = this.preRecord._id;
+      const subTopics = this.recordSubtopics;
+      var homework = "yok";
+      if (this.nextHomework != undefined) homework = this.nextHomework;
+      const sms =
+        this.lessonsStudents[this.id] +
+        ", " +
+        this.hours[this.teachersDaily()[this.id].hour] +
+        ", " +
+        this.lessonsBranches[this.id] +
+        ", önceki derste verilen ödev: " +
+        homeworkS +
+        ", bir sonraki ödev: " +
+        homework +
+        ", " +
+        this.userName() +
+        " " +
+        this.userSurname();
+      const homeworkStatus = this.homeworkStatus;
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
-          id, changes: {subTopics, homework, sms}
+          id,
+          changes: { subTopics, homework, sms }
         })
         .then(res => {
           console.log(res);
         });
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
-          id:preId, changes: {homeworkStatus}
+          id: preId,
+          changes: { homeworkStatus }
         })
         .then(res => {
           console.log(res);
         });
-      this.getLessonRecords();
+      this.start();
       this.close();
     },
-    findPreRecord: async function (lesson) {
-      const record = this.findMyRecord(lesson)
-      const conditions = {}
-      const student =  this.lessonsStudentId[lesson]
-      const group = this.lessonsGroupId[lesson]
-      if(student != '' && student != undefined && student != null) conditions.student = student
-      if(group != '' && group != undefined && group != null) conditions.group = group
-      conditions._id = {$ne: record}
-      conditions.branch = this.lessonsBranchId[lesson]
-      conditions.teacher = this.userId()
-      console.log('co');
+    updateGroupRecord: async function() {
+      for (const student in this.group()[this.LGId].student) {
+        const studentId = this.group()[this.LGId].student[student];
+        const homeworkStatus = this.LGHomeworkStatus[studentId];
+        var preId = "";
+        if (this.groupPres != undefined) preId = this.groupPres[studentId];
+        const recordId = this.groupRecords[studentId]._id;
+        const subTopics = this.recordSubtopics;
+        const branch = this.LGBranchId;
+        var homework = "yok";
+        if (this.nextHomework != undefined) homework = this.nextHomework;
+        const homeworkS = await this.homeworkStatusConvert(homeworkStatus);
+        const sms =
+          this.students[studentId] +
+          ", " +
+          this.lessonHour +
+          ", " +
+          this.branch()[branch].branchName +
+          ", önceki derste verilen ödev: " +
+          homeworkS +
+          ", bir sonraki ödev: " +
+          homework +
+          ", " +
+          this.userName() +
+          " " +
+          this.userSurname();
+        console.log("studentId: " + studentId);
+        console.log("homeworkStatus: " + homeworkStatus);
+        console.log("preId: " + preId._id);
+        console.log("subTopics: " + subTopics);
+        console.log("recordId: " + recordId);
+        console.log("branch: " + branch);
+        console.log("sms: " + sms);
+        await this.$axios
+          .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+            id: recordId,
+            changes: { subTopics, homework, sms }
+          })
+          .then(res => {
+            console.log(res);
+          });
+        await this.$axios
+          .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+            id: preId._id,
+            changes: { homeworkStatus }
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+      this.start();
+      this.close();
+    },
+    findPreRecord: async function(lesson) {
+      const record = this.findMyRecord(lesson);
+      const conditions = {};
+      const student = this.lessonsStudentId[lesson];
+      const group = this.lessonsGroupId[lesson];
+      if (student != "" && student != undefined && student != null)
+        conditions.student = student;
+      if (group != "" && group != undefined && group != null)
+        conditions.group = group;
+      conditions._id = { $ne: record };
+      conditions.branch = this.lessonsBranchId[lesson];
+      conditions.teacher = this.userId();
+      console.log("co");
       console.log(conditions);
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
           conditions
         })
         .then(res => {
-          this.preRecord = res.data.preRecord
+          this.preRecord = res.data.preRecord;
           if (res.data.preRecord != null) {
-            this.homeworkStatus = this.preRecord.homeworkStatus
+            this.homeworkStatus = this.preRecord.homeworkStatus;
           }
         });
+    },
+    findGroupPreRecord: async function(record, student) {
+      const conditions = {};
+      if (student != "" && student != undefined && student != null)
+        conditions.student = student;
+      conditions._id = { $ne: record };
+      conditions.branch = this.groupRecords[student].branch;
+      conditions.teacher = this.userId();
+      await this.$axios
+        .post(`${process.env.OUR_HOST}/findLessonRecord`, {
+          conditions
+        })
+        .then(res => {
+          this.$set(this.groupPres, student, res.data.preRecord);
+        });
+    },
+    start: async function() {
+      this.getGroups();
+      this.setDates();
+      await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
+      this.getLessonRecords();
+      this.dealCards();
+      this.getSubTopics();
+    },
+    getRights: async function() {
+      console.log("as");
+      try {
+        await this.$axios
+          .get(`${process.env.OUR_HOST}/groupRights`)
+          .then(res => {
+            this.groupRights = res.data;
+            console.log("res");
+          });
+      } catch (error) {
+        console.log(error);
+      }
+      for (const right in this.groupRights) {
+        this.$set(
+          this.students,
+          this.groupRights[right].student._id,
+          this.groupRights[right].student.name +
+            " " +
+            this.groupRights[right].student.surname
+        );
+      }
+      console.log("this.students");
+      console.log(this.students);
     }
   },
   watch: {},
   async mounted() {
-    this.setDates();
-    await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
-    this.getLessonRecords();
-    this.dealCards();
-    this.getSubTopics()
+    await this.getRights();
+    this.getBranches();
+    this.start();
   }
   // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };
@@ -449,7 +732,7 @@ $ligthGreen: #C4D7D1
   cursor: pointer
 
 
-.lessonContainer  
+.lessonContainer
   height: 400px
   overflow: auto
   padding: 50px
@@ -468,6 +751,9 @@ $ligthGreen: #C4D7D1
   display: flex
   flex-direction: row
 
+.lessonInfoesSMS
+  display: flex
+  flex-direction: column
 .clock
   background-color: $darkGreen
   color: $white
@@ -523,7 +809,7 @@ $ligthGreen: #C4D7D1
     &:hover
       height: 15px
       width: 15px
-      
+
 .topBar
     width: 100%
     height: 60px
@@ -584,12 +870,12 @@ $ligthGreen: #C4D7D1
 ::-webkit-scrollbar-thumb:hover
   background: #555
 
-@mixin box-shadow($shad) 
+@mixin box-shadow($shad)
   -webkit-box-shadow: $shad
   -moz-box-shadow: $shad
   box-shadow: $shad
 
-@mixin transition($transition) 
+@mixin transition($transition)
   -moz-transition:    $transition
   -o-transition:      $transition
   -webkit-transition: $transition
@@ -599,7 +885,7 @@ $ligthGreen: #C4D7D1
 
 .rounded-checkbox
   $heigth: 22px
-  
+
   display: flex
   flex-wrap: wrap
   gap: 12px
@@ -611,9 +897,9 @@ $ligthGreen: #C4D7D1
       background-color: green
       .rounded-checkbox__inner
         left: 38%
-      
-    
-  
+
+
+
   &__outer
     width: $heigth*2
     height: $heigth
@@ -623,7 +909,7 @@ $ligthGreen: #C4D7D1
     @include box-shadow(inset 0 0 10px rgba(#000, 0.4))
     position: relative
     @include transition(background-color 0.3s)
-  
+
   &__inner
     position: absolute
     left: 2%
@@ -634,6 +920,4 @@ $ligthGreen: #C4D7D1
     border-radius: $heigth
     @include transition(left 0.3s)
     @include box-shadow(inset 0 -1px 2px rgba(#000, 0.4))
-  
-
 </style>

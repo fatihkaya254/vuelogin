@@ -37,7 +37,7 @@ const lessonRecordchema = mongoose.Schema({
         ref:'subtopic'
     },
     student:{
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref:'user'
     },
     teacher:{
@@ -55,10 +55,14 @@ const lessonRecordchema = mongoose.Schema({
     recordDate: { 
         type: Date,
         required: true
+    },
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
     }
 })
 
-lessonRecordchema.index({ lesson: 1, recordDate: 1}, { unique: true })
+lessonRecordchema.index({ lesson: 1, recordDate: 1, student: 1, branch: 1}, { unique: true })
 
 const LessonRecord = mongoose.model('lessonRecord', lessonRecordchema)
 
