@@ -5,7 +5,7 @@ const sendedSMSSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    telNumber: {
+    phone: {
         type: String,
         required: true
     },

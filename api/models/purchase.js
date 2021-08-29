@@ -34,6 +34,11 @@ const purchaseSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    groupRight:{
+        type: Boolean,
+        default: false,
+        required: true
+    },
     weeklyPrivateLesson:{
         type: Number,
     },

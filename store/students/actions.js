@@ -18,7 +18,6 @@ export default {
 
   getGroups(vuexContext) {
     return this.$axios.get(`${process.env.OUR_HOST}/groups`).then(res => {
-      console.log(res.status);
       let groups = res.data;
       vuexContext.dispatch("putGroups", groups);
     });

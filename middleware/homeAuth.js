@@ -1,5 +1,5 @@
 import axios from "axios";
-export default function(context){
+export default async function(context){
     let token = context.store.getters.getAuthkey
     if(!context.store.getters.isAuthenticated){
     }else{

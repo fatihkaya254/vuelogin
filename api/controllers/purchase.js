@@ -2,6 +2,12 @@ import Purchase from "../models/purchase";
 import Package from "../models/package";
 import axios from "axios";
 
+exports.adminPurchase = async (req, res) => {
+  let purchase = req.body.purchase;
+  const newPurchase = await Purchase.create(purchase);
+  res.status(201).json({ newPurchase: newPurchase });
+};
+
 exports.newPurchase = async (req, res) => {
   let purchase = req.body.purchase;
   let purshasedPackage = purchase.package;
@@ -93,24 +99,64 @@ exports.getStudentPurchases = async (req, res) => {
           purchaseMap[purchaseInfo._id] = purchaseInfo;
         });
         res.send(purchaseMap);
-      });    
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getGroupStudentPurchases = async (req, res) => {
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  try {
+    Purchase.find({
+      groupRight: true,
+      student: { $exists: true, $ne: null, $ne: undefined },
+      endDate: { $gte: startOfToday }
+    })
+      .select("student branch packageName")
+      .populate("student", "name surname")
+      .populate("grade")
+      .sort("student")
+      .then(purchases => {
+        var purchaseMap = {};
+        purchases.forEach(function(purchaseInfo) {
+          purchaseMap[purchaseInfo.student._id] = purchaseInfo;
+        });
+        res.send(purchaseMap);
+      });
   } catch (error) {
     console.log(error);
   }
 };
 
 exports.addStudent = async (req, res) => {
-  const student = req.body.student
-  const id = req.body.purchase
+  const student = req.body.student;
+  const id = req.body.purchase;
   try {
     Purchase.findByIdAndUpdate({ _id: id }, { student }, () => {
       res.status(200).json({
         message: "updated"
-      })
-    })
-    res.status(200)
+      });
+    });
+    res.status(200);
   } catch (error) {
     console.log(error);
-    res.status(400)
+    res.status(400);
   }
-}
+};
+
+exports.parentShip = async (req, res) => {
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  try {
+    var now = new Date();
+    const todays = await Purchase.find({ endDate: { $gte: startOfToday } })
+      .select("parent student")
+      .populate({ path: "student" })
+      .populate({ path: "parent" });
+    res.status(201).json({ todays });
+  } catch (error) {
+    console.log(error);
+  }
+};

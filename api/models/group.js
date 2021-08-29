@@ -9,11 +9,12 @@ const groupSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'grade'
     },
-    user:{
+    student:{
         type: [mongoose.Schema.Types.ObjectId],
         ref:'user'
     }
 })
+groupSchema.index({ groupName: 1}, { unique: true})
 
 const Group = mongoose.model('group', groupSchema)
 
