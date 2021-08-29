@@ -214,6 +214,7 @@ app.get("/schoolCourses", SchoolCourse.getAllSchoolCourses);
 //--------------------------------------------  SENDED SMS -------------------------------------------- //
 app.post("/addSendedSMS", SendedSMS.newSendedSMS);
 app.get("/sendedSMSes", SendedSMS.getAllSendedSMSes);
+app.post("/sendSms", SendedSMS.sendSms);
 
 
 //--------------------------------------------  STUDENT ANSWER -------------------------------------------- //

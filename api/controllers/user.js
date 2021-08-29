@@ -36,7 +36,7 @@ exports.generateCode = async (req, res) => {
           smsStatus: "success"
         });
       } else {
-        console.log("habu rizeye emicen vefat etti");
+        console.log("sms gönderilemedi");
       }
     })
     .catch(resp => {

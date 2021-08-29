@@ -212,16 +212,16 @@ export default {
       this.nextHomework = "";
       this.private = false;
       this.gPop = false;
-      homeworkStatus = "";
-      nextHomework = "yok";
-      LGGs = [];
-      LGHomeworkStatus = [];
-      LGBranchName = "";
-      lessonHour = "";
-      LGId = "";
-      LGPreHomework = "";
-      LGBranchId = "";
-      smsText = "";
+      this.homeworkStatus = "";
+      this.nextHomework = "yok";
+      this.LGGs = [];
+      this.LGHomeworkStatus = [];
+      this.LGBranchName = "";
+      this.lessonHour = "";
+      this.LGId = "";
+      this.LGPreHomework = "";
+      this.LGBranchId = "";
+      this.smsText = "";
     },
     appSMS: async function(id, stat, lesson) {
       const myLesson = this.teachersDaily()[lesson];
@@ -605,6 +605,7 @@ export default {
       conditions._id = { $ne: record };
       conditions.branch = this.groupRecords[student].branch;
       conditions.teacher = this.userId();
+      console.log(conditions);
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
           conditions
