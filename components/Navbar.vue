@@ -287,12 +287,16 @@ header
   height: 90px
   width: 100%
   background-color: black
+  @media screen and (max-width: 1200px)
+    height: 70px
 
 .header
   margin: auto
   height: 90px
   max-width: 1350px
   -webkit-appearance: none
+  @media screen and (max-width: 1200px)
+    height: 60px
 
 .logo
   height: 90px
@@ -301,9 +305,16 @@ header
   margin-left: 2%
   float: left
   border: 0px solid black
+  @media screen and (max-width: 1200px)
+    height: 60px
+    width: 60px
   & img
     margin: 0
     margin-top: 16px
+    @media screen and (max-width: 1200px)
+      margin-top: 12px
+      margin-right: 8%
+  
 .account
   height: 90px
   width: 50%
@@ -311,6 +322,11 @@ header
   margin: 0
   margin-right: 2%
   display: block
+  @media screen and (max-width: 1200px)
+    height: 60px
+    width: 50%
+    margin-right: 5%
+
 .buttonIcon
   margin-left: -165px
   transition: all .1s ease
