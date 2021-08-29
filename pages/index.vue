@@ -3,9 +3,10 @@ div
   Navbar
   .lockServicePop(v-show="getPackagePop()")
     LockService
-  TeacherList
-  HomePageCharts
-  ServiceList
+  img(:src=" ourhost + '/logo.png'" v-show="this.$store.getters.userPic")
+  //TeacherList
+  //HomePageCharts
+  //ServiceList
 </template>
 
 <script>
@@ -18,6 +19,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      ourhost: process.env.OUR_URL
     };
   },
   middleware: ["session-control", "homeAuth"],
@@ -53,7 +55,8 @@ body
   letter-spacing: 1px
   font-size: 12pt
   margin: 0px
-  background-color: antiquewhite
+  // background-color: antiquewhite
+  background-color: white
   -webkit-appearance: none
 .lspWrapper
   width: 100vw
@@ -72,5 +75,7 @@ body
   margin-left: 20vw
   margin-top: 2vh
 
+img
+  width: 100%
 
 </style>

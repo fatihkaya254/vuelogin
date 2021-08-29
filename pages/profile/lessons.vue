@@ -738,6 +738,7 @@ $ligthGreen: #C4D7D1
   overflow: auto
   padding: 50px
   height: 60vh
+
 .subTopics
   margin: 20px
   height: 300px
@@ -794,7 +795,8 @@ $ligthGreen: #C4D7D1
 .changeHours
     top:0
     right: 0
-    height: 100%
+    height: 80vh
+    overflow: auto 
     width: 100%
     position: fixed
     z-index: 3

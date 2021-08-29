@@ -26,6 +26,8 @@
                 p SMS
             NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
                 p Kullanıcı Kaydı
+            NuxtLink(:to="'/manager/userInfo'", class="nuxt-link active" active) 
+                p Kullanıcı Düzenle
             NuxtLink(:to="'/manager/purchase'", class="nuxt-link") 
                 p Paket Yükle
             NuxtLink(:to="'/manager/addTeacher'", class="nuxt-link") 
@@ -57,7 +59,7 @@ export default {
       name: "",
       surname: "",
       file: "",
-      ourhost:  process.env.OUR_URL,
+      ourhost: process.env.OUR_URL
     };
   },
   methods: {
@@ -79,7 +81,7 @@ export default {
       this.file = file;
       const formData = new FormData();
       formData.append("file", this.file);
-      formData.append("who", this.userId())
+      formData.append("who", this.userId());
       try {
         await axios
           .post(`${process.env.OUR_HOST}/dropzone`, formData)
@@ -212,6 +214,4 @@ a.nuxt-link-active
     position: absolute
     cursor: pointer
     display: none
-
-
 </style>
