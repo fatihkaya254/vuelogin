@@ -113,7 +113,7 @@ import { gsap } from "gsap";
 export default {
   data() {
     return {
-     
+
       form: "loginForm",
       login: "login",
       phoneNumber: "",
@@ -143,14 +143,15 @@ export default {
     title: "my website title",
     meta: [
       { charset: "utf-8" },
-      { name: "google-signin-scope", content: "profile email" }
+      { name: "google-signin-scope", content: "profile email" },
+      { name:"viewport", content:"width=device-width, initial-scale=1, maximum-scale=1" }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   methods: {
-  
-  
-          
+
+
+
     clickSubmit: function() {
       if (this.$store.getters.isAuthenticated) {
         this.$store.commit("clearAuthkey");
@@ -231,12 +232,12 @@ export default {
       });
     },
     afterFinishProgress: function() {
-      
-      
+
+
       this.$store.dispatch("generatePasscode", { phone: this.phoneNumber }).then(()=>{
         this.$refs.pass.focus()
       })
-     
+
     }
   },
   watch: {
@@ -270,7 +271,7 @@ export default {
   computed: {},
   components: {
     GoogleLogin,
-    
+
   },
   mounted() {}
 };
@@ -313,8 +314,8 @@ header
     margin-top: 16px
     @media screen and (max-width: 1200px)
       margin-top: 12px
-      margin-right: 8%
-  
+      margin-left: 12px
+
 .account
   height: 90px
   width: 50%
@@ -325,8 +326,8 @@ header
   @media screen and (max-width: 1200px)
     height: 60px
     width: 50%
-    margin-right: 5%
-
+    margin-right: 12px
+    margin-top: -6px
 .buttonIcon
   margin-left: -165px
   transition: all .1s ease
@@ -359,10 +360,13 @@ header
   float: right
   position: relative
   z-index: 1
-  
+  @media screen and (max-width: 1200px)
+    font-size: 0pt
+
   &input[type=text]
     background-color: rgba(0, 0, 0, 0)
     height: 40px
+
   & img
     height: 32px
     width: 32px
@@ -372,7 +376,10 @@ header
     margin-left: -48px
     margin-top: -6px
     background-color: white
-
+    @media screen and (max-width: 1200px)
+      margin-left: 20px
+      height: 32px
+      width: 32px
 #phone
   height: 40px
   width: 200px
@@ -503,7 +510,7 @@ header
   position: absolute
   margin-top: -28px
   margin-left: $ortadaKuyuVar + 75
-  -webkit-user-select: none       
+  -webkit-user-select: none
   -moz-user-select: none
   -ms-user-select: none
   user-select: none
@@ -539,11 +546,16 @@ header
   border-radius: 1em
   border: 0px solid black
   transition: all .3s ease
+
+
 .loginForm
   height: 220px
   width: 272px
   position: relative
   z-index: 100
+  @media screen and (max-width: 1200px)
+    border: 1px solid black
+
 .error
   margin-left: 36px
   width: 180px

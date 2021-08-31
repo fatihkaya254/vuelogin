@@ -2,7 +2,7 @@
 div
   .aboutDay {{dateOfDay}} {{dayNames[day]}} 
   .lessonContainer  
-    .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null") 
+    .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
       .linePhoto
         img(:src=" ourhost + lessonsPhotos[lesson._id]" v-show="lessonsPhotos[lesson._id]")
       .lessonInfoes
@@ -85,6 +85,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      colors: ["#ff605c", "#ffbd44", "#00ca4e"],
       homeworkStatus: "",
       nextHomework: "yok",
       LGGs: [],
@@ -738,7 +739,9 @@ $ligthGreen: #C4D7D1
   overflow: auto
   padding: 50px
   height: 60vh
-
+  @media screen and (max-width: 1200px)
+    padding: 0
+    height: 100%
 .subTopics
   margin: 20px
   height: 300px
@@ -752,6 +755,8 @@ $ligthGreen: #C4D7D1
 .lessonInfoes
   display: flex
   flex-direction: row
+  @media screen and (max-width: 1200px)
+    flex-direction: column
 
 .lessonInfoesSMS
   display: flex
@@ -771,6 +776,8 @@ $ligthGreen: #C4D7D1
   border-radius: 1em
   margin-left: 20px
   cursor: pointer
+  @media screen and (max-width: 1200px)
+    margin: auto
   &:hover
     color: black
     background-color: $somon
@@ -787,20 +794,30 @@ $ligthGreen: #C4D7D1
   border-radius: 1em
 
 .lessonCard
-  background-color: $ligthGreen
+  //background-color: $ligthGreen
   padding: 36px
   margin: auto
   margin-top: 15px
   border-radius: 1em
+  @media screen and (max-width: 1200px)
+    padding: 10px
+    margin-bottom: 40px
+    display: flex
+    flex-direction: column
 .changeHours
     top:0
     right: 0
-    height: 80vh
+    height: 100vh
     overflow: auto 
     width: 100%
-    position: fixed
+    position: absolute
     z-index: 3
     background-color: white
+    @media screen and (max-width: 1200px)
+      top: 0
+      left: 0
+      height: 100%
+      position: fixed
 .close
     margin: 15px
     position: absolute
@@ -833,11 +850,17 @@ $ligthGreen: #C4D7D1
   width: 48px
   border-radius: 50%
   transition: all 0.5s ease
+  @media screen and (max-width: 1200px)
+    margin: 0px
+    position: absolute
+    z-index: 1
+    margin-top: 30px
   & img
       height: 48px
       width: 48px
       border-radius: 50%
       transition: all 0.5s ease
+
 .backgroundPhotoOverlay
   position: fixed
   z-index: -1

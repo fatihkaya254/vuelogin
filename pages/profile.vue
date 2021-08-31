@@ -18,10 +18,7 @@
                             | Değiştir
                 h4
                     | {{ userName() }} {{userSurname()}}
-                h5
-                    | 12. Sınıf
-                h5
-                    | 4,46
+
             NuxtLink(:to="'/profile/lessons'", class="nuxt-link", v-if="isTeacher()") 
                 p( v-if="isTeacher()") Günlük Program
             NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
@@ -140,10 +137,10 @@ a.nuxt-link-active
     background-size: cover
     background-position: center
     transform-style: preserve-3d
-
+            
 .container
     border-radius: 1em
-    overflow: hidden
+    overflow: auto
     margin: auto
     height: 80vh
     width: 70vw
@@ -151,14 +148,21 @@ a.nuxt-link-active
     position: relative
     top: 55%
     transform: perspective(1px) translateY(-50%)
-
+    @media screen and (max-width: 1200px)
+        width: 100vw
+        border-radius: 0em
 .sidebar
     float: left
     min-height: 800px
     height: 90%
     width: 20%
     padding: 12px
-
+    @media screen and (max-width: 1200px)
+        width: 100%
+        float: none
+        min-height: 300px
+        height: 20%
+        border-bottom: 1px solid black
 .profileInfo
     padding-top: 10px
     height: 280px
@@ -166,13 +170,19 @@ a.nuxt-link-active
     & h4, h5
         color: $gray6-dark
         margin: 2px
+    @media screen and (max-width: 1200px)
+        height: 120px
 .content
     height: 90vh
     width: 80%
     float: left
     padding: 30px
     padding-top: 50px
-
+    @media screen and (max-width: 1200px)
+        width: 100%
+        padding: none
+        padding: 0
+        
 .profilePhoto
     height: 144px
     width: 144px
@@ -180,11 +190,16 @@ a.nuxt-link-active
     margin: auto
     margin-bottom: 6px
     cursor: pointer
+    @media screen and (max-width: 1200px)
+        height: 60px
+        width: 60px
     & img
         height: 144px
         width: 144px
         border-radius: 50%
-
+        @media screen and (max-width: 1200px)
+            height: 60px
+            width: 60px
     .changeText
         margin-top: 22px
         height: 144px

@@ -3,7 +3,8 @@ div
   Navbar
   .lockServicePop(v-show="getPackagePop()")
     LockService
-  img(:src=" ourhost + '/logo.png'" v-show="this.$store.getters.userPic")
+  .mainImage
+    img(:src=" ourhost + '/logo.png'")
   //TeacherList
   //HomePageCharts
   //ServiceList
@@ -78,4 +79,10 @@ body
 img
   width: 100%
 
+.mainImage
+  width: 80%
+  margin: auto
+  text-align: center
+  @media screen and (max-width: 1200px)
+    width: 100%
 </style>
