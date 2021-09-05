@@ -23,7 +23,7 @@ export default {
 
   server: {     
     port: 8000, // default: 3000     
-    host: 'localhost', // default: localhost   
+    host: process.env.OUR_IP, // default: localhost   
   },   // other configs 
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
