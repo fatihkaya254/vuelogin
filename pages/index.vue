@@ -38,7 +38,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 #app
   font-family: 'Lemon/Milk light Regular'
   font-style: normal

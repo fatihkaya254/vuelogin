@@ -137,19 +137,21 @@ a.nuxt-link-active
     background-size: cover
     background-position: center
     transform-style: preserve-3d
-            
+    
 .container
     border-radius: 1em
-    overflow: auto
+    overflow: hidden
     margin: auto
     height: 80vh
     width: 70vw
     background-color: $gray6
     position: relative
-    top: 55%
-    transform: perspective(1px) translateY(-50%)
+    top: 15vh
     @media screen and (max-width: 1200px)
         width: 100vw
+        top: 10vh
+        padding: 5px
+        height: 70vh
         border-radius: 0em
 .sidebar
     float: left
@@ -160,9 +162,11 @@ a.nuxt-link-active
     @media screen and (max-width: 1200px)
         width: 100%
         float: none
-        min-height: 300px
-        height: 20%
+        min-height: 140px
+        height: 25vh
+        overflow: auto
         border-bottom: 1px solid black
+
 .profileInfo
     padding-top: 10px
     height: 280px
@@ -180,8 +184,8 @@ a.nuxt-link-active
     padding-top: 50px
     @media screen and (max-width: 1200px)
         width: 100%
-        padding: none
         padding: 0
+        height: 90vh
         
 .profilePhoto
     height: 144px

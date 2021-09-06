@@ -281,7 +281,8 @@ export default {
 $ortadaKuyuVar: 36px
 input
   -webkit-appearance: none
-
+img
+  width: 100%
 header
   top: 0
   left: 0
@@ -378,8 +379,9 @@ header
     background-color: white
     @media screen and (max-width: 1200px)
       margin-left: 20px
-      height: 32px
-      width: 32px
+      height: 52px
+      width: 52px
+      margin-top: -16px
 #phone
   height: 40px
   width: 200px

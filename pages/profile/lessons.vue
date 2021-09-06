@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.mainContainer
   .aboutDay {{dateOfDay}} {{dayNames[day]}} 
   .lessonContainer  
     .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
@@ -13,6 +13,7 @@ div
       .lessonInfoesSMS
         .student(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined") {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
         .changeRecord(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != 2" @click="appSMS(findMyRecord(lesson._id), lessonRecords[findMyRecord(lesson._id)].smsApp, lesson._id )" ) {{lessonRecords[findMyRecord(lesson._id)].smsApp ? 'SMS Onay Kaldır' : 'SMS Onayla'}}
+    .lessonCard {{dateOfDay}} {{dayNames[day]}} 
   .changeHours(v-show="private")
     .close(@click="close()")
     .topBar 
@@ -436,11 +437,13 @@ export default {
             await this.findGroupPreRecord(this.groupRecords[les]._id, les);
           }
           for (const pre in this.groupPres) {
-            this.$set(
-              this.LGHomeworkStatus,
-              this.groupPres[pre].student,
-              this.groupPres[pre].homeworkStatus
-            );
+            if (this.groupPres[pre] != undefined && this.groupPres[pre] != null ) {
+              this.$set(
+                this.LGHomeworkStatus,
+                this.groupPres[pre].student,
+                this.groupPres[pre].homeworkStatus
+              );
+            }
           }
           const theRecord = this.groupRecords[
             Object.keys(this.groupRecords)[0]
@@ -448,7 +451,8 @@ export default {
           this.recordSubtopics = theRecord.subTopics;
           this.nextHomework = theRecord.homework;
           this.LGId = theRecord.group;
-          this.LGGs = this.group()[this.LGId].student;
+          if (this.group()[this.LGId] != undefined && this.group()[this.LGId] != null)
+            this.LGGs = this.group()[this.LGId].student;
           this.LGBranchId = theRecord.branch;
           this.LGBranchName =
             this.branch()[this.LGBranchId].grade.gradeName +
@@ -601,10 +605,11 @@ export default {
     },
     findGroupPreRecord: async function(record, student) {
       const conditions = {};
-      if (student != "" && student != undefined && student != null)
+      if (student != "" && student != undefined && student != null){
         conditions.student = student;
-      conditions._id = { $ne: record };
+      }
       conditions.branch = this.groupRecords[student].branch;
+      conditions._id = { $ne: record };
       conditions.teacher = this.userId();
       console.log(conditions);
       await this.$axios
@@ -733,15 +738,18 @@ $ligthGreen: #C4D7D1
   padding: 5px
   cursor: pointer
 
-
+.mainContainer
+  overflow: auto
+  height: 60vh
+  padding-bottom: 200px
 .lessonContainer
   height: 400px
-  overflow: auto
   padding: 50px
   height: 60vh
   @media screen and (max-width: 1200px)
     padding: 0
-    height: 100%
+    height: 100vh
+
 .subTopics
   margin: 20px
   height: 300px
@@ -761,12 +769,14 @@ $ligthGreen: #C4D7D1
 .lessonInfoesSMS
   display: flex
   flex-direction: column
+
 .clock
   background-color: $darkGreen
   color: $white
   text-align: center
   padding: 5px
   border-radius: 1em
+
 .changeRecord
   width: 100px
   background-color: $darkGreen
@@ -781,6 +791,7 @@ $ligthGreen: #C4D7D1
   &:hover
     color: black
     background-color: $somon
+
 .branch
   text-align: center
   padding: 5px
@@ -799,13 +810,15 @@ $ligthGreen: #C4D7D1
   margin: auto
   margin-top: 15px
   border-radius: 1em
+  min-height: 200px
   @media screen and (max-width: 1200px)
     padding: 10px
     margin-bottom: 40px
     display: flex
     flex-direction: column
+    
 .changeHours
-    top:0
+    bottom:0
     right: 0
     height: 100vh
     overflow: auto 
@@ -814,10 +827,10 @@ $ligthGreen: #C4D7D1
     z-index: 3
     background-color: white
     @media screen and (max-width: 1200px)
-      top: 0
+      bottom: 0
       left: 0
       height: 100%
-      position: fixed
+
 .close
     margin: 15px
     position: absolute
@@ -841,6 +854,8 @@ $ligthGreen: #C4D7D1
   text-align: center
   padding: 5px
 
+
+
 .linePhoto
   position: relative
   z-index: 1
@@ -852,9 +867,8 @@ $ligthGreen: #C4D7D1
   transition: all 0.5s ease
   @media screen and (max-width: 1200px)
     margin: 0px
-    position: absolute
-    z-index: 1
-    margin-top: 30px
+    z-index: 2
+    margin-bottom: -40px
   & img
       height: 48px
       width: 48px
