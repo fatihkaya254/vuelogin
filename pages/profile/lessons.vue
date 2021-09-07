@@ -679,6 +679,10 @@ $ligthGreen: #C4D7D1
   height: 40px
   border-bottom: 0.75px solid gray
   width: 80%
+  @media screen and (max-width: 1200px)
+    display: flex
+    flex-direction: column
+    height: 100px
   & input
     float: right
     margin-right: 20%
@@ -690,7 +694,11 @@ $ligthGreen: #C4D7D1
     padding-left: 16px
     padding-right: 16px
     border-radius: 1em
-
+    @media screen and (max-width: 1200px)
+      margin-top: 10px
+      height: 40px
+      width: 100%
+      border: 0.5px solid black
     &:focus
       -webkit-appearance: none
 

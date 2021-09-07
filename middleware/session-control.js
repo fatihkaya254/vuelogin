@@ -1,4 +1,5 @@
 export default function(context){
+    console.log("sessioncontrol Middleware");
     if (process.client) {
         context.store.dispatch("initAuth")
     } else {

@@ -1,5 +1,6 @@
 import axios from "axios";
 export default async function(context){
+    console.log("auth Middleware");
     let token = context.store.getters.getAuthkey
     if(!context.store.getters.isAuthenticated){
        context.redirect("/");
