@@ -1,7 +1,15 @@
 <template lang="pug">
-div 
+.records 
     .infoLine(v-for="sc in mySchedule")
-      label {{ dayNames[sc.day] }} {{ hours[sc.hour] }} Branş: {{ sc.branch.branchName }} Öğretmen: {{ sc.teacher.name }} {{ sc.teacher.surname }}
+      label {{fixDate(sc.recordDate)}}
+      label {{ dayNames[sc.day] }} {{ hours[sc.hour] }} Branş: {{ sc.branch.branchName }} Öğretmen: {{ sc.teacher.name }} {{ sc.teacher.surname }} Konular:
+      label(v-for="ss in sc.subTopics") {{ ss.subTopicName}},
+      p Ödev: {{ sc.homework}} Ödev Yapılma Durumu: {{homeworkStatus[sc.homeworkStatus]}}
+    .infoLine
+    .infoLine
+    .infoLine
+    .infoLine
+    .infoLine
 </template>
 
 <script>
@@ -9,6 +17,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      homeworkStatus: ["", "Yapılmadı", "Eksik", "Tam"],
       file: "",
       name: "",
       surname: "",
@@ -72,12 +81,20 @@ export default {
     getStudentSchedule: async function(student) {
       console.log(student);
       await this.$axios
-        .post(`${process.env.OUR_HOST}/getStudentSchedule`, {
+        .post(`${process.env.OUR_HOST}/getStudentRecord`, {
           student
         })
         .then(res => {
           this.mySchedule = res.data;
         });
+    },
+    fixDate: function(rdate) {
+      let datetime = rdate
+      let date = datetime.split("-");
+      let year = date[0];
+      let month = date[1];
+      let day = date[2].charAt(0) + date[2].charAt(1);
+      return day + "." + month + "." + year;
     }
   },
   mounted() {
@@ -91,6 +108,11 @@ $gray: rgb(142, 142, 147, 0.70)
 $gray2: rgb(174, 174, 178, 0.70)
 $gray6: rgb(242, 242, 247, 0.70)
 $gray6-dark: rgb(28, 28, 30)
+
+.records
+    height: 70vh
+    overflow: auto
+
 .adminheader
     background-color: $gray
     height: 70px
@@ -128,7 +150,7 @@ $gray6-dark: rgb(28, 28, 30)
 .infoLine
   margin-top: 10px
   padding-top: 8px
-  height: 40px
+  min-height: 40px
   border-bottom: 0.75px solid $gray
 
   & input

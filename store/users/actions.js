@@ -10,6 +10,7 @@ export default {
   },
   addUser: function(vuexContext, user) {
     this.$axios.post("/addUser", { user: user }).then(res => {
+      console.log(res.data.message);
       console.log(res.data.user);
       vuexContext.dispatch("getUsers");
     });

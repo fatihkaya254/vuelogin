@@ -313,9 +313,16 @@ exports.getUserRole = async (req, res) => {
 };
 
 exports.newUser = async(req,res) => {
-  let user = req.body.user
-  const newuser = await User.create(user)
-  res.status(201).json({ user: newuser})
+  const user = req.body.user
+  const phone = user.phone
+  const isset = await User.findOne({phone})
+
+  if (isset != null && isset != undefined) {
+    res.status(201).json({ user: isset, message: "Bu numara kullanılmakta"})
+  }else{
+    const newuser = await User.create(user)
+    res.status(201).json({ user: newuser, message: "Kullanıcı Kaydı Başarılı"})
+  }
 }
 
 exports.getOneUser = async (req, res) => {

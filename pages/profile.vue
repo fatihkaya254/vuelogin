@@ -27,8 +27,8 @@
                 p Paketler
             NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
                 p Dersler
-            NuxtLink(:to="'/profile/pastLesson'", class="nuxt-link") 
-                p Ödevler
+            NuxtLink(:to="'/profile/lessonRecords'", class="nuxt-link") 
+                p Ders Kayıtları
         .content
             nuxt-child
             

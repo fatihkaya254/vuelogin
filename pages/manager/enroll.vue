@@ -85,9 +85,6 @@ export default {
       if (firstChar != 0) this.phoneLength = 10;
       else this.phoneLength = 11;
       this.phoneNumber = value.replace(/\D/g, "");
-      if (this.phoneNumber.length == this.phoneLength) {
-        alert(this.phoneNumber);
-      }
     },
   },
 };

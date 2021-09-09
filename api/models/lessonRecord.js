@@ -34,7 +34,7 @@ const lessonRecordchema = mongoose.Schema({
     },
     subTopics:{
         type: [mongoose.Schema.Types.ObjectId],
-        ref:'subtopic'
+        ref:'subTopic'
     },
     student:{
         type: mongoose.Schema.Types.ObjectId,

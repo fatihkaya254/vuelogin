@@ -40,6 +40,8 @@
                 p Özel Dersler
             NuxtLink(:to="'/manager/groupLessons'", class="nuxt-link") 
                 p Grup Dersleri
+            NuxtLink(:to="'/manager/purchaseList'", class="nuxt-link") 
+                p Satın Alımlar
         .content
             nuxt-child
 </template>

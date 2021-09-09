@@ -1,5 +1,5 @@
-import Branch from "../models/branch";
 import Lesson from "../models/lesson";
+import Group from "../models/group";
 
 exports.newLesson = async (req, res) => {
   let lesson = req.body.lesson;
@@ -112,6 +112,39 @@ exports.allStudentLessons = async (req, res) => {
 
       res.send(lessonMap);
     });
+};
+
+exports.getStudentSchedule = async (req, res) => {
+  const student = req.body.student;
+  const groupI = await Group.findOne({ student }).select("_id");
+  if (groupI != undefined && groupI != null) {
+    const group = groupI._id;
+    Lesson.find({ $or: [{ student }, { group }] })
+      .sort('day hour')
+      .populate({ path: "teacher", select: "name surname" })
+      .populate({ path: "branch", populate: { path: "grade" } })
+      .populate({ path: "group" })
+      .then(lessons => {
+        var lessonMap = {};
+        lessons.forEach(function(lesson) {
+          lessonMap[lesson._id] = lesson;
+        });
+        res.send(lessonMap);
+      });
+  } else {
+    Lesson.find({ student })
+      .sort('day hour')
+      .populate({ path: "teacher", select: "name surname" })
+      .populate({ path: "branch", populate: { path: "grade" } })
+      .populate({ path: "group" })
+      .then(lessons => {
+        var lessonMap = {};
+        lessons.forEach(function(lesson) {
+          lessonMap[lesson._id] = lesson;
+        });
+        res.send(lessonMap);
+      });
+  }
 };
 
 exports.getTodaysForTeacher = async (req, res) => {

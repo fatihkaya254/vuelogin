@@ -4,8 +4,13 @@ import axios from "axios";
 
 exports.adminPurchase = async (req, res) => {
   let purchase = req.body.purchase;
-  const newPurchase = await Purchase.create(purchase);
-  res.status(201).json({ newPurchase: newPurchase });
+  try {
+    const newPurchase = await Purchase.create(purchase);
+    res.status(201).json({ newPurchase: newPurchase });
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  }
 };
 
 exports.newPurchase = async (req, res) => {
@@ -159,4 +164,20 @@ exports.parentShip = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+exports.listAll = async (req, res) => {
+  Purchase.find()
+    .sort("-purchaseDate")
+    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "student", select: "name surname phone" })
+    .populate({ path: "parent", select: "name surname phone" })
+    .populate({ path: "grade" })
+    .then(purchases => {
+      var purchaseMap = {};
+      purchases.forEach(function(purchaseInfo) {
+        purchaseMap[purchaseInfo._id] = purchaseInfo;
+      });
+      res.send(purchaseMap);
+    });
 };

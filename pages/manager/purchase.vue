@@ -245,74 +245,74 @@ export default {
             " Sınıf ve Branş Seçimi Yapmanız Gerekmektedir"
         );
       } else {
-        const parent = this.parentId
-        const student = this.studentId
-        const branch = branches
-        const packagee = this.packageId
-        const purchaseDate = new Date(this.purchaseDate)
-        var life = parseInt(this.life)
-        var endDate = new Date()
+        const parent = this.parentId;
+        const student = this.studentId;
+        const branch = branches;
+        const packagee = this.packageId;
+        const purchaseDate = new Date(this.purchaseDate);
+        var life = parseInt(this.life);
+        var endDate = new Date();
         if (this.tett != "") {
-          endDate = new Date(this.tett)   
+          endDate = new Date(this.tett);
         } else {
-          endDate.setMonth(purchaseDate.getMonth()+life)  
+          endDate.setMonth(purchaseDate.getMonth() + life);
         }
-        var fee = this.package()[this.packageId].fee
-        if (this.newFee != '' && this.newFee != undefined ) {
-            fee = this.newFee
+        var fee = this.package()[this.packageId].fee;
+        if (this.newFee != "" && this.newFee != undefined) {
+          fee = this.newFee;
         }
-        var groupRight = false
-        if ( this.package()[this.packageId].scope == 'group') {
-            groupRight = true
+        var groupRight = false;
+        if (this.package()[this.packageId].scope == "group") {
+          groupRight = true;
         }
-        var grade = undefined
-        if ( this.mygrade != '') {
-            grade = this.mygrade
+        var grade = undefined;
+        if (this.mygrade != "") {
+          grade = this.mygrade;
         }
-        const weeklyPrivateLesson = this.package()[this.packageId].weeklyPrivateLesson
-        const packageDesc = this.package()[this.packageId].description
-        const packageName = this.package()[this.packageId].name
-        const oncePrivateLesson = this.package()[this.packageId].weeklyPrivateLesson
-        const weeklyExam = this.package()[this.packageId].weeklyPrivateLesson
-        const onceExam = this.package()[this.packageId].weeklyPrivateLesson
-        var installment = this.installment
+        const weeklyPrivateLesson = this.package()[this.packageId]
+          .weeklyPrivateLesson;
+        const packageDesc = this.package()[this.packageId].description;
+        const packageName = this.package()[this.packageId].name;
+        const oncePrivateLesson = this.package()[this.packageId]
+          .weeklyPrivateLesson;
+        const weeklyExam = this.package()[this.packageId].weeklyPrivateLesson;
+        const onceExam = this.package()[this.packageId].weeklyPrivateLesson;
+        var installment = this.installment;
         if (life != 1) {
-          installment = life
+          installment = life;
         }
         const purchase = {
-            packageName,
-            packageDesc,
-            parent,
-            student,
-            branch,
-            grade,
-            package: packagee,
-            purchaseDate,
-            endDate,
-            fee,
-            groupRight,
-            weeklyPrivateLesson,
-            weeklyExam,
-            oncePrivateLesson,
-            onceExam,
-            installment
-        }
-        console.log(purchase)
-        this.addPurchase(purchase)
+          packageName,
+          packageDesc,
+          parent,
+          student,
+          branch,
+          grade,
+          package: packagee,
+          purchaseDate,
+          endDate,
+          fee,
+          groupRight,
+          weeklyPrivateLesson,
+          weeklyExam,
+          oncePrivateLesson,
+          onceExam,
+          installment
+        };
+        console.log(purchase);
+        this.addPurchase(purchase);
       }
     },
     addPurchase: async function(purchase) {
-      try {
-        await axios
-          .put(`${process.env.OUR_HOST}/adminPurchase`, {
-            purchase
-          })
-          .then(res => {
-            console.log(res.status);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      await axios
+        .put(`${process.env.OUR_HOST}/adminPurchase`, {
+          purchase
+        })
+        .then(res => {
+          if (res.status == 201) {
+            this.$router.push("/manager/purchaseList");
+          }
+        });
     },
     deleteBranch: function(id) {
       const index = this.branches.indexOf(id);
@@ -422,10 +422,10 @@ export default {
         }
       }
     },
-    life(value){
-        if (this.packageId !="") {
-            this.newFee = value*this.package()[this.packageId].fee
-        }
+    life(value) {
+      if (this.packageId != "") {
+        this.newFee = value * this.package()[this.packageId].fee;
+      }
     }
   }
 };

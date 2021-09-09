@@ -2,8 +2,8 @@
 .container
     .students
         .names(v-for="lesson in studentLessons" )
-            p {{lesson.student.name}} {{lesson.student.surname}}
-            p {{lesson.packageName}} 
+            p(v-if="lesson.student") {{lesson.student.name}} {{lesson.student.surname}}
+            p(v-if="lesson.student") {{lesson.packageName}} 
             .lessons(v-for="branch in lesson.branch" @click="getBranchLessons(branch._id, lesson.student._id)")
                 | {{branch.grade.gradeName}} {{branch.branchName}}
     .schedule
@@ -246,7 +246,7 @@ export default {
     border-left: 0.75px solid black
     padding: 4px
     transition: all 0.5s ease
-
+    color: purple
 .column
     height: 80%
     min-width: 400px

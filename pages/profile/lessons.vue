@@ -19,9 +19,6 @@
     .topBar 
       .branch {{ lessonsBranches[id] }}
       .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
-      .backgroundPhotoOverlay
-      .backgroundPhoto
-        img(:src=" ourhost + lessonsPhotos[id]" v-show="lessonsPhotos[id]")
     .subTopics
       .subjectName(v-for="(topic, index) in this.branchProcess[braid]") {{branchSubjects[index].subjectName}}
         div( v-for="subtopic in topic" )
@@ -52,9 +49,6 @@
     .topBar 
       .branch {{ LGBranchName }}
       .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
-      .backgroundPhotoOverlay
-      .backgroundPhoto
-        img(:src=" ourhost + lessonsPhotos[id]" v-show="lessonsPhotos[id]")
     .subTopics
       .subjectName(v-for="(topic, index) in this.branchProcess[LGBranchId]") {{branchSubjects[index].subjectName}}
         div( v-for="subtopic in topic" )
@@ -828,7 +822,7 @@ $ligthGreen: #C4D7D1
 .changeHours
     bottom:0
     right: 0
-    height: 100vh
+    height: 100%
     overflow: auto 
     width: 100%
     position: absolute

@@ -47,11 +47,30 @@ exports.findOne = async (req, res) => {
 exports.getTodays = async (req, res) => {
   const now = new Date();
   var month = now.getMonth() + 1;
-  const today = now.getFullYear() + "-" + month + "-" + now.getDate()
+  const today = now.getFullYear() + "-" + month + "-" + now.getDate();
   try {
-    const todays = await LessonRecord.find({recordDate: today}).select("sms student smsApp recordDate");
+    const todays = await LessonRecord.find({ recordDate: today }).select(
+      "sms student smsApp recordDate"
+    );
     res.status(201).json({ todays });
   } catch (error) {
     console.log(error);
   }
+};
+
+exports.getStudentRecords = async (req, res) => {
+  const student = req.body.student;
+  LessonRecord.find({ student })
+    .sort("recordDate")
+    .populate({ path: "teacher", select: "name surname" })
+    .populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "group" })
+    .populate({ path: "subTopics" })
+    .then(lessons => {
+      var lessonMap = {};
+      lessons.forEach(function(lesson) {
+        lessonMap[lesson._id] = lesson;
+      });
+      res.send(lessonMap);
+    });
 };

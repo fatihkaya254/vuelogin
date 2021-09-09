@@ -204,6 +204,7 @@ app.get("/groupRights", Purchase.getGroupStudentPurchases);
 app.put("/addStudentOnPurchase", Purchase.addStudent);
 app.put("/adminPurchase", Purchase.adminPurchase);
 app.get("/getParentship", Purchase.parentShip);
+app.get("/purchaseList", Purchase.listAll);
 
 
 
@@ -239,6 +240,7 @@ app.post("/wholeBranchLessons", Lesson.wholeBranchLessons);
 app.put("/updateLesson", Lesson.update);
 app.get("/allStudentLessons", Lesson.allStudentLessons);
 app.post("/getTeacherToday", Lesson.getTodaysForTeacher);
+app.post("/getStudentSchedule", Lesson.getStudentSchedule);
 
 //--------------------------------------------  LESSONRECORD-------------------------------------------- //
 app.post("/addLessonRecord", LessonRecord.newLessonRecord);
@@ -246,6 +248,7 @@ app.post("/dailyTeacherRecords", LessonRecord.dailyTeacherRecords);
 app.post("/findLessonRecord", LessonRecord.findOne);
 app.put("/updateLessonRecord", LessonRecord.update);
 app.get("/getTodayRecord", LessonRecord.getTodays);
+app.post("/getStudentRecord", LessonRecord.getStudentRecords);
 
 //--------------------------------------------  SUBTOPİC -------------------------------------------- //
 app.post("/addSubTopic", SubTopic.newSubTopic);
