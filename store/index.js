@@ -91,7 +91,6 @@ export const actions = {
       .post(
         `${process.env.OUR_HOST}/auth`,
         { token: authKey },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         let user = JSON.stringify(res.data.user);
@@ -133,7 +132,6 @@ export const actions = {
           phone: authData.phone,
           code: authData.code
         },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         if (res.data.auth) {
@@ -158,7 +156,6 @@ export const actions = {
           email: authData.email,
           profilePic: authData.profilePic,
         },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         if (res.data.auth) {

@@ -129,7 +129,7 @@ export default {
       // client_id is the only required property but you can add several more params, full list down bellow on the Auth api section
       params: {
         client_id:
-          "1062958103241-4o0u00itp4jpccd36l9rjrq3iltopdi4.apps.googleusercontent.com"
+          "711011716160-5p2kb7qb71duf9oljo11ohsbkva425dq.apps.googleusercontent.com"
       },
       // only needed if you want to render the button with the google ui
       renderParams: {
@@ -140,7 +140,7 @@ export default {
     };
   },
   head: {
-    title: "my website title",
+    title: "izders.com",
     meta: [
       { charset: "utf-8" },
       { name: "google-signin-scope", content: "profile email" },
@@ -301,8 +301,8 @@ header
     height: 60px
 
 .logo
-  height: 90px
-  width: 90px
+  height: 70px
+  width: 70px
   margin: 0
   margin-left: 2%
   float: left
