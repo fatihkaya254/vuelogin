@@ -209,6 +209,6 @@ input
       cursor: pointer
 
 .wholeBranches
-    height: 400px
+    height: 22vh
     overflow: auto
 </style>

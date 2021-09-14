@@ -110,7 +110,6 @@ export const actions = {
       .post(
         "/phone",
         { phone: authData.phone },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         if (res.data.smsStatus == "success") {

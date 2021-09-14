@@ -18,30 +18,27 @@
                             | Değiştir
                 h4
                     | {{ userName() }} {{ userSurname() }}
-                h5
-                    | 12. Sınıf
-                h5
-                    | 4,46
-            NuxtLink(:to="'/manager/sms'", class="nuxt-link active" active) 
-                p SMS
-            NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
-                p Kullanıcı Kaydı
-            NuxtLink(:to="'/manager/userInfo'", class="nuxt-link active" active) 
-                p Kullanıcı Düzenle
-            NuxtLink(:to="'/manager/purchase'", class="nuxt-link") 
-                p Paket Yükle
-            NuxtLink(:to="'/manager/addTeacher'", class="nuxt-link") 
-                p Öğretmen Ekle
-            NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
-                p Öğretmenler
-            NuxtLink(:to="'/manager/groups'", class="nuxt-link") 
-                p Gruplar
-            NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 
-                p Özel Dersler
-            NuxtLink(:to="'/manager/groupLessons'", class="nuxt-link") 
-                p Grup Dersleri
-            NuxtLink(:to="'/manager/purchaseList'", class="nuxt-link") 
-                p Satın Alımlar
+            .links
+                NuxtLink(:to="'/manager/sms'", class="nuxt-link active" active) 
+                    p SMS
+                NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 
+                    p Kullanıcı Kaydı
+                NuxtLink(:to="'/manager/userInfo'", class="nuxt-link active" active) 
+                    p Kullanıcı Düzenle
+                NuxtLink(:to="'/manager/purchase'", class="nuxt-link") 
+                    p Paket Yükle
+                NuxtLink(:to="'/manager/addTeacher'", class="nuxt-link") 
+                    p Öğretmen Ekle
+                NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
+                    p Öğretmenler
+                NuxtLink(:to="'/manager/groups'", class="nuxt-link") 
+                    p Gruplar
+                NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 
+                    p Özel Dersler
+                NuxtLink(:to="'/manager/groupLessons'", class="nuxt-link") 
+                    p Grup Dersleri
+                NuxtLink(:to="'/manager/purchaseList'", class="nuxt-link") 
+                    p Satın Alımlar
         .content
             nuxt-child
 </template>
@@ -166,6 +163,14 @@ a.nuxt-link-active
     height: 90%
     width: 20%
     padding: 12px
+    @media screen and (max-width: 1200px)
+        width: 100%
+        float: none
+        min-height: 140px
+        height: 25vh
+        overflow: auto
+        border-bottom: 1px solid black
+
 
 .profileInfo
     padding-top: 10px
@@ -216,4 +221,23 @@ a.nuxt-link-active
     position: absolute
     cursor: pointer
     display: none
+
+.links
+    height: 32vh
+    overflow: auto
+
+::-webkit-scrollbar
+    width: 1px
+    border-radius: 1em
+
+::-webkit-scrollbar-track
+    background: #ffffff
+    border-radius: 1em
+
+::-webkit-scrollbar-thumb
+    background: #000
+    border-radius: 1em
+
+::-webkit-scrollbar-thumb:hover
+    background: #555
 </style>
