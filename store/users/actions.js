@@ -23,7 +23,6 @@ export default {
       .put(
         "/updateProfile",
         { id, where, value },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         console.log(res.status);
@@ -44,7 +43,6 @@ export default {
       .put(
         "/changePhoneCheck",
         { id, code, phone },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         console.log(res.status);

@@ -49,7 +49,6 @@ export default {
       .put(
         "/updateQuestion",
         { id, where, value },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         console.log(res.status);
@@ -61,7 +60,6 @@ export default {
       .put(
         "/deleteQuestion",
         { id: id },
-        { withCredentials: true, credentials: "include" }
       )
       .then(res => {
         console.log(res.data.message);

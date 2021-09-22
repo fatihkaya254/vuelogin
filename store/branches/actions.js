@@ -25,7 +25,6 @@ export default {
         .put(
           "/updateBranch",
           { id, where, value },
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.status);
@@ -37,7 +36,6 @@ export default {
         .put(
           "/deleteBranch",
           {id : id},
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.data.message);
@@ -97,7 +95,6 @@ export default {
         .put(
           "/updateSubject",
           { id, where, value },
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.status);
@@ -109,7 +106,6 @@ export default {
         .put(
           "/deleteSubject",
           {id : id},
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.data.message);
@@ -164,7 +160,6 @@ export default {
         .put(
           "/updateSubTopic",
           { id, where, value },
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.status);
@@ -176,7 +171,6 @@ export default {
         .put(
           "/deleteSubTopic",
           {id : id},
-          { withCredentials: true, credentials: "include" }
         )
         .then(res => {
           console.log(res.data.message);

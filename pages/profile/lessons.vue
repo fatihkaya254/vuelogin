@@ -4,7 +4,7 @@
   .lessonContainer  
     .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
       .linePhoto
-        img(:src=" ourhost + lessonsPhotos[lesson._id]" v-show="lessonsPhotos[lesson._id]")
+        img(:src=" ourhost + '/' + lessonsPhotos[lesson._id]" v-if="lessonsPhotos[lesson._id] != undefined")
       .lessonInfoes
         .clock {{ hours[lesson.hour] }} 
         .branch {{ lessonsBranches[lesson._id] }}
@@ -57,13 +57,13 @@
             span(class="rounded-checkbox__outer")
               span(class="rounded-checkbox__inner")
             p {{subtopic.subTopicName}}
-    .lastHomework
-    .homeworkStatus(v-for="stua in LGGs")  {{students[stua]}}
-      .not(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 1")
+    .lastHomework(v-if="groupPres[Object.keys(groupPres)[0]]") {{groupPres[Object.keys(groupPres)[0]].homework}}
+    .homeworkStatus(v-for="stua in LGGs" v-if="groupPres[Object.keys(groupPres)[0]]")  {{students[stua]}}
+      .not(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 1)")
         | Yapılmadı
-      .half(:style="[LGHomeworkStatus[stua] == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 2")
+      .half(:style="[LGHomeworkStatus[stua] == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 2)")
         | Eksik
-      .done(:style="[LGHomeworkStatus[stua] == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatus[stua] = 3")
+      .done(:style="[LGHomeworkStatus[stua] == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 3)")
         | Tam
     .nextHomework
       .infoLine
@@ -83,6 +83,7 @@ export default {
       colors: ["#ff605c", "#ffbd44", "#00ca4e"],
       homeworkStatus: "",
       nextHomework: "yok",
+      preHWL: "Önceki ödev bilgisi yok",
       LGGs: [],
       LGHomeworkStatus: [],
       LGBranchName: "",
@@ -146,7 +147,7 @@ export default {
         "20:00",
         "21:00",
         "22:00",
-        "23:00"
+        "23:00",
       ],
       turkMonths: [
         "Ocak",
@@ -160,7 +161,7 @@ export default {
         "Eylül",
         "Ekim",
         "Kasım",
-        "Aralık"
+        "Aralık",
       ],
       dayNames: [
         "Pazartesi",
@@ -169,12 +170,12 @@ export default {
         "Perşembe",
         "Cuma",
         "Cumartesi",
-        "Pazar"
+        "Pazar",
       ],
       studentName: "",
       dateOfDay: "",
       groupRights: [],
-      ourhost: process.env.OUR_URL
+      ourhost: process.env.OUR_URL,
     };
   },
   methods: {
@@ -182,7 +183,7 @@ export default {
     ...mapActions("users", [
       "getMyPurchases",
       "getMyPayments",
-      "getTeachersDaily"
+      "getTeachersDaily",
     ]),
     ...mapActions("branches", ["getBranches"]),
     ...mapGetters("branches", ["branch"]),
@@ -199,9 +200,9 @@ export default {
       "userBirthDayForInput",
       "userGoogleId",
       "isTeacher",
-      "userBranch"
+      "userBranch",
     ]),
-    close: function() {
+    close: function () {
       this.recordSubtopics = [];
       this.id = "";
       this.homeworkStatus = "";
@@ -218,8 +219,9 @@ export default {
       this.LGPreHomework = "";
       this.LGBranchId = "";
       this.smsText = "";
+      this.groupPres = []
     },
-    appSMS: async function(id, stat, lesson) {
+    appSMS: async function (id, stat, lesson) {
       const myLesson = this.teachersDaily()[lesson];
       this.findMyGroupRecords(lesson);
       if (myLesson.group != undefined) {
@@ -227,17 +229,17 @@ export default {
           console.log(
             this.groupRecords[this.group()[myLesson.group._id].student[stu]]._id
           );
-          const recordId = this.groupRecords[
-            this.group()[myLesson.group._id].student[stu]
-          ]._id;
+          const recordId =
+            this.groupRecords[this.group()[myLesson.group._id].student[stu]]
+              ._id;
           let newStat = "1";
           if (stat) newStat = "0";
           await this.$axios
             .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
               id: recordId,
-              changes: { smsApp: newStat }
+              changes: { smsApp: newStat },
             })
-            .then(res => {
+            .then((res) => {
               console.log(res);
             });
         }
@@ -248,15 +250,15 @@ export default {
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id,
-            changes: { smsApp: newStat }
+            changes: { smsApp: newStat },
           })
-          .then(res => {
+          .then((res) => {
             console.log(res);
           });
       }
       this.start();
     },
-    setDates: function() {
+    setDates: function () {
       this.teacher = this.userId();
       const now = new Date();
       this.day = this.turkDays[now.getDay()];
@@ -268,7 +270,7 @@ export default {
         now.getFullYear();
       var month = now.getMonth() + 1;
     },
-    addLessonRecord: function(lesson) {
+    addLessonRecord: function (lesson) {
       const now = new Date();
       const ml = this.teachersDaily()[lesson];
       var record = {};
@@ -287,25 +289,25 @@ export default {
           record.student = groupStudents[stu];
           this.$axios
             .post(`${process.env.OUR_HOST}/addLessonRecord`, {
-              lessonRecord: record
+              lessonRecord: record,
             })
-            .then(res => {
+            .then((res) => {
               console.log(res);
             });
         }
       } else {
         this.$axios
           .post(`${process.env.OUR_HOST}/addLessonRecord`, {
-            lessonRecord: record
+            lessonRecord: record,
           })
-          .then(res => {
+          .then((res) => {
             console.log(res);
           });
       }
       console.log(record);
       this.start();
     },
-    getLessonRecords: function() {
+    getLessonRecords: function () {
       const teacher = this.teacher;
       const now = new Date();
       var month = now.getMonth() + 1;
@@ -313,24 +315,24 @@ export default {
       this.$axios
         .post(`${process.env.OUR_HOST}/dailyTeacherRecords`, {
           teacher,
-          date
+          date,
         })
-        .then(res => {
+        .then((res) => {
           this.lessonRecords = res.data;
         });
     },
-    getSubTopics: function() {
+    getSubTopics: function () {
       this.$axios
         .post(`${process.env.OUR_HOST}/branchProcess`, {
-          branch: this.userBranch()
+          branch: this.userBranch(),
         })
-        .then(res => {
+        .then((res) => {
           this.branchProcess = res.data.branchMap;
           this.branchSubjects = res.data.subjectMap;
           this.branchSubTopics = res.data.branchSubtopics;
         });
     },
-    dealCards: function() {
+    dealCards: function () {
       for (const index in this.teachersDaily()) {
         if (
           this.teachersDaily()[index].branch != undefined &&
@@ -382,25 +384,24 @@ export default {
         }
       }
     },
-    findMyRecord: function(lesson) {
+    findMyRecord: function (lesson) {
       for (const index in this.lessonRecords) {
         if (this.lessonRecords[index].lesson == lesson) {
           return index;
         }
       }
     },
-    findMyGroupRecords: function(lesson) {
+    findMyGroupRecords: function (lesson) {
       var indexes = [];
       for (const index in this.lessonRecords) {
         if (this.lessonRecords[index].lesson == lesson) {
-          indexes[this.lessonRecords[index].student] = this.lessonRecords[
-            index
-          ];
+          indexes[this.lessonRecords[index].student] =
+            this.lessonRecords[index];
         }
       }
       this.groupRecords = indexes;
     },
-    clickOnLesson: async function(lesson, h) {
+    clickOnLesson: async function (lesson, h) {
       this.lessonHour = this.hours[h];
       if (this.findMyRecord(lesson)) {
         if (
@@ -431,7 +432,10 @@ export default {
             await this.findGroupPreRecord(this.groupRecords[les]._id, les);
           }
           for (const pre in this.groupPres) {
-            if (this.groupPres[pre] != undefined && this.groupPres[pre] != null ) {
+            if (
+              this.groupPres[pre] != undefined &&
+              this.groupPres[pre] != null
+            ) {
               this.$set(
                 this.LGHomeworkStatus,
                 this.groupPres[pre].student,
@@ -439,13 +443,15 @@ export default {
               );
             }
           }
-          const theRecord = this.groupRecords[
-            Object.keys(this.groupRecords)[0]
-          ];
+          const theRecord =
+            this.groupRecords[Object.keys(this.groupRecords)[0]];
           this.recordSubtopics = theRecord.subTopics;
           this.nextHomework = theRecord.homework;
           this.LGId = theRecord.group;
-          if (this.group()[this.LGId] != undefined && this.group()[this.LGId] != null)
+          if (
+            this.group()[this.LGId] != undefined &&
+            this.group()[this.LGId] != null
+          )
             this.LGGs = this.group()[this.LGId].student;
           this.LGBranchId = theRecord.branch;
           this.LGBranchName =
@@ -464,20 +470,20 @@ export default {
         console.log("c");
       }
     },
-    preHomework: function() {
+    preHomework: function () {
       if (this.preRecord == null || this.preRecord == undefined) {
         return "";
       } else {
         return this.preRecord.homework;
       }
     },
-    homeworkStatusConvert: async function(stat) {
+    homeworkStatusConvert: async function (stat) {
       if (stat == 1) return "yapılmadı";
       if (stat == 2) return "eksik";
       if (stat == 3) return "tam yapıldı";
       return "-";
     },
-    updateRecord: async function() {
+    updateRecord: async function () {
       const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus);
       const id = this.recordId;
       var preId = "";
@@ -503,28 +509,29 @@ export default {
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
           id,
-          changes: { subTopics, homework, sms }
+          changes: { subTopics, homework, sms },
         })
-        .then(res => {
+        .then((res) => {
           console.log(res);
         });
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
           id: preId,
-          changes: { homeworkStatus }
+          changes: { homeworkStatus },
         })
-        .then(res => {
+        .then((res) => {
           console.log(res);
         });
       this.start();
       this.close();
     },
-    updateGroupRecord: async function() {
+    updateGroupRecord: async function () {
       for (const student in this.group()[this.LGId].student) {
         const studentId = this.group()[this.LGId].student[student];
         const homeworkStatus = this.LGHomeworkStatus[studentId];
         var preId = "";
-        if (this.groupPres != undefined) preId = this.groupPres[studentId];
+        preId = this.groupPres[studentId];
+        console.log(this.groupPres);
         const recordId = this.groupRecords[studentId]._id;
         const subTopics = this.recordSubtopics;
         const branch = this.LGBranchId;
@@ -545,42 +552,37 @@ export default {
           this.userName() +
           " " +
           this.userSurname();
-        console.log("studentId: " + studentId);
-        console.log("homeworkStatus: " + homeworkStatus);
-        console.log("preId: " + preId._id);
-        console.log("subTopics: " + subTopics);
-        console.log("recordId: " + recordId);
-        console.log("branch: " + branch);
-        console.log("sms: " + sms);
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id: recordId,
-            changes: { subTopics, homework, sms }
+            changes: { subTopics, homework, sms },
           })
-          .then(res => {
+          .then((res) => {
             console.log(res);
           });
-        await this.$axios
-          .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
-            id: preId._id,
-            changes: { homeworkStatus }
-          })
-          .then(res => {
-            console.log(res);
-          });
+        if (preId != undefined && preId != null && preId !='') {
+          await this.$axios
+            .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+              id: preId._id,
+              changes: { homeworkStatus },
+            })
+            .then((res) => {
+              console.log(res);
+              console.log(homeworkStatus);
+              console.log("hw");
+            });
+        }
       }
       this.start();
       this.close();
     },
-    findPreRecord: async function(lesson) {
+    findPreRecord: async function (lesson) {
       const record = this.findMyRecord(lesson);
       const conditions = {};
       const student = this.lessonsStudentId[lesson];
-      const group = this.lessonsGroupId[lesson];
       if (student != "" && student != undefined && student != null)
         conditions.student = student;
-      if (group != "" && group != undefined && group != null)
-        conditions.group = group;
+      conditions.group = null
       conditions._id = { $ne: record };
       conditions.branch = this.lessonsBranchId[lesson];
       conditions.teacher = this.userId();
@@ -588,33 +590,43 @@ export default {
       console.log(conditions);
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
-          conditions
+          conditions,
         })
-        .then(res => {
+        .then((res) => {
           this.preRecord = res.data.preRecord;
           if (res.data.preRecord != null) {
             this.homeworkStatus = this.preRecord.homeworkStatus;
           }
         });
     },
-    findGroupPreRecord: async function(record, student) {
+    findGroupPreRecord: async function (record, student) {
+      const now = new Date()
+      var month = now.getMonth() + 1
+      var dateToday =
+        now.getFullYear() +
+        "-" +
+        month +
+        "-" +
+        now.getDate();
+      console.log(dateToday);
       const conditions = {};
-      if (student != "" && student != undefined && student != null){
+      if (student != "" && student != undefined && student != null) {
         conditions.student = student;
       }
       conditions.branch = this.groupRecords[student].branch;
-      conditions._id = { $ne: record };
+      conditions.group = this.groupRecords[student].group;
+      conditions.recordDate = { $lt: dateToday };
       conditions.teacher = this.userId();
-      console.log(conditions);
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
-          conditions
+          conditions,
         })
-        .then(res => {
+        .then((res) => {
           this.$set(this.groupPres, student, res.data.preRecord);
+          console.log(this.groupPres);
         });
     },
-    start: async function() {
+    start: async function () {
       this.getGroups();
       this.setDates();
       await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
@@ -622,12 +634,12 @@ export default {
       this.dealCards();
       this.getSubTopics();
     },
-    getRights: async function() {
+    getRights: async function () {
       console.log("as");
       try {
         await this.$axios
           .get(`${process.env.OUR_HOST}/groupRights`)
-          .then(res => {
+          .then((res) => {
             this.groupRights = res.data;
             console.log("res");
           });
@@ -645,6 +657,10 @@ export default {
       }
       console.log("this.students");
       console.log(this.students);
+    },
+    LGHomeworkStatusChange: function (student, hs) {
+      this.$set(this.LGHomeworkStatus, student, hs)
+      console.log(this.LGHomeworkStatus);
     }
   },
   watch: {},
@@ -652,7 +668,7 @@ export default {
     await this.getRights();
     this.getBranches();
     this.start();
-  }
+  },
   // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };
 </script>
@@ -818,12 +834,12 @@ $ligthGreen: #C4D7D1
     margin-bottom: 40px
     display: flex
     flex-direction: column
-    
+
 .changeHours
     bottom:0
     right: 0
     height: 100%
-    overflow: auto 
+    overflow: auto
     width: 100%
     position: absolute
     z-index: 3

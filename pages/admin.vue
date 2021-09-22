@@ -71,11 +71,11 @@ $gray6-dark: rgb(28, 28, 30)
     padding: 20px
 .content
     background-color: $gray6
-    height: 90%
-    min-height: 800px
+    height: 80vh
     width: 80%
     float: left
-    padding: 20px
+    padding: 21px
+    overflow: auto
 .nuxt-link
   color: $gray6-dark
   text-decoration: none
