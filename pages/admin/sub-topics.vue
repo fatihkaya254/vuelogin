@@ -20,7 +20,7 @@ div
                             li( v-for="subject in subject()" v-if="subject.branch == branch._id")
                                 div(@click="openCloseSubject(subject._id)" :class="[collapseSubject[subject._id] ? 'accordionTittle accordionTittleOpen' : 'accordionTittle']")
                                   | &nbsp;&nbsp;&nbsp;{{ subject.subjectOrder }} - {{ subject.subjectName }}  
-                                .accordionContent(v-show="collapseSubject[subject._id]")
+                                .accordionContent(v-if="collapseSubject[subject._id]")
                                     ul
                                       li( v-for="subTopic in subTopic()" v-if="subTopic.subject == subject._id")
                                         .card(@click="move($event, subTopic._id)")

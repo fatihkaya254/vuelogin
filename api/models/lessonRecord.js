@@ -24,6 +24,9 @@ const lessonRecordchema = mongoose.Schema({
         type: Number,
         default: 0,
     },
+    join: {
+        type: Boolean,
+    },
     lesson: {
         type:mongoose.Schema.Types.ObjectId,
         ref:'lesson'

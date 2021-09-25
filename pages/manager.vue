@@ -31,6 +31,8 @@
                     p Öğretmen Ekle
                 NuxtLink(:to="'/manager/teachers'", class="nuxt-link") 
                     p Öğretmenler
+                NuxtLink(:to="'/manager/teachersSchedule'", class="nuxt-link") 
+                    p Öğretmen Programları
                 NuxtLink(:to="'/manager/groups'", class="nuxt-link") 
                     p Gruplar
                 NuxtLink(:to="'/manager/lessons'", class="nuxt-link") 

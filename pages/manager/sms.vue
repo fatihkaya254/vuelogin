@@ -6,7 +6,7 @@
           .infoes
             .lessonInfo {{s.sms}} 
             .lessonInfo(v-if="s.smsApp == 1") 
-              p(v-for="number in warnings[s.student]") {{number}}
+              p(v-for="number in warnings[s.student]") {{number}} {{whois[number]}}
               .changeRecord(@click="sendSms(s)") Gönder
             .lessonInfo(v-if="s.smsApp == 1") 
               .changeRecord(@click="cancel(s._id)") İptal Et
@@ -65,6 +65,7 @@ export default {
       phone: "",
       date: "",
       photo: "",
+      whois: {}, 
       adress: "",
       email: "",
       mainBranch: "",
@@ -87,9 +88,11 @@ export default {
       for (const j in this.parent) {
         if (this.parent[j].student != undefined) {
           if (student == this.parent[j].student._id) {
+            var name = this.parent[j].parent.name + " " + this.parent[j].parent.surname 
             var phone = this.parent[j].parent.phone;
             await this.$set(phones, phone, phone);
             this.$set(this.warnings, student, phones);
+            this.$set(this.whois, phone, name)
           }
         }
       }
