@@ -22,7 +22,7 @@ export default {
   ],
 
   server: {     
-    port: 80, // default: 3000     
+    port: process.env.OUR_PORT, // default: 3000     
     host: process.env.OUR_IP, // default: localhost   
   },   // other configs 
 

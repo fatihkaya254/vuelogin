@@ -198,6 +198,7 @@ app.post("/myPayments", Payment.getMyPayments);
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);
 app.get("/purchases", Purchase.getAllPurchases);
+app.get("/yearlyEarns", Purchase.yearlyEarns);
 app.post("/myPurchases", Purchase.getMyPurchases);
 app.get("/studentLessons", Purchase.getStudentPurchases);
 app.get("/groupRights", Purchase.getGroupStudentPurchases);
