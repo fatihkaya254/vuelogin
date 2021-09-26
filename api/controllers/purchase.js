@@ -248,8 +248,8 @@ exports.yearlyEarns = async (req, res) => {
             pNameBranchFee[branchName] += perBranchFee
             if(pNameBranchAverageFee[branchName] == undefined)  pNameBranchAverageFee[branchName] = 0
             pNameBranchAverageFee[branchName] = parseInt(pNameBranchFee[branchName] / pNameBranch[branchName] / weeks, 10)
-            pInfoGrade[branchId] = {name: gradeName + " " +branchName, students: pGradeBranch[branchId], total:pGradeBranchFee[branchId], perHour: pGradeBranchAverageFee[branchId] }
-            pInfo[branchName] = {name: branchName, students: pNameBranch[branchName], total:pNameBranchFee[branchName], perHour: pNameBranchAverageFee[branchName] }
+            pInfoGrade[branchId] = {name: gradeName + " " +branchName, hours: pGradeBranch[branchId], total:pGradeBranchFee[branchId], perHour: pGradeBranchAverageFee[branchId] }
+            pInfo[branchName] = {name: branchName, hours: pNameBranch[branchName], total:pNameBranchFee[branchName], perHour: pNameBranchAverageFee[branchName] }
             pInfoGradeTotal[branchId]= pInfoGrade[branchId]
             earns.branches = pInfoGradeTotal
             pInfoTotal[branchName]= pInfo[branchName]
