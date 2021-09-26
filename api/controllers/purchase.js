@@ -187,6 +187,8 @@ exports.yearlyEarns = async (req, res) => {
     .sort("parent student")
     .populate([{ path: 'branch', populate: { path: 'grade'}}])
     .populate('grade')
+    .populate('parent')
+    .populate('student')
     .then(purchases => {
       var earns = {};
       var gStudent = {};
@@ -211,6 +213,11 @@ exports.yearlyEarns = async (req, res) => {
       earns.groupCount = 0
       earns.parents = 0
       earns.students = 0
+      earns.grades = {}
+      earns.branches = {}
+      earns.generalBranches = {}
+      earns.sList = {}
+      earns.pList = {}
       var parent = ""
       var student = ""
       var nextP = ""
@@ -260,10 +267,27 @@ exports.yearlyEarns = async (req, res) => {
         if (p.fee == 0) return // ücretsiz paketleri atla
 
         // veli ve öğrencileri say
-        nextP = ""+p.parent
-        nextS = ""+p.student
-        if(parent != nextP) earns.parents += 1
-        if(student != nextS) earns.students += 1
+        nextP = ""+p.parent._id
+        nextS = ""+p.student._id
+        if(parent != nextP){
+          if(earns.pList[p.parent._id] == undefined){
+            earns.pList[p.parent._id] = {}
+            earns.pList[p.parent._id].fee = 0
+          } 
+          earns.pList[p.parent._id].name = p.parent.name + " " + p.parent.surname
+          earns.parents += 1
+        } 
+        earns.pList[p.parent._id].fee += p.fee
+        if(student != nextS) 
+        {
+          if(earns.sList[p.student._id] == undefined){
+            earns.sList[p.student._id] = {}
+            earns.sList[p.student._id].fee = 0
+          } 
+          earns.sList[p.student._id].name = p.student.name + " " + p.student.surname
+          earns.students += 1
+        }
+        earns.sList[p.student._id].fee += p.fee
         parent = nextP
         student = nextS
 

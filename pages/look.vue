@@ -1,5 +1,10 @@
 <template lang="pug">
 .body
+    .pop(v-show="popup")
+      .close(@click="close()") Kapat
+      .list
+        ol
+          li(v-for="l in list") {{l.name}} | {{doThousandsRegExp(l.fee)}}₺
     .generals
         .container
             .block(v-if="generals.total != undefined")
@@ -18,11 +23,11 @@
             .block(v-if="generals.perGroup != undefined")
                 .string 1 Grup Programı  Yıllık Ücreti
                 .number {{doThousandsRegExp(generals.perGroup)}}₺
-        .container
+        .container(@click="students()")
             .block(v-if="generals.students != undefined")
                 .string Öğrenci Sayısı
                 .number {{doThousandsRegExp(generals.students)}}
-        .container
+        .container(@click="parents()")
             .block(v-if="generals.parents != undefined")
                 .string Veli Sayısı
                 .number {{doThousandsRegExp(generals.parents)}}
@@ -91,24 +96,46 @@ import Navbar from "@/components/Navbar.vue";
 export default {
   middleware: ["session-control", "managerAuth"],
   components: {
-    Navbar,
+    Navbar
   },
   data() {
     return {
       string: "",
       generals: {},
+      list: {},
+      popup: false,
       a: false,
       b: false,
       c: false,
-      ourhost: process.env.OUR_URL,
+      ourhost: process.env.OUR_URL
     };
   },
   methods: {
-    getSummary: async function () {
+    parents: function() {
+      this.popup = true;
+      var list = Object.keys(this.generals.pList).map((key) => [key, this.generals.pList[key]]);
+      list.sort((b, a) => (a[1].fee - b[1].fee));
+      list.forEach(element => {
+        this.list[element[0]] = element[1]
+      });
+    },
+    students: function() {
+      this.popup = true;
+      var list = Object.keys(this.generals.sList).map((key) => [key, this.generals.sList[key]]);
+      list.sort((b, a) => (a[1].fee - b[1].fee));
+      list.forEach(element => {
+        this.list[element[0]] = element[1]
+      });
+    },
+    close: function() {
+      this.popup = false;
+      this.list = {};
+    },
+    getSummary: async function() {
       try {
         await this.$axios
           .get(`${process.env.OUR_HOST}/yearlyEarns`)
-          .then((res) => {
+          .then(res => {
             this.generals = res.data;
             console.log(this.generals);
           });
@@ -116,18 +143,51 @@ export default {
         console.log(error);
       }
     },
-    doThousandsRegExp: function (n) {
+    doThousandsRegExp: function(n) {
       if (n.length < 4) return n;
       return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
+    }
   },
   mounted() {
     this.getSummary();
-  },
+  }
 };
 </script>
 
 <style lang="sass" scoped>
+.pop
+  height: 60vh
+  width: 60vw
+  background-color: white
+  position: absolute
+  z-index: 1
+  right: 20vw
+  border-radius: 8px
+  box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+  overflow: hidden
+
+.close
+  width: 60vw
+  background-color: #EF5350
+  color: white
+  justify-content: center
+  align-items: center
+  text-align: center
+  font-family: "Lato", Arial
+  padding: 12px
+
+.list
+  height: 50vh
+  overflow: auto
+  justify-content: center
+  text-align: center
+  margin-top: 16px
+  ol
+    display: table
+    margin: 0 auto
+    padding: 0
+  li
+    margin: 10px
 .subs
   transition: all 0.5s ease
 
@@ -156,7 +216,7 @@ export default {
     margin-bottom: 20px
     display: flex
     flex-direction: row
-    justify-content: space-around  
+    justify-content: space-around
     width: 60vw
     background: white
     align-items: center
@@ -180,11 +240,26 @@ export default {
         height: 100px
       &:hover
         color: #EF5350
-      .number 
+      .number
         font-size: 32px
         font-weight: bold
       .string
         font-size: 12px
         line-height: 24px
         color: gray
+
+::-webkit-scrollbar
+  width: 5px
+  border-radius: 1em
+
+::-webkit-scrollbar-track
+  background: #ffffff
+  border-radius: 1em
+
+::-webkit-scrollbar-thumb
+  background: #000
+  border-radius: 1em
+
+::-webkit-scrollbar-thumb:hover
+  background: #555
 </style>
