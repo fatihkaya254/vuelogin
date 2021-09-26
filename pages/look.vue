@@ -1,0 +1,190 @@
+<template lang="pug">
+.body
+    .generals
+        .container
+            .block(v-if="generals.total != undefined")
+                .string Sözleşme Toplamı
+                .number {{doThousandsRegExp(generals.total)}}₺
+        .container
+            .block(v-if="generals.group != undefined")
+                .string Grup Ders Toplam
+                .number {{doThousandsRegExp(generals.group)}}₺
+        .container
+            .block(v-if="generals.priv != undefined")
+                .string Özel Ders Toplam
+                .number {{doThousandsRegExp(generals.priv)}}₺
+    .generals
+        .container
+            .block(v-if="generals.perGroup != undefined")
+                .string 1 Grup Programı  Yıllık Ücreti
+                .number {{doThousandsRegExp(generals.perGroup)}}₺
+        .container
+            .block(v-if="generals.students != undefined")
+                .string Öğrenci Sayısı
+                .number {{doThousandsRegExp(generals.students)}}
+        .container
+            .block(v-if="generals.parents != undefined")
+                .string Veli Sayısı
+                .number {{doThousandsRegExp(generals.parents)}}
+    .generals
+        .container
+            .block(v-if="generals.perHourPriv != undefined")
+                .string 1 Saat Özel Ders Ücreti
+                .number {{doThousandsRegExp(generals.perHourPriv)}}₺
+        .container
+            .block(v-if="generals.perStudent != undefined")
+                .string Öğrenci Başına Yıllık
+                .number {{doThousandsRegExp(generals.perStudent)}}₺
+        .container
+            .block(v-if="generals.perParent != undefined")
+                .string Veli Başına Yıllık
+                .number {{doThousandsRegExp(generals.perParent)}}₺
+    .container(@click="a = !a") Grup Programları
+    .subs(v-if="generals.grades && a")
+        .container(v-for="g in generals.grades")
+            .block(style="border-bottom: 0.5px solid black")
+                h5 {{g.name}} Grup Programı
+            .block
+                .string Öğrenci Sayısı
+                .number {{g.students}}
+            .block
+                .string Ortalama Ücret
+                .number {{doThousandsRegExp(parseInt(g.totalFee/g.students, 10))}}₺
+            .block
+                .string Toplam Ücret
+                .number {{doThousandsRegExp(g.totalFee)}}₺
+    
+    .container(@click="b = !b") Sınıf-Branş Özel Ders
+    .subs(v-if="generals.branches && b")
+        .container(v-for="b in generals.branches")
+            .block(style="border-bottom: 0.5px solid black")
+                h5 {{b.name}} Özel Ders
+            .block
+                .string Haftalık Ders Saati
+                .number {{b.hours}}
+            .block
+                .string Saatlik Ücret
+                .number {{doThousandsRegExp(b.perHour)}}₺
+            .block
+                .string Toplam Ücret
+                .number {{doThousandsRegExp(b.total)}}₺
+    .container(@click="c = !c") Branş Özel Ders
+    .subs(v-if="generals.generalBranches && c")
+        .container(v-for="c in generals.generalBranches")
+            .block(style="border-bottom: 0.5px solid black")
+                h5 {{c.name}} Özel Ders
+            .block
+                .string Haftalık Ders Saati
+                .number {{c.hours}}
+            .block
+                .string Saatlik Ücret
+                .number {{doThousandsRegExp(c.perHour)}}₺
+            .block
+                .string Toplam Ücret
+                .number {{doThousandsRegExp(c.total)}}₺
+
+</template>
+
+<script>
+import Navbar from "@/components/Navbar.vue";
+
+export default {
+  middleware: ["session-control", "managerAuth"],
+  components: {
+    Navbar,
+  },
+  data() {
+    return {
+      string: "",
+      generals: {},
+      a: false,
+      b: false,
+      c: false,
+      ourhost: process.env.OUR_URL,
+    };
+  },
+  methods: {
+    getSummary: async function () {
+      try {
+        await this.$axios
+          .get(`${process.env.OUR_HOST}/yearlyEarns`)
+          .then((res) => {
+            this.generals = res.data;
+            console.log(this.generals);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    doThousandsRegExp: function (n) {
+      if (n.length < 4) return n;
+      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+  },
+  mounted() {
+    this.getSummary();
+  },
+};
+</script>
+
+<style lang="sass" scoped>
+.subs
+  transition: all 0.5s ease
+
+.body
+  padding: 50px
+  width: 100vw
+  min-height: 100vh
+  justify-content: center
+  align-items: center
+  background: #EF5350
+  font-family: "Lato", Arial
+  color: #263238
+  transition: all 0.5s ease
+  .generals
+    transition: all 0.5s ease
+    width: 60vw
+    display: flex
+    gap: 20px
+    margin: auto
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+      gap: 0px
+  .container
+    transition: all 0.5s ease
+    margin: auto
+    margin-bottom: 20px
+    display: flex
+    flex-direction: row
+    justify-content: space-around  
+    width: 60vw
+    background: white
+    align-items: center
+    border-radius: 8px
+    box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+    @media screen and (min-width: 1200px)
+      height: 100px
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+      min-height: 60px
+    .block
+      transition: all 0.5s ease
+      text-align: center
+      height: 100%
+      width: 200px
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      @media screen and (max-width: 1200px)
+        height: 100px
+      &:hover
+        color: #EF5350
+      .number 
+        font-size: 32px
+        font-weight: bold
+      .string
+        font-size: 12px
+        line-height: 24px
+        color: gray
+</style>
