@@ -11,7 +11,7 @@ exports.getAllClassrooms = async (req,res) =>{
         var classroomMap = {};
     
         classrooms.forEach(function(classroom) {
-            classroomnMap[classroom._id] = classroom;
+            classroomMap[classroom._id] = classroom;
         });
     
         res.send(classroomMap);  
