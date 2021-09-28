@@ -9,6 +9,7 @@ header
         .nuxt-link-cover
           NuxtLink(:to="'/profile/'", class="nuxt-link") 
             img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+            img(:src=" ourhost + '/basic-profile.png'" v-show="!this.$store.getters.userPic")
             p {{ this.$store.getters.userMerhaba }}
       div(:class="[login, this.$store.state.toForm ? form : '']")
         input#login(type="submit", value="Çıkış Yap", v-show="this.$store.getters.isAuthenticated", @click="clickSubmit")
@@ -113,7 +114,7 @@ import { gsap } from "gsap";
 export default {
   data() {
     return {
-
+      ourhost:  process.env.OUR_URL,
       form: "loginForm",
       login: "login",
       phoneNumber: "",
