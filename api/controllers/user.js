@@ -11,6 +11,7 @@ const createToken = id => {
 };
 exports.generateCode = async (req, res) => {
   const phoneNumber = req.body.phone;
+  console.log('numara giriş yapıyor: ' + phoneNumber);
   const passcode = Math.floor(Math.random() * (99999 - 10000)) + 10000;
   axios
     .post("https://api.iletimerkezi.com/v1/send-sms/json", {
@@ -42,6 +43,8 @@ exports.generateCode = async (req, res) => {
       }
     })
     .catch(resp => {
+      console.log(resp.status);
+      console.log(resp.statusText);
       if (resp.response.status == 452) {
         res.status(201).json({
           smsStatus: "numberInvalid"
