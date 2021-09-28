@@ -30,6 +30,12 @@ const purchaseSchema = mongoose.Schema({
     endDate:{
         type: Date,
     },
+    cancelDate:{
+        type: Date,
+    },
+    waivedWage:{
+        type: Number,
+    },
     fee:{
         type: Number,
         required: true
@@ -52,6 +58,10 @@ const purchaseSchema = mongoose.Schema({
         type: Number,
     },
     installment:{
+        type: Number,
+        required: true
+    },
+    cancel:{
         type: Number,
         required: true
     },
