@@ -31,6 +31,8 @@ exports.generateCode = async (req, res) => {
       }
     })
     .then(async resp => {
+      console.log(resp.status);
+      console.log(resp.statusText);
       if (resp.status == 200) {
         res.status(201).json({
           smsStatus: "success"

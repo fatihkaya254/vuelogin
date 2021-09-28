@@ -13,16 +13,16 @@
             .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
             .linePhoto
               img(:src=" ourhost + lesson.teacher.profilePic" v-show="lesson.teacher.profilePic")
-              img(:src=" ourhost + '/basic-profile.png'" v-show="!lesson.teacher.profilePic")
+              img(src="../../assets/basic-profile.png" v-show="!lesson.teacher.profilePic")
           .infoes(v-if="lesson.student != undefined && lesson.student != null" :style="{ color: warnings[lesson._id] }")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.student.name}} {{lesson.student.surname}} 
             .linePhoto
               img(:src=" ourhost + lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
-              img(:src=" ourhost + '/basic-profile.png'" v-show="!lesson.student.profilePic" @click="emptyLesson(lesson._id)")
+              img(src="../../assets/basic-profile.png" v-show="!lesson.student.profilePic" @click="emptyLesson(lesson._id)")
           .infoes(v-if="lesson.group != undefined && lesson.group != null")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.group.groupName}}
             .linePhoto
-              img(:src="ourhost + '/basic-profile.png'" @click="emptyLesson(lesson._id)")
+              img(src="../../assets/basic-profile.png" @click="emptyLesson(lesson._id)")
 </template>
 
 <script>

@@ -6,7 +6,7 @@
             .lessonInfo {{groups.groupName}} 
           .infoes(v-for="branch in branch()" v-show="branch.grade._id == groups.grade")
             .lessonInfoL(@click="setGroup(groups._id, branch._id)") {{branch.grade.gradeName}}  {{branch.branchName}}
-          .infoes(v-for="student in groups.student" @click="removeStu(groups._id, student)")
+          .infoes(v-for="student in groups.student")
             .lessonInfo(style="color: #88B0BF") {{students[student]}}
     .schedule
       .column  
@@ -15,16 +15,16 @@
             .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
             .linePhoto
               img(:src=" ourhost + lesson.teacher.profilePic" v-show="lesson.teacher.profilePic")
-              img(:src=" ourhost + '/basic-profile.png'" v-show="!lesson.teacher.profilePic")
+              img(src="../../assets/basic-profile.png" v-show="!lesson.teacher.profilePic")
           .infoes(v-if="lesson.student != undefined && lesson.student != null" :style="{ color: warnings[lesson._id] }")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.student.name}} {{lesson.student.surname}} 
             .linePhoto
               img(:src=" ourhost + lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
-              img(:src=" ourhost + lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
+              img(src="../../assets/basic-profile.png" v-show="!lesson.student.profilePic" @click="emptyLesson(lesson._id)")
           .infoes(v-if="lesson.group != undefined && lesson.group != null")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.group.groupName}}
             .linePhoto
-              img(:src="ourhost + '/basic-profile.png'" @click="emptyLesson(lesson._id)")
+              img(src="../../assets/basic-profile.png" @click="emptyLesson(lesson._id)")
 </template>
 
 <script>

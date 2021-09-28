@@ -7,7 +7,7 @@
             .profileInfo
                 .profilePhoto(@click="$refs.file.click()")
                     img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
-                    img(:src=" ourhost + '/basic-profile.png'" v-show="!this.$store.getters.userPic")
+                    img(src="../assets/basic-profile.png" v-show="!this.$store.getters.userPic")
                     input(
                         type="file"
                         class="input-field"

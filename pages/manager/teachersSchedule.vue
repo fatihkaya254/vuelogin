@@ -10,10 +10,11 @@ div
     .topBar
       p {{ name }} {{ surname }} | {{mainBranch}}
     .column(v-for="(n, day) in 7") {{days[day]}}
-      .row(v-for="(n, hour) in 24"  v-if="teachersLessons()[day+'-'+hour] && schedule[day+'-'+hour]!= undefined && schedule[day+'-'+hour].branch != undefined")  {{hours[hour]}} 
-        p {{schedule[day+'-'+hour].branch.branchName}}
-        p(v-if="schedule[day+'-'+hour].student != undefined") {{schedule[day+'-'+hour].student.name}} {{schedule[day+'-'+hour].student.surname}}
-        p(v-if="schedule[day+'-'+hour].group != undefined") {{schedule[day+'-'+hour].group.groupName}}
+      .row(v-for="(n, hour) in 24"  v-if="teachersLessons()[day+'-'+hour] != undefined && teachersLessons()[day+'-'+hour] != 0" )  {{hours[hour]}} 
+        div(v-if="schedule[day+'-'+hour]!= undefined && schedule[day+'-'+hour].branch != undefined")
+          p {{schedule[day+'-'+hour].branch.branchName}}
+          p(v-if="schedule[day+'-'+hour].student != undefined") {{schedule[day+'-'+hour].student.name}} {{schedule[day+'-'+hour].student.surname}}
+          p(v-if="schedule[day+'-'+hour].group != undefined") {{schedule[day+'-'+hour].group.groupName}}
 </template>
 
 <script>
@@ -205,12 +206,13 @@ export default {
 <style lang="sass" scoped>
 .formWrapper
   text-align: center
-
 .infoLine
   margin-top: 10px
   padding-top: 8px
   height: 40px
   border-bottom: 0.75px solid gray
+  @media screen and (max-width: 1200px)
+    height: 100px
   & img
     float: left
     margin-bottom: 5px
