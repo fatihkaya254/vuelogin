@@ -1,5 +1,7 @@
 const bodyParser = require("body-parser")
 require('dotenv').config()
+import path from 'path'
+import fs from 'fs'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -22,6 +24,10 @@ export default {
   ],
 
   server: {     
+    /*https: {
+      key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
+      crs: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.csr'))
+    },*/
     port: process.env.OUR_PORT, // default: 3000     
     host: process.env.OUR_IP, // default: localhost   
   },   // other configs 
