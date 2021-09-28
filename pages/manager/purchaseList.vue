@@ -74,36 +74,31 @@
                 | Veli {{parentName}}
             input(type="text" placeholder="Telefon numarası" v-model="parentPhone" :maxlength="phoneLength")
         .infoLine
+            input(type="submit" value="Onayla" @click="cParent()")
+        .infoLine
             label
                 | Öğrenci {{studentName}}
             input(type="text" placeholder="Telefon numarası" v-model="studentPhone" :maxlength="phoneLength")
-        .infoLine
-            label(v-if="packageId != ''")
-                | {{package()[packageId].name}}
-            label(v-if="packageId == ''")
-                | Paket
-            select(v-model="packageId")
-                option(v-for="packagee in package()" :value="packagee._id") {{packagee.name}}
-        .infoLine(v-if="packageId != '' && package()[packageId].installability")
+            input(type="submit" value="Onayla" @click="cStudent()")
+        .infoLine(v-if="packageId != ''")
             label
                 | Taksit 
             input(type="number" v-model="installment")
+            input(type="submit" value="Onayla" @click="cInstallment()")
         .infoLine
             label(v-show="purchaseDate == ''")
                 | Başlangıç
             label(v-show="purchaseDate != ''")
                 | {{purchaseDate}}
             input(type="date" v-model="purchaseDate")
+            input(type="submit" value="Onayla" @click="cPDate()")
         .infoLine(v-if="packageId != ''")
             label(v-show="tett == ''")
                 | Bitiş Tarihi
             label(v-show="tett != ''")
                 | {{tett}}
             input(type="date" v-model="tett")
-        .infoLine(v-if="packageId != '' && !package()[packageId].installability")
-            label
-                | {{life}} Aylık
-            input(type="number" v-model="life")
+            input(type="submit" value="Onayla" @click="cEDate()")
         .infoLine(v-if="packageId != ''")
             label
                 | Paket Fiyatı: {{package()[packageId].fee}}
@@ -112,7 +107,7 @@
             label
                 | Yeni Fiyatı: {{newFee}}
             input(type="number" v-model="newFee")
-        .close(style="background-color: #04AA6D") Ekle
+            input(type="submit" value="Onayla" @click="cNewFee()")
     .purchaseList
         table(id="customers")
             thead
@@ -125,12 +120,12 @@
                     th Bitiş
             tbody
                 tr(v-for="p in purchases" @click="selectPurchase(p._id)")
-                    td {{ p.parent.name }} {{ p.parent.surname }}
+                    td(v-if="p.parent != undefined") {{ p.parent.name }} {{ p.parent.surname }}
                     td(v-if="p.student != undefined") {{ p.student.name }} {{ p.student.surname }}
-                    td {{p.packageName}}
-                    td {{fixFee(p.fee)}}
-                    td {{fixDate(p.purchaseDate)}}
-                    td {{fixDate(p.endDate)}}
+                    td(v-if="p.packageName != undefined") {{p.packageName}}
+                    td(v-if="p.fee != undefined") {{fixFee(p.fee)}}
+                    td(v-if="p.purchaseDate != undefined") {{fixDate(p.purchaseDate)}}
+                    td(v-if="p.endDate != undefined") {{fixDate(p.endDate)}}
 </template>
 
 <script>
@@ -205,6 +200,8 @@ export default {
       this.packageId = "";
       this.mygrade = "";
       this.fee = "";
+      this.newFee = "";
+      this.id = 0;
       this.parentName = "";
       this.studentName = "";
       this.life = 1;
@@ -212,6 +209,7 @@ export default {
       this.tett = "";
       this.purchaseDate = "";
       this.myBranches = [];
+      this.getAll();
     },
     getAll: async function() {
       await this.$axios
@@ -219,6 +217,14 @@ export default {
         .then(res => {
           this.purchases = res.data;
         });
+    },
+    change: async function(id, where, value) {
+      await this.$axios
+        .put(`${process.env.OUR_HOST}/updatePurchase`, { id, where, value })
+        .then(res => {
+          this.purchases = res.data;
+        });
+      this.close();
     },
     fixDate: function(mydate) {
       let datetime = mydate;
@@ -232,6 +238,7 @@ export default {
       return x.toLocaleString("tr-TR") + " ₺";
     },
     selectPurchase: function(id) {
+      this.id = id;
       this.pop = true;
       this.packageId = this.purchases[id].package;
       if (this.purchases[id].grade[0] != undefined)
@@ -325,14 +332,44 @@ export default {
         );
       } else {
         const branch = branches;
-        const grade = this.mygrade
+        const grade = this.mygrade;
         if (grade != "") {
-          if(confirm("grade")) alert("tamam")
-          else alert("iyi")
-        }else if(branch != []){
-          alert("branch")
+          if (confirm("Sınıf Değiştir"))
+            this.change(this.id, "grade", this.mygrade);
+        } else if (branch != []) {
+          if (confirm("Branş Değiştir")) this.change(this.id, "branch", branch);
         }
       }
+    },
+    cParent: function() {
+      const parent = this.parentId;
+      if (confirm("Yeni Veli: " + this.parentName))
+        this.change(this.id, "parent", parent);
+    },
+    cStudent: function() {
+      const student = this.studentId;
+      if (confirm("Yeni Öğrenci: " + this.studentName))
+        this.change(this.id, "student", student);
+    },
+    cInstallment: function() {
+      const installment = this.installment;
+      if (confirm("Yeni Taksit: " + this.installment))
+        this.change(this.id, "installment", installment);
+    },
+    cEDate: function() {
+      const date = this.tett;
+      if (confirm("Yeni Bitiş Tarihi: " + this.tett))
+        this.change(this.id, "endDate", date);
+    },
+    cPDate: function() {
+      const date = this.purchaseDate;
+      if (confirm("Yeni Alım Tarihi: " + this.purchaseDate))
+        this.change(this.id, "purchaseDate", date);
+    },
+    cNewFee: function() {
+      const fee = this.newFee;
+      if (confirm("Yeni Toplam Paket Fiyatı: " + fee))
+        this.change(this.id, "fee", fee);
     }
   },
   watch: {

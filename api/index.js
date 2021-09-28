@@ -204,6 +204,7 @@ app.get("/studentLessons", Purchase.getStudentPurchases);
 app.get("/groupRights", Purchase.getGroupStudentPurchases);
 app.put("/addStudentOnPurchase", Purchase.addStudent);
 app.put("/adminPurchase", Purchase.adminPurchase);
+app.put("/updatePurchase", Purchase.update);
 app.get("/getParentship", Purchase.parentShip);
 app.get("/purchaseList", Purchase.listAll);
 

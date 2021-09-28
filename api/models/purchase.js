@@ -63,7 +63,6 @@ const purchaseSchema = mongoose.Schema({
     },
     cancel:{
         type: Number,
-        required: true
     },
     branch:{
         type: [mongoose.Schema.Types.ObjectId],
