@@ -34,15 +34,13 @@ import Sharp from "sharp";
 import fs from "fs";
 import path from "path";
 
-
-
-  var corsOptions = {
+var corsOptions = {
   origin: process.env.OUR_URL,
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
 app.use("./static", express.static(path.join(__dirname, "static")));
-const fileFilter = function(req, file, cb) {
+const fileFilter = function (req, file, cb) {
   const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
   if (!allowedTypes.includes(file.mimetype)) {
     const error = new Error("Wrong file type");
@@ -56,22 +54,20 @@ const upload = Multer({
   dest: "./uploads",
   fileFilter,
   limits: {
-    fileSize: MAX_SIZE
-  }
+    fileSize: MAX_SIZE,
+  },
 });
-
-
 
 mongoose
   .connect(
     "mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     }
   )
   .then(console.log("connected to db"))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
@@ -82,9 +78,10 @@ app.post("/upload", upload.single("file"), (req, res) => {
 });
 
 app.post("/dropzone", upload.single("file"), async (req, res) => {
-  console.log('request: ', req.body.who);
-  var newName = Date.now() + "-"+ req.body.who + path.extname(req.file.originalname)
-  console.log(newName)
+  console.log("request: ", req.body.who);
+  var newName =
+    Date.now() + "-" + req.body.who + path.extname(req.file.originalname);
+  console.log(newName);
   try {
     await Sharp(req.file.path)
       .resize(300, 300, {
@@ -93,8 +90,8 @@ app.post("/dropzone", upload.single("file"), async (req, res) => {
           r: 0,
           g: 0,
           b: 0,
-          alpha: 0
-        }
+          alpha: 0,
+        },
       })
       //.background('white')
       //.embed()
@@ -107,7 +104,7 @@ app.post("/dropzone", upload.single("file"), async (req, res) => {
   }
 });
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   if (err.code === "LIMIT_FILE_TYPES") {
     res.status(422).json({ error: "Only images are allowed" });
     return;
@@ -119,7 +116,6 @@ app.use(function(err, req, res, next) {
     return;
   }
 });
-
 
 //-------------------------------------------- USERS -------------------------------------------- //
 app.post("/phone", User.generateCode);
@@ -175,7 +171,6 @@ app.get("/parents", Parent.getAllParents);
 app.post("/addParentShip", ParentShip.newParentShip);
 app.get("/parentShips", ParentShip.getAllParentShips);
 
-
 //--------------------------------------------  QUESTİON -------------------------------------------- //
 app.post("/addQuestion", Question.newQuestion);
 app.get("/questions", Question.getAllQuestions);
@@ -188,12 +183,10 @@ app.get("/questionSubtopics", QuestionSubtopic.getAllQuestionSubtopics);
 app.post("/addPackage", Package.newPackage);
 app.get("/packages", Package.getAllPackages);
 
-
 //--------------------------------------------  Payment -------------------------------------------- //
 app.post("/addPayment", Payment.newPayment);
 app.get("/payments", Payment.getAllPayments);
 app.post("/myPayments", Payment.getMyPayments);
-
 
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);
@@ -207,8 +200,6 @@ app.put("/adminPurchase", Purchase.adminPurchase);
 app.get("/getParentship", Purchase.parentShip);
 app.get("/purchaseList", Purchase.listAll);
 
-
-
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);
 app.get("/schoolCourses", SchoolCourse.getAllSchoolCourses);
@@ -217,7 +208,6 @@ app.get("/schoolCourses", SchoolCourse.getAllSchoolCourses);
 app.post("/addSendedSMS", SendedSMS.newSendedSMS);
 app.get("/sendedSMSes", SendedSMS.getAllSendedSMSes);
 app.post("/sendSms", SendedSMS.sendSms);
-
 
 //--------------------------------------------  STUDENT ANSWER -------------------------------------------- //
 app.post("/addStudentAnswer", StudentAnswer.newStudentAnswer);
@@ -273,5 +263,5 @@ app.get("/waitingSMSes", WaitingSMS.getAllWaitingSMSes);
 
 module.exports = {
   path: "/api",
-  handler: app
+  handler: app,
 };
