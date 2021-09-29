@@ -9,7 +9,7 @@
         .container
             .block(v-if="generals.total != undefined")
                 .string Sözleşme Toplamı
-                .number {{doThousandsRegExp(generals.total)}}₺
+                .number {{generals.total.toLocaleString("tr-TR")}}₺
         .container
             .block(v-if="generals.group != undefined")
                 .string Grup Ders Toplam
@@ -113,18 +113,24 @@ export default {
   methods: {
     parents: function() {
       this.popup = true;
-      var list = Object.keys(this.generals.pList).map((key) => [key, this.generals.pList[key]]);
-      list.sort((b, a) => (a[1].fee - b[1].fee));
+      var list = Object.keys(this.generals.pList).map(key => [
+        key,
+        this.generals.pList[key]
+      ]);
+      list.sort((b, a) => a[1].fee - b[1].fee);
       list.forEach(element => {
-        this.list[element[0]] = element[1]
+        this.list[element[0]] = element[1];
       });
     },
     students: function() {
       this.popup = true;
-      var list = Object.keys(this.generals.sList).map((key) => [key, this.generals.sList[key]]);
-      list.sort((b, a) => (a[1].fee - b[1].fee));
+      var list = Object.keys(this.generals.sList).map(key => [
+        key,
+        this.generals.sList[key]
+      ]);
+      list.sort((b, a) => a[1].fee - b[1].fee);
       list.forEach(element => {
-        this.list[element[0]] = element[1]
+        this.list[element[0]] = element[1];
       });
     },
     close: function() {
@@ -144,8 +150,7 @@ export default {
       }
     },
     doThousandsRegExp: function(n) {
-      if (n.length < 4) return n;
-      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return n.toLocaleString("tr-TR");
     }
   },
   mounted() {
