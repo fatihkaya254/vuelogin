@@ -1,4 +1,5 @@
 const bodyParser = require("body-parser")
+
 require('dotenv').config()
 import path from 'path'
 import fs from 'fs'
@@ -11,6 +12,7 @@ export default {
     },
     meta: [
       { charset: 'utf-8' },
+      { name: 'google-site-verification', content: '77GsZ_cFE2zVjV5NuLNkE5UA-Nr5THP67ho6z-jseEc' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' }
     ],
@@ -24,10 +26,10 @@ export default {
   ],
 
   server: {     
-    /*https: {
+    https: {
       key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
-      crs: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.csr'))
-    },*/
+      cert: fs.readFileSync(path.resolve("../vuelogin", 'IZDERSCOM_AllCertificate.crt'))
+    },
     port: process.env.OUR_PORT, // default: 3000     
     host: process.env.OUR_IP, // default: localhost   
   },   // other configs 
@@ -53,6 +55,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
+    https: true,
     baseURL: process.env.OUR_HOST
   },
 

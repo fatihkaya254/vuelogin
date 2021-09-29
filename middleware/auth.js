@@ -8,7 +8,7 @@ export default async function(context){
         return axios
           .post(`${process.env.OUR_HOST}/auth`, { token: token })
           .then((res) => {
-            console.log('hello world');
+            console.log('hello auth');
             let user = JSON.stringify(res.data.user)
             context.store.dispatch("setUser", user)
         })
