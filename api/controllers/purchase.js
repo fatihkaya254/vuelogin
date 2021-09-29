@@ -117,6 +117,7 @@ exports.getGroupStudentPurchases = async (req, res) => {
     Purchase.find({
       groupRight: true,
       student: { $exists: true, $ne: null, $ne: undefined },
+      cancel: { $ne: true},
       endDate: { $gte: startOfToday }
     })
       .select("student branch packageName")
@@ -221,23 +222,64 @@ exports.yearlyEarns = async (req, res) => {
       var pInfo = {};
       var pInfoTotal = {};
       earns.total = 0;
+      earns.totalWaived = 0;
+      earns.totalUnWaived = 0;
       earns.priv = 0;
       earns.group = 0;
       earns.privCount = 0;
       earns.yearlyPrivCount = 0;
       earns.groupCount = 0;
       earns.parents = 0;
+      earns.cparents = 0;
       earns.students = 0;
+      earns.cstudents = 0;
       earns.grades = {};
       earns.branches = {};
       earns.generalBranches = {};
       earns.sList = {};
+      earns.csList = {};
+      earns.csList2 = {};
+      earns.cpList = {};
       earns.pList = {};
       var parent = "";
       var student = "";
       var nextP = "";
       var nextS = "";
       purchases.forEach(function(p) {
+        nextP = "" + p.parent._id;
+        nextS = "" + p.student._id;
+        if (p.cancel) {
+          if (parent != nextP) {
+            if (earns.cpList[p.parent._id] == undefined) {
+              earns.cpList[p.parent._id] = {};
+              earns.cpList[p.parent._id].fee = 0;
+            }
+            earns.cpList[p.parent._id].name =
+              p.parent.name + " " + p.parent.surname;
+            earns.cparents += 1;
+          }
+          earns.cpList[p.parent._id].fee += p.waivedWage;
+          if (student != nextS) {
+            if (earns.csList[p.student._id] == undefined) {
+              earns.csList[p.student._id] = {};
+              earns.csList2[p.student._id] = {};
+              earns.csList[p.student._id].fee = 0;
+              earns.csList2[p.student._id].fee = 0;
+            }
+            earns.csList[p.student._id].name =
+            p.student.name + " " + p.student.surname;
+            earns.csList2[p.student._id].name =
+              p.student.name + " " + p.student.surname;
+            earns.cstudents += 1;
+          }
+          earns.csList[p.student._id].fee += p.waivedWage;
+          earns.csList2[p.student._id].fee += p.fee - p.waivedWage;
+          earns.totalWaived += p.waivedWage
+          earns.totalUnWaived += p.fee - p.waivedWage
+          parent = nextP;
+          student = nextS;
+          return;
+        }
         // grup sınıflarını say
         if (p.grade != undefined && p.grade.length != 0) {
           if (gStudent[p.grade[0]._id] == undefined)
@@ -316,8 +358,7 @@ exports.yearlyEarns = async (req, res) => {
         if (p.fee == 0) return; // ücretsiz paketleri atla
 
         // veli ve öğrencileri say
-        nextP = "" + p.parent._id;
-        nextS = "" + p.student._id;
+
         if (parent != nextP) {
           if (earns.pList[p.parent._id] == undefined) {
             earns.pList[p.parent._id] = {};

@@ -108,6 +108,24 @@
                 | Yeni Fiyatı: {{newFee}}
             input(type="number" v-model="newFee")
             input(type="submit" value="Onayla" @click="cNewFee()")
+        .infoLine
+            label
+                | İPTAL (SÜRESİ DOLAN ÖĞRENCİLERİN TARİHLERİNİ DÜZENLEYİN! BU MENÜ PLANLANANDAN ERKEN AYRILAN ÖĞRENCİLER İÇİN)
+            label
+                | İptal Sebebi
+            input(type="text" placeholder="İptal Sebebi" v-model="cancelDesc")
+        .infoLine
+            label
+                | Vazgeçilen Ücret: {{waivedWage}}
+            input(type="number" v-model="waivedWage")
+        .infoLine
+            label
+                | İptal Tarihi: {{cancelDate}}
+            input(type="date" v-model="cancelDate")
+        .infoLine
+            input(type="submit" value="Onayla" @click="cancelPurch()")
+        .infoLine(v-if="purchases[id] != undefined && purchases[id].cancel")
+            input(type="submit" value="İptali Geri Al"  @click="cancelCancel()")
     .purchaseList
         table(id="customers")
             thead
@@ -119,7 +137,7 @@
                     th Kayıt
                     th Bitiş
             tbody
-                tr(v-for="p in purchases" @click="selectPurchase(p._id)")
+                tr(v-for="p in purchases" @click="selectPurchase(p._id)" :style="[p.cancel ? {'background-color': '#ff605c'} : {'background-color': ''}]" )
                     td(v-if="p.parent != undefined") {{ p.parent.name }} {{ p.parent.surname }}
                     td(v-if="p.student != undefined") {{ p.student.name }} {{ p.student.surname }}
                     td(v-if="p.packageName != undefined") {{p.packageName}}
@@ -142,6 +160,9 @@ export default {
       mygrade: "",
       tett: "",
       life: 1,
+      cancelDesc: "",
+      cancelDate: "",
+      waivedWage: 0,
       selectedBranch: "none",
       selectedGrade: "none",
       name: "",
@@ -210,6 +231,9 @@ export default {
       this.purchaseDate = "";
       this.myBranches = [];
       this.getAll();
+      this.cancelDesc = "";
+      this.cancelDate = "";
+      this.waivedWage = 0;
     },
     getAll: async function() {
       await this.$axios
@@ -237,7 +261,8 @@ export default {
     fixFee: function(x) {
       return x.toLocaleString("tr-TR") + " ₺";
     },
-    selectPurchase: function(id) {
+    selectPurchase: async function(id) {
+      await this.close();
       this.id = id;
       this.pop = true;
       this.packageId = this.purchases[id].package;
@@ -257,6 +282,11 @@ export default {
       this.tett = this.fixDate(this.purchases[id].endDate);
       this.purchaseDate = this.fixDate(this.purchases[id].purchaseDate);
       this.myBranches = this.purchases[id].branch;
+      if (this.purchases[id].cancel == true) {
+        this.cancelDesc = this.purchases[id].cancelDesc;
+        this.cancelDate = this.fixDate(this.purchases[id].cancelDate);
+        this.waivedWage = this.purchases[id].waivedWage;
+      }
     },
     onChangeGrade(event) {
       this.selectedGrade = event.target.value;
@@ -370,6 +400,24 @@ export default {
       const fee = this.newFee;
       if (confirm("Yeni Toplam Paket Fiyatı: " + fee))
         this.change(this.id, "fee", fee);
+    },
+    cancelPurch: function() {
+      if (this.cancelDesc != "" && this.cancelDate != "") {
+        this.change(this.id, "cancelDate", this.cancelDate);
+        this.change(this.id, "cancelDesc", this.cancelDesc);
+        this.change(this.id, "waivedWage", this.waivedWage);
+        this.change(this.id, "cancel", true);
+      } else {
+        alert("İptal tarihi ve açıklaması boş bırakılamaz");
+      }
+    },
+    cancelCancel: function() {
+      if (confirm("Tüm iptal bilgileri silinecek")) {
+        this.change(this.id, "cancelDate", undefined);
+        this.change(this.id, "cancelDesc", undefined);
+        this.change(this.id, "waivedWage", undefined);
+        this.change(this.id, "cancel", false);
+      }
     }
   },
   watch: {

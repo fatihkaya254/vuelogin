@@ -8,7 +8,7 @@
     .generals
         .container
             .block(v-if="generals.total != undefined")
-                .string Sözleşme Toplamı
+                .string Aktif Sözleşme Toplamı
                 .number {{generals.total.toLocaleString("tr-TR")}}₺
         .container
             .block(v-if="generals.group != undefined")
@@ -44,6 +44,19 @@
             .block(v-if="generals.perParent != undefined")
                 .string Veli Başına Yıllık
                 .number {{doThousandsRegExp(generals.perParent)}}₺
+    .generals
+        .container(@click="cparents()")
+            .block(v-if="generals.totalWaived != undefined")
+                .string Vazgeçilen Ödemeler
+                .number {{doThousandsRegExp(generals.totalWaived)}}₺
+        .container(@click="cstudents2()")
+            .block(v-if="generals.totalUnWaived != undefined")
+                .string İptallerde Tahsil Edilen
+                .number {{doThousandsRegExp(generals.totalUnWaived)}}₺
+        .container(@click="cstudents()")
+            .block(v-if="generals.cstudents != undefined")
+                .string İptal Eden Öğrenci
+                .number {{doThousandsRegExp(generals.cstudents)}}
     .container(@click="a = !a") Grup Programları
     .subs(v-if="generals.grades && a")
         .container(v-for="g in generals.grades")
@@ -122,11 +135,44 @@ export default {
         this.list[element[0]] = element[1];
       });
     },
+    cparents: function() {
+      this.popup = true;
+      var list = Object.keys(this.generals.cpList).map(key => [
+        key,
+        this.generals.cpList[key]
+      ]);
+      list.sort((b, a) => a[1].fee - b[1].fee);
+      list.forEach(element => {
+        this.list[element[0]] = element[1];
+      });
+    },
     students: function() {
       this.popup = true;
       var list = Object.keys(this.generals.sList).map(key => [
         key,
         this.generals.sList[key]
+      ]);
+      list.sort((b, a) => a[1].fee - b[1].fee);
+      list.forEach(element => {
+        this.list[element[0]] = element[1];
+      });
+    },
+    cstudents: function() {
+      this.popup = true;
+      var list = Object.keys(this.generals.csList).map(key => [
+        key,
+        this.generals.csList[key]
+      ]);
+      list.sort((b, a) => a[1].fee - b[1].fee);
+      list.forEach(element => {
+        this.list[element[0]] = element[1];
+      });
+    },
+    cstudents2: function() {
+      this.popup = true;
+      var list = Object.keys(this.generals.csList2).map(key => [
+        key,
+        this.generals.csList2[key]
       ]);
       list.sort((b, a) => a[1].fee - b[1].fee);
       list.forEach(element => {

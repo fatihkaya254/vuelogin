@@ -5,7 +5,7 @@
           .infoes 
             .lessonInfo {{groups.groupName}} 
           .infoes(v-for="branch in branch()" v-show="branch.grade._id == groups.grade")
-            .lessonInfoL(@click="setGroup(groups._id, branch._id)") {{branch.grade.gradeName}}  {{branch.branchName}}
+            .lessonInfoL(@click="setGroup(groups._id, branch._id)") {{branch.grade.gradeName}}  {{branch.branchName}} ({{whoGetWhat[groups._id + "-" +branch._id]}})
           .infoes(v-for="student in groups.student")
             .lessonInfo(style="color: #88B0BF") {{students[student]}}
     .schedule
@@ -95,6 +95,7 @@ export default {
       students: [],
       settedStudentLessons: {},
       lessonTeachers: {},
+      whoGetWhat: {},
       warnings: {}
     };
   },
@@ -112,16 +113,29 @@ export default {
     ...mapGetters("branches", ["branch"]),
     ...mapActions("students", ["getGrades", "getGroups"]),
     ...mapGetters("students", ["grade", "group"]),
-    setGroup: function (group, branch) {
-      this.addingGroup = group
-      this.addingBranch = branch
+    setGroup: async function(group, branch) {
+      this.addingGroup = group;
+      this.addingBranch = branch;
+      this.lessonTeachers = {};
+      try {
+        await axios
+          .post(`${process.env.OUR_HOST}/branchLessons`, {
+            branch: branch
+          })
+          .then(res => {
+            console.log(res.data);
+            for (const index in res.data) {
+              Vue.set(this.lessonTeachers, index, res.data[index]);
+            }
+          });
+      } catch (error) {
+        console.log(error);
+      }
     },
     getAllLessons: async function() {
       try {
         await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
           this.studentLessons = res.data;
-          console.log("res.data");
-          console.log(res.data);
         });
       } catch (error) {
         console.log(error);
@@ -166,13 +180,11 @@ export default {
       }
     },
     removeRigth: function(student, branch) {
-      console.log(student + " " + branch);
       for (const lesson in this.studentLessons) {
         if (this.studentLessons[lesson].student._id == student) {
           for (const branches in this.studentLessons[lesson].branch) {
             if (this.studentLessons[lesson].branch[branches]._id == branch) {
               Vue.delete(this.studentLessons[lesson].branch, branches);
-              console.log(this.studentLessons);
               return "green";
             }
           }
@@ -186,14 +198,25 @@ export default {
           await axios
             .post(`${process.env.OUR_HOST}/wholeBranchLessons`, {})
             .then(res => {
-              console.log(res.data);
               for (const index in res.data) {
-                Vue.set(this.lessonTeachers, index, res.data[index]);
+                var d = res.data[index];
+                if (d.group != undefined) {
+                  if (
+                    this.whoGetWhat[d.group._id + "-" + d.branch._id] ==
+                    undefined
+                  ) {
+                    this.whoGetWhat[d.group._id + "-" + d.branch._id] = 1;
+                  } else {
+                    this.whoGetWhat[d.group._id + "-" + d.branch._id] += 1;
+                  }
+                }
+                Vue.set(this.lessonTeachers, index, d);
               }
             });
         } catch (error) {
           console.log(error);
         }
+        console.log(this.whoGetWhat);
       } else {
         this.selectedBranch = branchId;
         this.student = studentId;
@@ -321,7 +344,7 @@ export default {
         cursor: pointer
         &:hover
             height: 28px
-            width: 28px  
+            width: 28px
 .lessonInfo
     width: 70%
 

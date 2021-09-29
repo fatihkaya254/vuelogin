@@ -1,5 +1,5 @@
 <template lang="pug">
-div 
+.infoes 
     .infoLine
       label
           | {{ userName() }}
@@ -221,6 +221,10 @@ $gray6-dark: rgb(28, 28, 30)
     background-size: cover
     background-position: center
     transform-style: preserve-3d
+.infoes
+  overflow: auto
+  @media screen and (max-width: 1200px)
+    height: 40vh
 
 .outAuth
   height: 40px
@@ -248,7 +252,9 @@ $gray6-dark: rgb(28, 28, 30)
   padding-top: 8px
   height: 40px
   border-bottom: 0.75px solid $gray
-
+  @media screen and (max-width: 1200px)
+    height: 60px
+    
   & input
     float: right
     margin-right: 20%
@@ -260,6 +266,8 @@ $gray6-dark: rgb(28, 28, 30)
     padding-left: 16px
     padding-right: 16px
     border-radius: 1em
+    @media screen and (max-width: 1200px)
+      margin-top: 0px
 
     &:focus
       -webkit-appearance: none

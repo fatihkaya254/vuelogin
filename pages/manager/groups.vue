@@ -155,8 +155,8 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      this.getGroups();
-      this.getRights();
+      await this.getGroups();
+      await this.getRights();
       this.judge();
     },
     addGroup: async function() {

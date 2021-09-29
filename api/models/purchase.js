@@ -27,6 +27,9 @@ const purchaseSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    cancelDesc:{
+        type: String,
+    },
     endDate:{
         type: Date,
     },
