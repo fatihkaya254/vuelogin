@@ -206,6 +206,15 @@ exports.yearlyEarns = async (req, res) => {
     .populate("parent")
     .populate("student")
     .then(purchases => {
+      function fixDate(mydate) {
+        let date = mydate;
+        var d = date.getDate();
+        if (d<10) d = "0"+d
+        var m = date.getMonth()+1;
+        if (m<10) m = "0"+m
+        var y = date.getFullYear()
+        return y + "-" + m + "-" + d;
+      }
       var earns = {};
       var gStudent = {};
       var gFee = {};
@@ -221,6 +230,7 @@ exports.yearlyEarns = async (req, res) => {
       var pInfoGradeTotal = {};
       var pInfo = {};
       var pInfoTotal = {};
+      earns.cronosTotal = {}
       earns.total = 0;
       earns.totalWaived = 0;
       earns.totalUnWaived = 0;
@@ -272,10 +282,22 @@ exports.yearlyEarns = async (req, res) => {
               p.student.name + " " + p.student.surname;
             earns.cstudents += 1;
           }
+          var date = new Date(p.cancelDate);
+          if (earns.cronosTotal[fixDate(date)] == undefined) {
+            earns.cronosTotal[fixDate(date)] = 0
+            earns.cronosTotal[fixDate(date)] = 0
+          }
+          date = new Date(p.purchaseDate);
+          if (earns.cronosTotal[fixDate(date)] == undefined) {
+            earns.cronosTotal[fixDate(date)] = 0
+          }
+          earns.cronosTotal[fixDate(date)] += p.fee
+          earns.cronosTotal[fixDate(date)] -= p.waivedWage
           earns.csList[p.student._id].fee += p.waivedWage;
           earns.csList2[p.student._id].fee += p.fee - p.waivedWage;
           earns.totalWaived += p.waivedWage
           earns.totalUnWaived += p.fee - p.waivedWage
+          earns.total += p.fee - p.waivedWage
           parent = nextP;
           student = nextS;
           return;
@@ -382,6 +404,12 @@ exports.yearlyEarns = async (req, res) => {
         parent = nextP;
         student = nextS;
 
+
+        var date = new Date(p.purchaseDate);
+        if (earns.cronosTotal[fixDate(date)] == undefined) {
+          earns.cronosTotal[fixDate(date)] = 0
+        }
+        earns.cronosTotal[fixDate(date)] += p.fee
         // kazançları ve ortalamaları hesapla
         earns.total += p.fee;
         if (p.weeklyPrivateLesson != 0) {

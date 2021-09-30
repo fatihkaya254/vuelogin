@@ -1,12 +1,15 @@
 <template lang="pug">
 .body
+    .chartPop(v-show="chartPop")
+      .close(@click="chartPop = false") Kapat
+      GChart( type="LineChart", :data="chartData", :options="chartOptions")
     .pop(v-show="popup")
       .close(@click="close()") Kapat
       .list
         ol
           li(v-for="l in list") {{l.name}} | {{doThousandsRegExp(l.fee)}}₺
     .generals
-        .container
+        .container(@click="openChart()")
             .block(v-if="generals.total != undefined")
                 .string Aktif Sözleşme Toplamı
                 .number {{generals.total.toLocaleString("tr-TR")}}₺
@@ -105,17 +108,30 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import { GChart } from "vue-google-charts";
 
 export default {
   middleware: ["session-control", "managerAuth"],
   components: {
-    Navbar
+    Navbar,
+    GChart
   },
   data() {
     return {
+      chartData: [["Tarih", "Günlük", "Toplam"]],
+      chartOptions: {
+        chart: {
+          title: "Sözleşmeler",
+          subtitle: "Gün bazında sözleşmeler"
+        },
+        displayAnnotations: true,
+        width: 150,
+        height: 2100
+      },
       string: "",
       generals: {},
       list: {},
+      chartPop: false,
       popup: false,
       a: false,
       b: false,
@@ -124,6 +140,13 @@ export default {
     };
   },
   methods: {
+    openChart: function() {
+      this.chartPop = true;
+      if (process.client) {
+        this.chartOptions.height = window.innerHeight * 0.50;
+        this.chartOptions.width = window.innerWidth * 0.58;
+      }
+    },
     parents: function() {
       this.popup = true;
       var list = Object.keys(this.generals.pList).map(key => [
@@ -183,13 +206,32 @@ export default {
       this.popup = false;
       this.list = {};
     },
+    sortObj: function(obj) {
+      return Object.keys(obj)
+        .sort()
+        .reduce(function(result, key) {
+          result[key] = obj[key];
+          return result;
+        }, {});
+    },
     getSummary: async function() {
       try {
         await this.$axios
           .get(`${process.env.OUR_HOST}/yearlyEarns`)
           .then(res => {
             this.generals = res.data;
-            console.log(this.generals);
+            var ct = this.sortObj(this.generals.cronosTotal);
+            var total = 0;
+            for (const [key, value] of Object.entries(ct)) {
+              total += value;
+              var data = [
+                new Date(key),
+                value,
+                total
+              ];
+              this.chartData.push(data);
+              console.log(`${key}: ${value}`);
+            }
           });
       } catch (error) {
         console.log(error);
@@ -216,7 +258,16 @@ export default {
   border-radius: 8px
   box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
   overflow: hidden
-
+.chartPop
+  height: 60vh
+  width: 60vw
+  background-color: white
+  position: absolute
+  z-index: 1
+  right: 20vw
+  border-radius: 8px
+  box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+  overflow: auto
 .close
   width: 60vw
   background-color: #EF5350

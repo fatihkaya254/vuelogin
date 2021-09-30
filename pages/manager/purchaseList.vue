@@ -233,6 +233,8 @@ export default {
       this.getAll();
       this.cancelDesc = "";
       this.cancelDate = "";
+      this.studentPhone = "";
+      this.parentPhone = "";
       this.waivedWage = 0;
     },
     getAll: async function() {
