@@ -1,70 +1,137 @@
-<template>
-  <div>
-    Böyle Bir Sayfa Yok
-  </div>
+<template lang="pug">
+.body  
+  .body2
+    .text-wrapper
+      .title(data-content='404')
+        | 404
+      .subtitle(data-content="Oops, bir şeyler yanlış gitti! Bir hata oldu ya da olmayan bir sayfaya giriş yapılmaya çalışıldı")
+        | Oops, bir şeyler yanlış gitti! Bir hata oldu ya da olmayan bir sayfaya giriş yapılmaya çalışıldı.
+      .buttons
+        a.button(@click="push") Anasayfaya Dön
 </template>
 
 <script>
-
-
+export default {
+  methods: {
+    push: function(){
+      this.$router.push("/")
+    }
+  }
+}
 </script>
 
+<style lang="scss" scoped>
+@use "sass:math";
+@import url(https://fonts.googleapis.com/css?family=Raleway:300);
 
-<style>
-html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
+$color1: white;
+$color2: #342643;
+$color3: #1fa9d6;
 
 *,
-*::before,
-*::after {
+*:before,
+*:after {
   box-sizing: border-box;
-  margin: 0;
+}
+html {
+  height: 100%;
+}
+.body {
+  background: url(https://i.imgur.com/CZdBKjO.gif) no-repeat center center fixed;
+  background-size: cover;
+  font-family: "Raleway", sans-serif;
+  background-color: $color2;
+  height: 100vh;
+}
+.body2 {
+  background-color: rgba(0, 0, 0, 0.275);
+  height: 100vh;
 }
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+.text-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
+.title {
+  font-size: 9em;
+  font-weight: 700;
+  color: $color1;
+  position: relative;
 }
 
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
+.subtitle {
+  font-size: 40px;
+  font-weight: 700;
+  color: $color1;
+  position: relative;
 }
 
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+.buttons {
+  margin: 30px;
+
+  a.button {
+    background-color: $color2;
+    font-weight: 700;
+    border: 2px solid $color1;
+    text-decoration: none;
+    padding: 15px;
+    text-transform: uppercase;
+    color: $color1;
+    border-radius: 26px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: lighten($color2, 10%);
+      color: white;
+      transition: all 0.2s ease-in-out;
+    }
+  }
 }
 
+// Glitch animation from https://codepen.io/lbebber/pen/ypgql
+@keyframes noise-anim {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(math.div(1, $steps)))} {
+      clip: rect(random(200) + px, 9999px, random(200) + px, 0);
+    }
+  }
+}
+.subtitle:after,
+.title:after {
+  content: attr(data-content);
+  position: absolute;
+  left: 2px;
+  text-shadow: -1px 0 red;
+  top: 0;
+  color: $color1;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim 2s infinite linear alternate-reverse;
+}
 
+@keyframes noise-anim-2 {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(math.div(1, $steps)))} {
+      clip: rect(random(200) + px, 9999px, random(200) + px, 0);
+    }
+  }
+}
+.subtitle:before,
+.title:before {
+  content: attr(data-content);
+  position: absolute;
+  left: -2px;
+  text-shadow: 1px 0 blue;
+  top: 0;
+  color: $color1;
+  overflow: hidden;
+  clip: rect(0, 900px, 0, 0);
+  animation: noise-anim-2 3s infinite linear alternate-reverse;
+}
 </style>
