@@ -9,8 +9,11 @@
           .infoes(v-for="student in groups.student")
             .lessonInfo(style="color: #88B0BF") {{students[student]}}
     .schedule
+      .options
+        input(type="text" v-model="opDay"  placeholder="Salı ✔ 1 ✔ salı x")
+        input(type="text" v-model="opTeacher" placeholder="Esra ✔ Uçar ✔ Esra Uçar x esra x uçar x")
       .column  
-        .row(v-for="lesson in lessonTeachers" v-show="lesson.status != 0" :style="{ backgroundColor: colorsofhour[lesson.hour % 2] }")
+        .row(v-for="lesson in lessonTeachers" v-show="lesson.status != 0 && (days[lesson.day] == opDay || opDay =='' || lesson.day == opDay) && (lesson.teacher.name == opTeacher || opTeacher =='' || lesson.teacher.surname == opTeacher)" :style="{ backgroundColor: colorsofhour[lesson.hour % 2] }")
           .infoes(@click="setLesson(lesson._id)")
             .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
             .linePhoto
@@ -96,7 +99,9 @@ export default {
       settedStudentLessons: {},
       lessonTeachers: {},
       whoGetWhat: {},
-      warnings: {}
+      warnings: {},
+      opDay: "",
+      opTeacher: ""
     };
   },
   async mounted() {
@@ -275,7 +280,14 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
+.options
+    display: flex
+    flex-direction: row
+    gap: 20px
+    width: 100%
+    padding: 12px
+    input
+      width: 100%
 .container
     display: flex
 
@@ -296,7 +308,7 @@ export default {
     width: 40%
     overflow: auto
     display: flex
-    flex-direction: row
+    flex-direction: column
 
 .lessons
     height: 30px
@@ -367,4 +379,19 @@ export default {
 
 ::-webkit-scrollbar-thumb:hover
     background: #555
+
+::-webkit-scrollbar-thumb:hover
+    background: #555
+
+::-webkit-input-placeholder
+  font-size: 8pt
+
+::-moz-placeholder
+  font-size: 8pt
+
+:-ms-input-placeholder
+  font-size: 8pt
+
+::placeholder
+  font-size: 8pt
 </style>
