@@ -1,10 +1,14 @@
 <template lang="pug">
-div
+.main
   .formWrapper
     .enrollmentForm
       .infoLine(v-for="teacher in teacher()")
           label(@click="getSchedule(teacher._id)")
               | {{teacher.name}} {{teacher.surname}} | {{teacher.mainBranch}} 
+      .infoLine
+      .infoLine
+      .infoLine
+      .infoLine
   .changeHours(v-show="id != ''")
     .close(@click="id = ''")
     .topBar
@@ -329,4 +333,9 @@ input
 
 ::-webkit-scrollbar-thumb:hover
     background: #555
+
+.main
+  height: 65vh
+  overflow: auto
+
 </style>

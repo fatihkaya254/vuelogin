@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+.main
   .formWrapper
     .enrollmentForm
       .infoLine(v-for="teacher in teacher()")
@@ -149,6 +149,7 @@ export default {
 <style lang="sass" scoped>
 .formWrapper
   text-align: center
+
 
 .infoLine
   margin-top: 10px

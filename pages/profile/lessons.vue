@@ -290,6 +290,7 @@ export default {
       record.day = ml.day;
       record.hour = ml.hour;
       record.lesson = lesson;
+      record.join = true
       record.teacher = this.teacher;
       record.student = this.lessonsStudentId[lesson];
       record.branch = this.lessonsBranchId[lesson];

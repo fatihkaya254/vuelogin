@@ -1,7 +1,7 @@
 <template lang="pug">
 .container
     .students
-        .names(v-for="lesson in studentLessons" )
+        .names(v-for="lesson in studentLessons" v-show="isExist(lesson.branch)") 
             p(v-if="lesson.student") {{lesson.student.name}} {{lesson.student.surname}}
             p(v-if="lesson.student") {{lesson.packageName}} 
             .lessons(v-for="branch in lesson.branch" @click="getBranchLessons(branch._id, lesson.student._id)")
@@ -134,6 +134,13 @@ export default {
           });
       } catch (error) {
         console.log(error);
+      }
+    },
+    isExist: function(a){
+      if (a.length == 0) {
+        return false
+      } else {
+        return true
       }
     },
     removeRigth: function(student, branch) {

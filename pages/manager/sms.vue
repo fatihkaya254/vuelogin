@@ -1,5 +1,6 @@
 <template lang="pug">
 .container
+    p Bakiye: {{balance}} sms
     .schedule
       .column  
         .row(v-for="s in sms" :style="{backgroundColor: colors[s.smsApp]}")
@@ -21,6 +22,7 @@ export default {
       selectedGrade: "none",
       name: "",
       id: "",
+      balance: "",
       teacherHours: "",
       branches: [],
       days: [
@@ -65,7 +67,7 @@ export default {
       phone: "",
       date: "",
       photo: "",
-      whois: {}, 
+      whois: {},
       adress: "",
       email: "",
       mainBranch: "",
@@ -80,6 +82,9 @@ export default {
     };
   },
   async mounted() {
+    await this.$axios.get(`${process.env.OUR_HOST}/smsBalance`).then(res => {
+      this.balance = res.data.sms;
+    });
     await this.getAll();
     var phones = {};
     for (const i in this.sms) {
@@ -88,11 +93,12 @@ export default {
       for (const j in this.parent) {
         if (this.parent[j].student != undefined) {
           if (student == this.parent[j].student._id) {
-            var name = this.parent[j].parent.name + " " + this.parent[j].parent.surname 
+            var name =
+              this.parent[j].parent.name + " " + this.parent[j].parent.surname;
             var phone = this.parent[j].parent.phone;
             await this.$set(phones, phone, phone);
             this.$set(this.warnings, student, phones);
-            this.$set(this.whois, phone, name)
+            this.$set(this.whois, phone, name);
           }
         }
       }
