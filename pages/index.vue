@@ -8,10 +8,13 @@ div
   //TeacherList
   //HomePageCharts
   //ServiceList
+  footer
+    Footer
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/footer.vue";
 import HomePageCharts from "@/components/HomePageCharts.vue";
 import ServiceList from "@/components/ServiceList.vue";
 import TeacherList from "@/components/TeacherList.vue";
@@ -27,6 +30,7 @@ export default {
   components: {
     HomePageCharts,
     Navbar,
+    Footer,
     ServiceList,
     LockService,
     TeacherList
