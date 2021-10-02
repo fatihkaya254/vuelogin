@@ -46,6 +46,13 @@
                         p
                             a PROFİL
             .subFootersR 
+                .baslik 
+                    .payLogo
+                        fa-icon(:icon="['fab', 'cc-visa']")
+                .baslik 
+                    .payLogo
+                        fa-icon(:icon="['fab', 'cc-mastercard']")
+        
     .row
         .bottomOfFooter
             .subFootersB 
@@ -66,11 +73,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.payLogo
+    font-size: 30pt
 a 
   color: black
   text-decoration: none
-  &:hover
-      color: white
+
 @font-face
     font-family: 'Lemon/Milk light Regular'
     font-style: normal

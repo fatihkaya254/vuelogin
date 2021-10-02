@@ -19,6 +19,8 @@
                 h4
                     | {{ userName() }} {{ userSurname() }}
             .links
+                NuxtLink(:to="'/manager/deneme'", class="nuxt-link active" active) 
+                    p dew
                 NuxtLink(:to="'/manager/sms'", class="nuxt-link active" active) 
                     p SMS
                 NuxtLink(:to="'/manager/enroll'", class="nuxt-link active" active) 

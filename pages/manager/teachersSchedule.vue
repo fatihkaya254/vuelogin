@@ -283,7 +283,10 @@ input
     position: fixed
     z-index: 3
     background-color: white
-
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+      overflow: auto
+      padding: 9px
 .close
     margin: 15px
     position: absolute
@@ -312,6 +315,11 @@ input
     overflow: auto
     padding-bottom: 16px
     padding-top: 16px
+    @media screen and (max-width: 1200px)
+      display: flex
+      width: 90%
+      height: 150px
+      margin: auto
 .row
     width: 80%
     border-radius: 1em
@@ -319,8 +327,12 @@ input
     margin: auto
     margin-top: 16px
     font-size: 14px
+    @media screen and (max-width: 1200px)
+      padding: 10px
+      height: 90px
+      margin-left: 5px
 ::-webkit-scrollbar
-    height: 10px
+    height: 2px
     width: 2px
     border-radius: 1em
 ::-webkit-scrollbar-track
