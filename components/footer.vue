@@ -5,7 +5,7 @@
         .mainFooters 
             .subFootersL 
                 .baslik 
-                    p KAMPANYALARI İLK SEN DUY
+                    p FIRSATLARI İLK SEN DUY
                 .bulten
                     input#bulten(type="text", name="bulten", placeholder="ornek@mail.com")
                     input#aboneol(type="submit", value="ABONE OL")

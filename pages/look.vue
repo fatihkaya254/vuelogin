@@ -9,7 +9,7 @@
         ol
           li(v-for="l in list") {{l.name}} | {{doThousandsRegExp(l.fee)}}₺
     .generals
-        .container(@click="openChart()")
+        .container(@click="setChart('total')")
             .block(v-if="generals.total != undefined")
                 .string Aktif Sözleşme Toplamı
                 .number {{generals.total.toLocaleString("tr-TR")}}₺
@@ -22,7 +22,7 @@
                 .string Özel Ders Toplam
                 .number {{doThousandsRegExp(generals.priv)}}₺
     .generals
-        .container
+        .container(@click="setChart('group')")
             .block(v-if="generals.perGroup != undefined")
                 .string 1 Grup Programı  Yıllık Ücreti
                 .number {{doThousandsRegExp(generals.perGroup)}}₺
@@ -39,7 +39,7 @@
             .block(v-if="generals.perHourPriv != undefined")
                 .string 1 Saat Özel Ders Ücreti
                 .number {{doThousandsRegExp(generals.perHourPriv)}}₺
-        .container
+        .container(@click="setChart('student')")
             .block(v-if="generals.perStudent != undefined")
                 .string Öğrenci Başına Yıllık
                 .number {{doThousandsRegExp(generals.perStudent)}}₺
@@ -143,7 +143,7 @@ export default {
     openChart: function() {
       this.chartPop = true;
       if (process.client) {
-        this.chartOptions.height = window.innerHeight * 0.50;
+        this.chartOptions.height = window.innerHeight * 0.5;
         this.chartOptions.width = window.innerWidth * 0.58;
       }
     },
@@ -214,23 +214,65 @@ export default {
           return result;
         }, {});
     },
+    setChart: function(x) {
+      this.openChart();
+      this.chartData = [];
+      if (x == "group") {
+        this.chartData[0] = ["Tarih", "Ortalama"];
+        var gpm = this.sortObj(this.generals.groupPM);
+        var gpmc = this.sortObj(this.generals.groupPMC);
+        var totalGroupCount = 0;
+        var totalGroupValue = 0;
+        for (const [key, value] of Object.entries(gpm)) {
+          totalGroupCount += gpmc[key];
+          totalGroupValue += value;
+          var data = [
+            new Date(key),
+            parseInt(totalGroupValue / totalGroupCount, 10)
+          ];
+          this.chartData.push(data);
+        }
+      } else if (x == "total") {
+        this.chartData[0] = ["Tarih", "Günlük", "Toplam"];
+        var ct = this.sortObj(this.generals.cronosTotal);
+        var total = 0;
+        for (const [key, value] of Object.entries(ct)) {
+          total += value;
+          var data = [new Date(key), value, total];
+          this.chartData.push(data);
+        }
+      } else if (x == "student") {
+        this.chartData[0] = ["Tarih", "Ortalama"];
+        var ct = this.sortObj(this.generals.cronosTotal);
+        var cs = this.sortObj(this.generals.cronosStudent);
+        var total = 0;
+        var student = 0;
+        var cronos = [];
+        for (const [key, value] of Object.entries(ct)) {
+          total += value;
+          cronos[key] = total;
+        }
+        for (const [key, value] of Object.entries(cs)) {
+          student += value;
+          var average = parseInt(cronos[key]/student, 10)
+          var data = [new Date(key), average];
+          this.chartData.push(data)
+        }
+      }
+    },
     getSummary: async function() {
       try {
         await this.$axios
           .get(`${process.env.OUR_HOST}/yearlyEarns`)
           .then(res => {
             this.generals = res.data;
+            console.log(res.data);
             var ct = this.sortObj(this.generals.cronosTotal);
             var total = 0;
             for (const [key, value] of Object.entries(ct)) {
               total += value;
-              var data = [
-                new Date(key),
-                value,
-                total
-              ];
+              var data = [new Date(key), value, total];
               this.chartData.push(data);
-              console.log(`${key}: ${value}`);
             }
           });
       } catch (error) {

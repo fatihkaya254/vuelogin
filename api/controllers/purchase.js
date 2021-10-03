@@ -117,7 +117,7 @@ exports.getGroupStudentPurchases = async (req, res) => {
     Purchase.find({
       groupRight: true,
       student: { $exists: true, $ne: null, $ne: undefined },
-      cancel: { $ne: true},
+      cancel: { $ne: true },
       endDate: { $gte: startOfToday }
     })
       .select("student branch packageName")
@@ -209,10 +209,10 @@ exports.yearlyEarns = async (req, res) => {
       function fixDate(mydate) {
         let date = mydate;
         var d = date.getDate();
-        if (d<10) d = "0"+d
-        var m = date.getMonth()+1;
-        if (m<10) m = "0"+m
-        var y = date.getFullYear()
+        if (d < 10) d = "0" + d;
+        var m = date.getMonth() + 1;
+        if (m < 10) m = "0" + m;
+        var y = date.getFullYear();
         return y + "-" + m + "-" + d;
       }
       var earns = {};
@@ -230,7 +230,7 @@ exports.yearlyEarns = async (req, res) => {
       var pInfoGradeTotal = {};
       var pInfo = {};
       var pInfoTotal = {};
-      earns.cronosTotal = {}
+      earns.cronosTotal = {};
       earns.total = 0;
       earns.totalWaived = 0;
       earns.totalUnWaived = 0;
@@ -251,6 +251,9 @@ exports.yearlyEarns = async (req, res) => {
       earns.csList2 = {};
       earns.cpList = {};
       earns.pList = {};
+      earns.groupPM = {};
+      earns.groupPMC = {};
+      earns.cronosStudent = {};
       var parent = "";
       var student = "";
       var nextP = "";
@@ -277,27 +280,44 @@ exports.yearlyEarns = async (req, res) => {
               earns.csList2[p.student._id].fee = 0;
             }
             earns.csList[p.student._id].name =
-            p.student.name + " " + p.student.surname;
+              p.student.name + " " + p.student.surname;
             earns.csList2[p.student._id].name =
               p.student.name + " " + p.student.surname;
             earns.cstudents += 1;
           }
           var date = new Date(p.cancelDate);
           if (earns.cronosTotal[fixDate(date)] == undefined) {
-            earns.cronosTotal[fixDate(date)] = 0
-            earns.cronosTotal[fixDate(date)] = 0
+            earns.cronosTotal[fixDate(date)] = 0;
           }
+          if (earns.cronosStudent[fixDate(date)] != undefined) {
+            earns.cronosStudent[fixDate(date)] = 0;
+          }
+          earns.cronosStudent[fixDate(date)] -= 1;
           date = new Date(p.purchaseDate);
           if (earns.cronosTotal[fixDate(date)] == undefined) {
-            earns.cronosTotal[fixDate(date)] = 0
+            earns.cronosTotal[fixDate(date)] = 0;
           }
-          earns.cronosTotal[fixDate(date)] += p.fee
-          earns.cronosTotal[fixDate(date)] -= p.waivedWage
+          if (earns.cronosStudent[fixDate(date)] == undefined) {
+            earns.cronosStudent[fixDate(date)] = 0;
+          }
+          earns.cronosStudent[fixDate(date)] += 1;
+          if (p.groupRight) {
+            if (earns.groupPM[fixDate(date)] == undefined) {
+              earns.groupPM[fixDate(date)] = 0;
+            }
+            earns.groupPM[fixDate(date)] += p.fee;
+            if (earns.groupPMC[fixDate(date)] == undefined) {
+              earns.groupPMC[fixDate(date)] = 0;
+            }
+            earns.groupPMC[fixDate(date)] += 1;
+          }
+          earns.cronosTotal[fixDate(date)] += p.fee;
+          earns.cronosTotal[fixDate(date)] -= p.waivedWage;
           earns.csList[p.student._id].fee += p.waivedWage;
           earns.csList2[p.student._id].fee += p.fee - p.waivedWage;
-          earns.totalWaived += p.waivedWage
-          earns.totalUnWaived += p.fee - p.waivedWage
-          earns.total += p.fee - p.waivedWage
+          earns.totalWaived += p.waivedWage;
+          earns.totalUnWaived += p.fee - p.waivedWage;
+          earns.total += p.fee - p.waivedWage;
           parent = nextP;
           student = nextS;
           return;
@@ -399,17 +419,31 @@ exports.yearlyEarns = async (req, res) => {
           earns.sList[p.student._id].name =
             p.student.name + " " + p.student.surname;
           earns.students += 1;
+          var date = new Date(p.purchaseDate);
+          if (earns.cronosStudent[fixDate(date)] == undefined) {
+            earns.cronosStudent[fixDate(date)] = 0;
+          }
+          earns.cronosStudent[fixDate(date)] += 1;
         }
         earns.sList[p.student._id].fee += p.fee;
         parent = nextP;
         student = nextS;
 
-
         var date = new Date(p.purchaseDate);
-        if (earns.cronosTotal[fixDate(date)] == undefined) {
-          earns.cronosTotal[fixDate(date)] = 0
+        if (p.groupRight) {
+          if (earns.groupPM[fixDate(date)] == undefined) {
+            earns.groupPM[fixDate(date)] = 0;
+          }
+          earns.groupPM[fixDate(date)] += p.fee;
+          if (earns.groupPMC[fixDate(date)] == undefined) {
+            earns.groupPMC[fixDate(date)] = 0;
+          }
+          earns.groupPMC[fixDate(date)] += 1;
         }
-        earns.cronosTotal[fixDate(date)] += p.fee
+        if (earns.cronosTotal[fixDate(date)] == undefined) {
+          earns.cronosTotal[fixDate(date)] = 0;
+        }
+        earns.cronosTotal[fixDate(date)] += p.fee;
         // kazançları ve ortalamaları hesapla
         earns.total += p.fee;
         if (p.weeklyPrivateLesson != 0) {
