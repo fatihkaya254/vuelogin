@@ -199,6 +199,8 @@ exports.listAll = async (req, res) => {
 };
 
 exports.yearlyEarns = async (req, res) => {
+  console.log(req)
+
   Purchase.find()
     .sort("parent student")
     .populate([{ path: "branch", populate: { path: "grade" } }])

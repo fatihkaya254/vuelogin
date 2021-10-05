@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import axios from "axios";
+
 import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -107,7 +107,7 @@ export default {
     ...mapGetters("branches", ["branch"]),
     getAllLessons: async function() {
       try {
-        await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
+        awaitthis.$axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
           this.studentLessons = res.data;
           console.log("res.data");
           console.log(res.data);
@@ -118,7 +118,7 @@ export default {
     },
     getAllSettedLessons: async function() {
       try {
-        await axios
+        await this.$axios 
           .get(`${process.env.OUR_HOST}/allStudentLessons`)
           .then(res => {
             this.settedStudentLessons = res.data;
@@ -161,7 +161,7 @@ export default {
     getBranchLessons: async function(branchId, studentId) {
       if (branchId == undefined) {
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/wholeBranchLessons`, {})
             .then(res => {
               console.log(res.data);
@@ -178,7 +178,7 @@ export default {
         this.lessonTeachers = {};
         this.lessonStatus = {};
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/branchLessons`, {
               branch: branchId
             })
@@ -214,7 +214,7 @@ export default {
       console.log("chang");
       console.log(changes);
       try {
-        await axios
+        await this.$axios 
           .put(`${process.env.OUR_HOST}/updateLesson`, changes)
           .then(res => {
             Vue.set(this.lessonTeachers, res.data._id, res.data);

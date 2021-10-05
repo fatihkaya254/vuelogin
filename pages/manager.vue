@@ -50,7 +50,6 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { mapActions, mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
   middleware: ["session-control", "managerAuth"],
@@ -86,7 +85,7 @@ export default {
       formData.append("file", this.file);
       formData.append("who", this.userId());
       try {
-        await axios
+        await this.$axios
           .post(`${process.env.OUR_HOST}/dropzone`, formData)
           .then(res => {
             let profilePic = res.data.file;

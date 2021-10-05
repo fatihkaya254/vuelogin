@@ -50,7 +50,6 @@
 
 <script>
 import Dropzone from "@/components/Dropzone.vue";
-import axios from "axios";
 import GoogleLogin from "vue-google-login";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -117,7 +116,7 @@ export default {
       const formData = new FormData();
       formData.append("file", this.file);
       try {
-        await axios
+        await this.$axios
           .post(`${process.env.OUR_HOST}/dropzone`, formData)
           .then(res => {
             let profilePic = process.env.OUR_URL + res.data.file;
