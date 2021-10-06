@@ -9,14 +9,14 @@ export default async function(context) {
         if (res.data.user.role != undefined) {
           var rank = parseInt(res.data.user.role.rank, 10)   
             console.log("hello manager");
-            if (rank <= 10) {
+            if (rank == 25 || rank == 0) {
                 let user = JSON.stringify(res.data.user);
                 context.store.dispatch("setUser", user);
             } else {
-                context.redirect("/");
+                context.redirect("/error");
             }
         }else{
-            context.redirect("/");
+            context.redirect("/error");
         }
       });
   }

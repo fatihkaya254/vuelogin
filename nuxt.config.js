@@ -57,8 +57,18 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
+<<<<<<< HEAD
     https: true,
     baseURL: process.env.OUR_HOST
+=======
+    https: process.env.AXIOS_HTTPS,  
+    baseURL: process.env.OUR_HOST,  
+    headers : {
+      common: {
+        'Authorization' : process.env.AXIOS_AUTH
+      }
+    }
+>>>>>>> 0ef8eb3bb2ed71f2e654371c2a6ce1b00ab923cd
   },
   // font awesome configuration: https://www.npmjs.com/package/@nuxtjs/fontawesome
   fontawesome: {

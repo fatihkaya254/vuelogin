@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -71,7 +70,7 @@ export default {
     ...mapGetters("branches", ["branch"]),
     getUser: async function() {
       try {
-        await axios
+        await this.$axios
           .post(`${process.env.OUR_HOST}/getOneUser`, {
             phone: this.phoneNumber
           })
@@ -90,7 +89,7 @@ export default {
     },
     updateUser: async function(where, value) {
       try {
-        await axios
+        await this.$axios
           .put(`${process.env.OUR_HOST}/updateProfile`, {
             id: this.id,
             where: where,

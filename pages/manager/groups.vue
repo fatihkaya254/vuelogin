@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -109,7 +108,7 @@ export default {
       if (this.selectedStudent != "") {
         groupStudents.push(this.selectedStudent);
         try {
-          await axios
+          awaitthis.$axios 
             .put(`${process.env.OUR_HOST}/addStudentToGroup`, {
               student: groupStudents,
               id: group
@@ -144,7 +143,7 @@ export default {
         groupStudents.splice(index, 1);
       }
       try {
-        await axios
+        await this.$axios 
           .put(`${process.env.OUR_HOST}/addStudentToGroup`, {
             student: groupStudents,
             id: group
@@ -161,7 +160,7 @@ export default {
     },
     addGroup: async function() {
       try {
-        await axios
+        await this.$axios 
           .post(`${process.env.OUR_HOST}/addGroup`, {
             group: { groupName: this.groupName, grade: this.mygrade }
           })
@@ -175,7 +174,7 @@ export default {
     },
     getRights: async function() {
       try {
-        await axios.get(`${process.env.OUR_HOST}/groupRights`).then(res => {
+        await this.$axios .get(`${process.env.OUR_HOST}/groupRights`).then(res => {
           this.groupRights = res.data;
         });
       } catch (error) {
@@ -210,7 +209,7 @@ export default {
     },
     changeLesson: async function(changes) {
       try {
-        await axios
+        await this.$axios 
           .put(`${process.env.OUR_HOST}/updateLesson`, changes)
           .then(res => {
             Vue.set(this.lessonTeachers, res.data._id, res.data);

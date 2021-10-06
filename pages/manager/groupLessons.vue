@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Vue from "vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -123,7 +122,7 @@ export default {
       this.addingBranch = branch;
       this.lessonTeachers = {};
       try {
-        await axios
+        await this.$axios 
           .post(`${process.env.OUR_HOST}/branchLessons`, {
             branch: branch
           })
@@ -139,7 +138,7 @@ export default {
     },
     getAllLessons: async function() {
       try {
-        await axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
+        await this.$axios .get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
           this.studentLessons = res.data;
         });
       } catch (error) {
@@ -148,7 +147,7 @@ export default {
     },
     getRights: async function() {
       try {
-        await axios.get(`${process.env.OUR_HOST}/groupRights`).then(res => {
+        await this.$axios .get(`${process.env.OUR_HOST}/groupRights`).then(res => {
           this.groupRights = res.data;
         });
       } catch (error) {
@@ -166,7 +165,7 @@ export default {
     },
     getAllSettedLessons: async function() {
       try {
-        await axios
+        await this.$axios 
           .get(`${process.env.OUR_HOST}/allStudentLessons`)
           .then(res => {
             this.settedStudentLessons = res.data;
@@ -200,7 +199,7 @@ export default {
     getBranchLessons: async function(branchId, studentId) {
       if (branchId == undefined) {
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/wholeBranchLessons`, {})
             .then(res => {
               for (const index in res.data) {
@@ -228,7 +227,7 @@ export default {
         this.lessonTeachers = {};
         this.lessonStatus = {};
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/branchLessons`, {
               branch: branchId
             })
@@ -263,7 +262,7 @@ export default {
       console.log("chang");
       console.log(changes);
       try {
-        await axios
+        await this.$axios 
           .put(`${process.env.OUR_HOST}/updateLesson`, changes)
           .then(res => {
             Vue.set(this.lessonTeachers, res.data._id, res.data);

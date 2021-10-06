@@ -69,9 +69,9 @@ exports.getAllPurchases = async (req, res) => {
     });
 };
 
-exports.getMyPurchases = async (req, res) => {
+exports.getMyPurchases = async (req, res, context) => {
   var id = req.body.id;
-  await axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
+  await context.$axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
     id = res.data.user._id;
   });
   Purchase.find({ parent: id })
@@ -199,6 +199,8 @@ exports.listAll = async (req, res) => {
 };
 
 exports.yearlyEarns = async (req, res) => {
+  console.log(req)
+
   Purchase.find()
     .sort("parent student")
     .populate([{ path: "branch", populate: { path: "grade" } }])

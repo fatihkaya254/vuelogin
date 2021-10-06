@@ -28,6 +28,7 @@ import WaitingSMS from "./controllers/waitingSMS";
 import Package from "./controllers/package";
 import Purchase from "./controllers/purchase";
 import Payment from "./controllers/payment";
+import AuthMiddleware from "./middlewares/auth";
 import Multer from "multer";
 import cors from "cors";
 import Sharp from "sharp";
@@ -72,6 +73,7 @@ mongoose
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
+app.use('/*',AuthMiddleware.update)
 
 app.post("/upload", upload.single("file"), (req, res) => {
   res.status(201).json({ file: req.file });
@@ -116,7 +118,6 @@ app.use(function (err, req, res, next) {
     return;
   }
 });
-
 //-------------------------------------------- USERS -------------------------------------------- //
 app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);

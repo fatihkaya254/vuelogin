@@ -45,7 +45,7 @@
                             a İLETİŞİM
                         p
                             a PROFİL
-            .subFootersR 
+            .subFootersR.logos 
                 .baslik 
                     .payLogo
                         fa-icon(:icon="['fab', 'cc-visa']")
@@ -75,6 +75,7 @@ export default {
 <style lang="sass" scoped>
 .payLogo
     font-size: 30pt
+
 a 
   color: black
   text-decoration: none
@@ -132,6 +133,13 @@ a
         width: 100%
     @media screen and (min-width: 1200px)
         float: left
+.logos
+    @media screen and (max-width: 1200px)
+        margin-top: 30px
+        display: flex
+        flex-direction: row
+        justify-content: center
+        gap: 20px
 .subFootersB
     height: 100%
     width: 49%
@@ -174,6 +182,7 @@ a
     display: flex
     @media screen and (max-width: 1200px)
         flex-direction: column
+        margin-top: 36px
     @media screen and (min-width: 1200px)
         justify-content: space-between
         float: left

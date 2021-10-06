@@ -131,7 +131,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -304,7 +303,7 @@ export default {
       }
     },
     addPurchase: async function(purchase) {
-      await axios
+      await this.$axios 
         .put(`${process.env.OUR_HOST}/adminPurchase`, {
           purchase
         })
@@ -379,7 +378,7 @@ export default {
       this.phoneNumber = value.replace(/\D/g, "");
       if (this.phoneNumber.length == this.phoneLength) {
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/getOneUser`, {
               phone: this.phoneNumber
             })
@@ -404,7 +403,7 @@ export default {
       this.phoneNumber = value.replace(/\D/g, "");
       if (this.phoneNumber.length == this.phoneLength) {
         try {
-          await axios
+          await this.$axios 
             .post(`${process.env.OUR_HOST}/getOneUser`, {
               phone: this.phoneNumber
             })
