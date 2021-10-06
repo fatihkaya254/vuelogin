@@ -26,10 +26,10 @@ export default {
   css: [],
 
   server: {
-    //https: {
-    //  key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
-    //  cert: fs.readFileSync(path.resolve("../vuelogin", 'IZDERSCOM_AllCertificate.crt'))
-    //},
+    https: {
+      key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
+      cert: fs.readFileSync(path.resolve("../vuelogin", 'IZDERSCOM_AllCertificate.crt'))
+    },
     port: process.env.OUR_PORT, // default: 3000
     host: process.env.OUR_IP // default: localhost
   }, // other configs
@@ -57,7 +57,7 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    //https: true,
+    https: true,
     baseURL: process.env.OUR_HOST
   },
   // font awesome configuration: https://www.npmjs.com/package/@nuxtjs/fontawesome
