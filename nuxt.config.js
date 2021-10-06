@@ -57,11 +57,11 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    //https: true,
+    https: process.env.AXIOS_HTTPS,  
     baseURL: process.env.OUR_HOST,  
     headers : {
       common: {
-        'Authorization' : 'TBYEfaFGAsFoyiph9c4OmnFEWZQZrpSLT3RgGbJ93OTE7WdT'
+        'Authorization' : process.env.AXIOS_AUTH
       }
     }
   },

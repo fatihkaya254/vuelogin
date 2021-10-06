@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
 const roleSchema = mongoose.Schema({
-    roleDescripton: {
-        type: String,
+    rank: {
+        type: Number,
     },
     roleName: {
         type: String,

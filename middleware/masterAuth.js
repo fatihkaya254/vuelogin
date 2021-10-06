@@ -6,12 +6,17 @@ export default async function(context) {
     return context.$axios
       .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
-        console.log("hello master");
-        if (res.data.user.phone == 5321130988 || res.data.user.phone == 5073857166 ) {
-          let user = JSON.stringify(res.data.user);
-          context.store.dispatch("setUser", user);
-        } else {
-          context.redirect("/");
+        if (res.data.user.role != undefined) {
+          var rank = parseInt(res.data.user.role.rank, 10)   
+            console.log("hello manager");
+            if (rank <= 0) {
+                let user = JSON.stringify(res.data.user);
+                context.store.dispatch("setUser", user);
+            } else {
+                context.redirect("/");
+            }
+        }else{
+            context.redirect("/");
         }
       });
   }

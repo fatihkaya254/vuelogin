@@ -7,13 +7,13 @@ div
                 .card( @click="hookRole( role._id)")
                     p {{ role._id }}
                     p {{ role.roleName }}
-                    p {{ role.roleDescripton }}
+                    p {{ role.rank }}
     .updateUser
     label Rol Adı 
     input(type="text" v-model="name")
     br
-    label Açıklaması 
-    input(type="text" v-model="descripton")
+    label Rütbe 
+    input(type="number" v-model="rank")
     br
     input(type="submit" @click="throwAddRole")
 </template>
@@ -25,18 +25,18 @@ export default {
     return {
       id: null,
       name: "",
-      descripton: ""
+      rank: ""
     };
   },
   methods: {
     ...mapActions("users", ["getRoles", "addRole"]),
     throwAddRole: function(){
-      this.addRole({ roleDescripton: this.descripton, roleName: this.name})
+      this.addRole({ rank: this.rank, roleName: this.name})
     },
     hookRole: function(id) {
       this.id = this.$store.state.users.role[id]._id;
       this.name = this.$store.state.users.role[id].roleName;
-      this.descripton = this.$store.state.users.role[id].roleDescripton;
+      this.rank = this.$store.state.users.role[id].rank;
     }
   },
   mounted() {

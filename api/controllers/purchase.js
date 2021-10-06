@@ -69,9 +69,9 @@ exports.getAllPurchases = async (req, res) => {
     });
 };
 
-exports.getMyPurchases = async (req, res) => {
+exports.getMyPurchases = async (req, res, context) => {
   var id = req.body.id;
-  await axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
+  await context.$axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
     id = res.data.user._id;
   });
   Purchase.find({ parent: id })
