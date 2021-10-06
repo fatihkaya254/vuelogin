@@ -25,6 +25,11 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
+  loading: {
+    color: '#EF5350',
+    height: '0.75px'
+  },
+
   server: {
     //https: {
     //  key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
