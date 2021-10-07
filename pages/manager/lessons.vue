@@ -107,7 +107,7 @@ export default {
     ...mapGetters("branches", ["branch"]),
     getAllLessons: async function() {
       try {
-        awaitthis.$axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
+        await this.$axios.get(`${process.env.OUR_HOST}/studentLessons`).then(res => {
           this.studentLessons = res.data;
           console.log("res.data");
           console.log(res.data);
