@@ -1,6 +1,7 @@
 import Purchase from "../models/purchase";
 import Package from "../models/package";
 import axios from "axios";
+axios.defaults.headers.common['Authorization'] = process.env.AXIOS_AUTH;
 
 exports.adminPurchase = async (req, res) => {
   let purchase = req.body.purchase;
@@ -71,7 +72,7 @@ exports.getAllPurchases = async (req, res) => {
 
 exports.getMyPurchases = async (req, res, context) => {
   var id = req.body.id;
-  await context.$axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
+  await axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
     id = res.data.user._id;
   });
   Purchase.find({ parent: id })

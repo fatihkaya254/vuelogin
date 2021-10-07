@@ -1,5 +1,6 @@
 import Payment from "../models/payment"
 import axios from "axios";
+axios.defaults.headers.common['Authorization'] = process.env.AXIOS_AUTH;
 
 exports.newPayment = async(req,res) => {
     let paymentInfo = req.body.payment
