@@ -1,4 +1,5 @@
 export default async function(context) {
+  console.log("master Middleware 5");
   let token = context.store.getters.getAuthkey;
   if (!context.store.getters.isAuthenticated) {
     context.redirect("/");
@@ -7,16 +8,16 @@ export default async function(context) {
       .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
         if (res.data.user.role != undefined) {
-          var rank = parseInt(res.data.user.role.rank, 10)   
-            console.log("hello manager");
-            if (rank <= 0) {
-                let user = JSON.stringify(res.data.user);
-                context.store.dispatch("setUser", user);
-            } else {
-                context.redirect("/");
-            }
-        }else{
+          var rank = parseInt(res.data.user.role.rank, 10);
+          console.log("hello manager");
+          if (rank <= 0) {
+            let user = JSON.stringify(res.data.user);
+            context.store.dispatch("setUser", user);
+          } else {
             context.redirect("/");
+          }
+        } else {
+          context.redirect("/");
         }
       });
   }

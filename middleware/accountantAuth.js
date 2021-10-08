@@ -1,8 +1,11 @@
 export default async function(context) {
+  console.log("accountancy Middleware");
   let token = context.store.getters.getAuthkey;
   if (!context.store.getters.isAuthenticated) {
+    console.log("accountancy Middleware 5");
     context.redirect("/");
   } else {
+    console.log("accountancy Middleware 8");
     return context.$axios
       .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
@@ -13,10 +16,10 @@ export default async function(context) {
                 let user = JSON.stringify(res.data.user);
                 context.store.dispatch("setUser", user);
             } else {
-                context.redirect("/error");
+                context.redirect("/");
             }
         }else{
-            context.redirect("/error");
+            context.redirect("/");
         }
       });
   }

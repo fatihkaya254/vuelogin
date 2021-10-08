@@ -11,27 +11,38 @@ const paymentSchema = mongoose.Schema({
         ref:'user',
         required: true
     },
-    parent:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'user',
+    installmentTotal:{
+        type: Number,
+        required: true
+    },
+    installmentDate:{
+        type: Date,
+        required: true
+    },
+    installmentOrder:{
+        type: Number,
         required: true
     },
     paymentTotal:{
         type: Number,
-        required: true
     },
     paymentDate:{
         type: Date,
-        required: true
+    },
+    closed:{
+        type: Boolean,
+        default: false
     },
     paymentMethod:{
         type: String,
-        required: true
     },
     approver:{
         type: String,
-        required: true
     },
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
+    }
     
 })
 

@@ -29,6 +29,7 @@ import Package from "./controllers/package";
 import Purchase from "./controllers/purchase";
 import Payment from "./controllers/payment";
 import AuthMiddleware from "./middlewares/auth";
+import Log from "./middlewares/log";
 import Multer from "multer";
 import cors from "cors";
 import Sharp from "sharp";
@@ -74,6 +75,7 @@ mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 app.use('/*',AuthMiddleware.update)
+app.use('/*',Log.log)
 
 app.post("/upload", upload.single("file"), (req, res) => {
   res.status(201).json({ file: req.file });
@@ -201,6 +203,7 @@ app.put("/adminPurchase", Purchase.adminPurchase);
 app.put("/updatePurchase", Purchase.update);
 app.get("/getParentship", Purchase.parentShip);
 app.get("/purchaseList", Purchase.listAll);
+app.get("/getActives", Purchase.actives);
 
 //--------------------------------------------  SCHOOL AND COURSE -------------------------------------------- //
 app.post("/addSchoolCourse", SchoolCourse.newSchoolCourse);

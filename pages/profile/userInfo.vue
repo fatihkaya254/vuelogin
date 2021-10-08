@@ -66,7 +66,7 @@ export default {
       date: this.userBirthDayForInput(),
       params: {
         client_id:
-          "1062958103241-4o0u00itp4jpccd36l9rjrq3iltopdi4.apps.googleusercontent.com"
+          "711011716160-5p2kb7qb71duf9oljo11ohsbkva425dq.apps.googleusercontent.com"
       },
       renderParams: {
         width: 250,

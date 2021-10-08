@@ -70,6 +70,23 @@ exports.getAllPurchases = async (req, res) => {
     });
 };
 
+exports.actives = async (req, res) => {
+  Purchase.find({
+    cancel: { $ne: true },
+    fee: { $ne: 0 },
+  })
+    //.populate({ path: "branch", populate: { path: "grade" } })
+    .populate({ path: "parent" })
+    .sort("parent")
+    .then(purchases => {
+      var purchaseMap = {};
+      purchases.forEach(function(purchaseInfo) {
+        purchaseMap[purchaseInfo._id] = purchaseInfo;
+      });
+      res.send(purchaseMap);
+    });
+};
+
 exports.getMyPurchases = async (req, res, context) => {
   var id = req.body.id;
   await axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
@@ -93,7 +110,8 @@ exports.getStudentPurchases = async (req, res) => {
   try {
     Purchase.find({
       student: { $exists: true, $ne: null, $ne: undefined },
-      endDate: { $gte: startOfToday }
+      endDate: { $gte: startOfToday },
+      cancel: { $ne: true }
     })
       .select("student branch packageName")
       .populate({ path: "branch", populate: { path: "grade" } })

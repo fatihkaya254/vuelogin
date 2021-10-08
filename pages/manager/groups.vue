@@ -108,7 +108,7 @@ export default {
       if (this.selectedStudent != "") {
         groupStudents.push(this.selectedStudent);
         try {
-          awaitthis.$axios 
+          await this.$axios 
             .put(`${process.env.OUR_HOST}/addStudentToGroup`, {
               student: groupStudents,
               id: group
