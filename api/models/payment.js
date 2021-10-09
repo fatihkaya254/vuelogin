@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const paymentSchema = mongoose.Schema({
     purchase:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref:'purchase',
         required: true
     },

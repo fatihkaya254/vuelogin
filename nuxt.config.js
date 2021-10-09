@@ -26,8 +26,8 @@ export default {
   css: [],
 
   loading: {
-    color: '#EF5350',
-    height: '0.75px'
+    color: "#EF5350",
+    height: "0.75px"
   },
 
   server: {
@@ -40,33 +40,31 @@ export default {
   }, // other configs
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    
-      "@nuxtjs/fontawesome",
-
-    
-  ],
+  buildModules: ["@nuxtjs/fontawesome"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
+    
     "@nuxtjs/axios",
-    "@nuxtjs/dotenv"
+    "@nuxtjs/dotenv",
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    https: process.env.AXIOS_HTTPS,  
-    baseURL: process.env.OUR_HOST,  
-    headers : {
+    https: process.env.AXIOS_HTTPS,
+    baseURL: process.env.OUR_HOST,
+    headers: {
       common: {
-        'Authorization' : process.env.AXIOS_AUTH
+        Authorization: process.env.AXIOS_AUTH
       }
     }
   },
@@ -74,9 +72,9 @@ export default {
   fontawesome: {
     component: "fa",
     suffix: true,
-    icons:{
+    icons: {
       solid: true,
-      brands: true,
+      brands: true
     }
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
