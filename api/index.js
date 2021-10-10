@@ -190,6 +190,7 @@ app.get("/packages", Package.getAllPackages);
 app.post("/addPayment", Payment.newPayment);
 app.get("/payments", Payment.getAllPayments);
 app.post("/myPayments", Payment.getMyPayments);
+app.put("/updatePayment", Payment.update);
 
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);

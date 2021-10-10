@@ -18,11 +18,26 @@ exports.getAllPayments = async (req, res) => {
     .then(purchases => {
       var purchaseMap = {};
       purchases.forEach(function(p) {
-        if(purchaseMap[p._user._id] == undefined) purchaseMap[p._id] = {}
-        purchaseMap[p._user._id][p._id] = p
+        if(purchaseMap[p.user._id] == undefined) purchaseMap[p.user._id] = {}
+        purchaseMap[p.user._id][p._id] = p
       });
       res.send(purchaseMap);
     });
+};
+
+exports.update = async (req, res) => {
+  let id = req.body.id;
+  let changes = req.body.changes;
+  console.log(changes);
+  try {
+    Payment.findByIdAndUpdate({ _id: id }, changes, () => {
+      res.status(200).json({
+        message: "updated"
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getMyPayments = async (req, res) => {
