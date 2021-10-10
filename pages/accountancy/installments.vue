@@ -17,10 +17,10 @@
                 label {{i}}. Taksit
                 input(type="text" v-model="loans[i-1]" @input="changeLoan(i-1)")
                 label {{dates[i-1]}}
-            input(type="submit" value="Oluştur" @click="createPayment(p.parent._id, p.purchases)")
-          .set(v-if="payment()[p.parent._id] != undefined")
+            input(type="submit" value="Oluştur" @click="createPayment(p.parent._id, p.purchases, p.student._id)")
+          .set(v-if="payment()[p.student._id] != undefined")
             .installments
-              .installment(v-for="i in payment()[p.parent._id]" :style="[i.closed ? {'background-color': '#3EB595'} : {'background-color': 'antiquewhite'}]")
+              .installment(v-for="i in payment()[p.student._id]" :style="[i.closed ? {'background-color': '#3EB595'} : {'background-color': 'antiquewhite'}]")
                 .title(@click="subDrop(i._id)")
                   label {{i.installmentOrder}}. Taksit 
                   label {{i.installmentTotal}}₺
@@ -140,9 +140,10 @@ export default {
         this.loans[b] = befores;
       }
     },
-    createPayment: async function(user, purchase) {
+    createPayment: async function(user, purchase, student) {
       this.generating = true;
       var newPayment = {};
+      newPayment.student = student
       newPayment.user = user;
       newPayment.purchase = purchase;
       for (let i = 0; i < this.installment; i++) {

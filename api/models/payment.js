@@ -11,6 +11,11 @@ const paymentSchema = mongoose.Schema({
         ref:'user',
         required: true
     },
+    student:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'user',
+        required: true
+    },
     installmentTotal:{
         type: Number,
         required: true
@@ -46,7 +51,7 @@ const paymentSchema = mongoose.Schema({
     }
     
 })
-paymentSchema.index({ user: 1, purchase: 1, installmentOrder: 1}, { unique: true })
+paymentSchema.index({ student: 1, purchase: 1, installmentOrder: 1}, { unique: true })
 
 const Payment = mongoose.model('payment', paymentSchema)
 

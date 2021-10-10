@@ -18,8 +18,8 @@ exports.getAllPayments = async (req, res) => {
     .then(purchases => {
       var purchaseMap = {};
       purchases.forEach(function(p) {
-        if(purchaseMap[p.user._id] == undefined) purchaseMap[p.user._id] = {}
-        purchaseMap[p.user._id][p._id] = p
+        if(purchaseMap[p.student._id] == undefined) purchaseMap[p.student._id] = {}
+        purchaseMap[p.student._id][p._id] = p
       });
       res.send(purchaseMap);
     });
