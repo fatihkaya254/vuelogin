@@ -9,7 +9,10 @@
         .sidebar
             NuxtLink(:to="'/accountancy/purchases'", class="nuxt-link") 
                 p Satın Alımlar
- 
+            NuxtLink(:to="'/accountancy/purchase'", class="nuxt-link") 
+                p Satın Alım Ekle
+            NuxtLink(:to="'/accountancy/installments'", class="nuxt-link") 
+                p Taksitler
         .content
             nuxt-child
 </template>

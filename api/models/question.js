@@ -3,14 +3,12 @@ import mongoose from "mongoose";
 const questionSchema = mongoose.Schema({
   imageUpText: {
     type: String,
-    required: true
   },
   imageUrl: { 
     type: String,
   },
   imageDownText: {
     type: String,
-    required: true
   },
   root: {
     type: String,
@@ -38,7 +36,17 @@ const questionSchema = mongoose.Schema({
   },
   branch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "branch"
+    ref: "branch",
+    required: true
+  },
+  subtopics: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "subTopic"
+  },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: true
   }
 });
 

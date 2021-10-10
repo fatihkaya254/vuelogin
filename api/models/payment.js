@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const paymentSchema = mongoose.Schema({
     purchase:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref:'purchase',
         required: true
     },
@@ -11,29 +11,42 @@ const paymentSchema = mongoose.Schema({
         ref:'user',
         required: true
     },
-    parent:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'user',
+    installmentTotal:{
+        type: Number,
+        required: true
+    },
+    installmentDate:{
+        type: Date,
+        required: true
+    },
+    installmentOrder:{
+        type: Number,
         required: true
     },
     paymentTotal:{
         type: Number,
-        required: true
+        default: 0 
     },
     paymentDate:{
         type: Date,
-        required: true
+    },
+    closed:{
+        type: Boolean,
+        default: false
     },
     paymentMethod:{
         type: String,
-        required: true
     },
     approver:{
         type: String,
-        required: true
     },
+    createdAt: { 
+        type: Date, 
+        default: Date.now 
+    }
     
 })
+paymentSchema.index({ user: 1, purchase: 1, installmentOrder: 1}, { unique: true })
 
 const Payment = mongoose.model('payment', paymentSchema)
 

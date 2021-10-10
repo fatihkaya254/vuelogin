@@ -1,6 +1,7 @@
 import Purchase from "../models/purchase";
 import Package from "../models/package";
 import axios from "axios";
+axios.defaults.headers.common["Authorization"] = process.env.AXIOS_AUTH;
 
 exports.adminPurchase = async (req, res) => {
   let purchase = req.body.purchase;
@@ -69,9 +70,45 @@ exports.getAllPurchases = async (req, res) => {
     });
 };
 
+exports.actives = async (req, res) => {
+  Purchase.find({
+    cancel: { $ne: true },
+    fee: { $ne: 0 }
+  })
+    .populate({ path: "student" })
+    .populate({ path: "parent" })
+    .sort("student")
+    .then(purchases => {
+      var purchaseMap = {};
+      var purch = [];
+      purchases.forEach(function(p) {
+        if (purchaseMap[p.student._id] == undefined) {
+          purchaseMap[p.student._id] = {};
+          purchaseMap[p.student._id].totalFee = 0;
+          purchaseMap[p.student._id].date = p.purchaseDate;
+          purchaseMap[p.student._id].parent = p.parent;
+          purchaseMap[p.student._id].student = p.student;
+          purchaseMap[p.student._id].installment = 0;
+          purchaseMap[p.student._id].life = 0;
+          purchaseMap[p.student._id].purchases = [];
+          purch = [];
+        }
+        purch.push(p._id);
+        purchaseMap[p.student._id].purchases = purch;
+        if (p.groupRight) {
+          purchaseMap[p.student._id].installment = p.installment;
+        } else {
+          purchaseMap[p.student._id].life = p.installment;
+        }
+        purchaseMap[p.student._id].totalFee += p.fee;
+      });
+      res.send(purchaseMap);
+    });
+};
+
 exports.getMyPurchases = async (req, res, context) => {
   var id = req.body.id;
-  await context.$axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
+  await axios.post(`${process.env.OUR_HOST}/auth`, { token: id }).then(res => {
     id = res.data.user._id;
   });
   Purchase.find({ parent: id })
@@ -92,7 +129,8 @@ exports.getStudentPurchases = async (req, res) => {
   try {
     Purchase.find({
       student: { $exists: true, $ne: null, $ne: undefined },
-      endDate: { $gte: startOfToday }
+      endDate: { $gte: startOfToday },
+      cancel: { $ne: true }
     })
       .select("student branch packageName")
       .populate({ path: "branch", populate: { path: "grade" } })
@@ -199,7 +237,7 @@ exports.listAll = async (req, res) => {
 };
 
 exports.yearlyEarns = async (req, res) => {
-  console.log(req)
+  console.log(req);
 
   Purchase.find()
     .sort("parent student")

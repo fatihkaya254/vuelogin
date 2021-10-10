@@ -29,7 +29,8 @@
     "sharp": "^0.28.3",
     "vue-google-charts": "^0.3.3",
     "vue-google-login": "^2.0.5",
-    "vue-image-upload-resize": "^2.3.0"
+    "vue-image-upload-resize": "^2.3.0",
+    "vue-mathjax": "0.0.11"
   },
   "devDependencies": {
     "@nuxtjs/fontawesome": "^1.1.2",
