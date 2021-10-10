@@ -13,6 +13,8 @@
                 p Satın Alım Ekle
             NuxtLink(:to="'/accountancy/installments'", class="nuxt-link") 
                 p Taksitler
+            NuxtLink(:to="'/accountancy/exports'", class="nuxt-link") 
+                p Çıktı
         .content
             nuxt-child
 </template>
