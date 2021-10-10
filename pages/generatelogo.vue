@@ -6,8 +6,12 @@
     .line2(:style="{background: logoColor}")
     .color
         input(type="color" v-model="logoColor")
+        br
+        input(type="text" v-model="logoColor")
     .color2
         input(type="color" v-model="bColor")
+        br
+        input(type="text" v-model="bColor")
 </template>
 
 <script>
@@ -68,7 +72,8 @@ export default {
     border-radius: 1em 0 1em 0
     @media screen and (max-width: 1200px)
         zoom: 0.4
-
+input[type="text"] 
+  width: 75px
 input[type="color"] 
   appearance: none
   -moz-appearance: none

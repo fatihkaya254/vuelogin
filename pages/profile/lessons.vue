@@ -23,7 +23,7 @@
     .subTopics
       .subjectName(v-for="(topic, index) in this.branchProcess[braid]") 
        p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
-        div( v-for="subtopic in topic" )
+        div( v-for="subtopic in topic" style="border-bottom: 1px solid black;")
           label(:for="subtopic._id" class="rounded-checkbox") 
             input(type="checkbox" :id="subtopic._id" :value="subtopic._id" v-model="recordSubtopics" ) 
             span(class="rounded-checkbox__outer")

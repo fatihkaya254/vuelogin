@@ -31,10 +31,10 @@ export default {
   },
 
   server: {
-    //https: {
-    //  key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
-    //  cert: fs.readFileSync(path.resolve("../vuelogin", 'IZDERSCOM_AllCertificate.crt'))
-    //},
+    https: {
+      key: fs.readFileSync(path.resolve("../vuelogin", 'izders.com.key')),
+      cert: fs.readFileSync(path.resolve("../vuelogin", 'IZDERSCOM_AllCertificate.crt'))
+    },
     port: process.env.OUR_PORT, // default: 3000
     host: process.env.OUR_IP // default: localhost
   }, // other configs
