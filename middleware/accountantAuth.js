@@ -13,10 +13,10 @@ export default async function(context) {
                 let user = JSON.stringify(res.data.user);
                 context.store.dispatch("setUser", user);
             } else {
-                context.redirect("/error");
+                context.redirect("/");
             }
         }else{
-            context.redirect("/error");
+            context.redirect("/");
         }
       });
   }
