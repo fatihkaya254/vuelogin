@@ -25,7 +25,7 @@
                   label {{i.installmentOrder}}. Taksit 
                   label {{i.installmentTotal}}₺
                 .pay(v-if="installmentId == i._id")
-                  label Yapılmış Ödeme {{i.paymentTotal}} - {{}}
+                  label Yapılmış Ödeme {{i.paymentTotal}} - {{fixDate(i.paymentDate)}}
                   label Ödeme Miktarı
                   input(type="text" v-model="paymentTotal")
                   label Ödeme Tarihi
@@ -73,6 +73,7 @@ export default {
       });
     },
     fixDate: function(mydate) {
+      if(mydate == undefined) return "Ödeme Yapılmadı"
       let datetime = mydate;
       let date = datetime.split("-");
       let year = date[0];
@@ -180,7 +181,8 @@ export default {
       await this.$axios
         .put(`${process.env.OUR_HOST}/updatePayment`, {
           id: this.installmentId,
-          changes
+          changes,
+          pay: pt
         })
         .then(res => {
           console.log(res);

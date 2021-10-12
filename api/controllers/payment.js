@@ -1,4 +1,5 @@
 import Payment from "../models/payment";
+import Paylog from "../models/paylog";
 import axios from "axios";
 axios.defaults.headers.common["Authorization"] = process.env.AXIOS_AUTH;
 
@@ -28,7 +29,16 @@ exports.getAllPayments = async (req, res) => {
 exports.update = async (req, res) => {
   let id = req.body.id;
   let changes = req.body.changes;
-  console.log(changes);
+  if (changes.paymentTotal != undefined) {
+    const paylog = {
+      payment: id,
+      payTotal: req.body.pay,
+      payDate: changes.paymentDate,
+      payMethod: changes.paymentMethod,
+      approver: changes.approver
+    }
+    await Paylog.create(paylog);
+  }
   try {
     Payment.findByIdAndUpdate({ _id: id }, changes, () => {
       res.status(200).json({
@@ -38,6 +48,7 @@ exports.update = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+  res.status(200)
 };
 
 exports.getMyPayments = async (req, res) => {
