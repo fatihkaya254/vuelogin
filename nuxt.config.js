@@ -1,4 +1,5 @@
 const bodyParser = require("body-parser");
+import redirectSSL from 'redirect-ssl'
 
 require("dotenv").config();
 import path from "path";
@@ -81,5 +82,7 @@ export default {
   build: {
     transpile: ["gsap"]
   },
-  serverMiddleware: [bodyParser.json(), "~/api"]
+  serverMiddleware: [    redirectSSL.create({
+    enabled: true
+   }), bodyParser.json(), "~/api"]
 };

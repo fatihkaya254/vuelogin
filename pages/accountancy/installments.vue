@@ -5,11 +5,11 @@
     .search
       input(type="text" placeholder="ara" v-model="searchText")
     .list
-      .students(v-for="p in purchases" :style="[(payment()[p.parent._id] != undefined) ? {'background-color': 'antiquewhite'} : {'background-color': '#FF665A'}]"  v-show="search(p.student.name, p.student.surname, p.parent.name, p.parent.surname)")
+      .students(v-for="p in purchases" :style="[(payment()[p.student._id] != undefined) ? {'background-color': 'antiquewhite'} : {'background-color': '#FF665A'}]"  v-show="search(p.student.name, p.student.surname, p.parent.name, p.parent.surname)")
         .title(@click="drop(p.student._id)")
           p {{p.parent.name}} {{p.parent.surname}} ({{p.student.name}} {{p.student.surname}}) {{p.totalFee}} 
         .index(v-if="studentId == p.student._id")
-          .create(v-if="payment()[p.parent._id] == undefined")
+          .create(v-if="payment()[p.student._id] == undefined")
             input(type="number" v-model="changeInstallment")
             input(type="date" v-model="date")
             .installments
