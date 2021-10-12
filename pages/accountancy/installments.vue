@@ -25,7 +25,7 @@
                   label {{i.installmentOrder}}. Taksit 
                   label {{i.installmentTotal}}₺
                 .pay(v-if="installmentId == i._id")
-                  label Yapılmış Ödeme {{i.paymentTotal}} - {{fixDate(i.paymentDate)}}
+                  label Yapılmış Ödeme {{i.paymentTotal}} - {{}}
                   label Ödeme Miktarı
                   input(type="text" v-model="paymentTotal")
                   label Ödeme Tarihi

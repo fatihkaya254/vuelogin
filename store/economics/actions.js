@@ -11,7 +11,7 @@ export default {
   },
   addPackage: function(vuexContext, thepackage) {
     this.$axios.post("/addPackage", { package: thepackage }).then(res => {
-      console.log(res.data.package);
+      console.log(res.status);
       vuexContext.dispatch("getPackages");
     });
   },
