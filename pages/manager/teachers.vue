@@ -149,7 +149,9 @@ export default {
 .formWrapper
   text-align: center
 
-
+.enrollmentForm
+  height: 66vh
+  overflow: auto
 .infoLine
   margin-top: 10px
   padding-top: 8px

@@ -189,8 +189,10 @@ app.get("/packages", Package.getAllPackages);
 //--------------------------------------------  Payment -------------------------------------------- //
 app.post("/addPayment", Payment.newPayment);
 app.get("/payments", Payment.getAllPayments);
+app.get("/paylogs", Payment.getAllPaylogs);
 app.post("/myPayments", Payment.getMyPayments);
 app.put("/updatePayment", Payment.update);
+app.get("/delayedPayments", Payment.delayeds);
 
 //--------------------------------------------  Purchase -------------------------------------------- //
 app.post("/addPurchase", Purchase.newPurchase);
