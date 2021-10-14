@@ -90,6 +90,7 @@ exports.delayeds = async (req, res) => {
       closed: false
     })
       .populate("student", "name surname")
+      .populate("user", "name surname phone")
       .sort("student")
       .then(purchases => {
         var purchaseMap = {};
