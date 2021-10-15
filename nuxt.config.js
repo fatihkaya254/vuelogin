@@ -8,7 +8,7 @@ export default {
   head: {
     title: "İşleyen Zihinler",
     htmlAttrs: {
-      lang: "en"
+      lang: "tr"
     },
     meta: [
       { charset: "utf-8" },
