@@ -28,6 +28,7 @@ export default {
     },
     watch:{
         total: function (value){
+            this.total = value.replace(/[^0-9,]/g, "");
             var first = value.split(",")[0]
             var s = []
             let spells = []
