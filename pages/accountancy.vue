@@ -15,6 +15,8 @@
                 p Taksitler
             NuxtLink(:to="'/accountancy/exports'", class="nuxt-link") 
                 p Çıktı
+            NuxtLink(:to="'/accountancy/delayed'", class="nuxt-link") 
+                p Gecikmiş Ödemeler
         .content
             nuxt-child
 </template>

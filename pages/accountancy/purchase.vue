@@ -86,7 +86,7 @@
   .enrollmentForm
     .infoLine
         label
-            | Telefon {{parentPhone}}
+            | Veli {{parentPhone}}
         input(type="text" placeholder="Telefon numarası" v-model="parentPhone" :maxlength="phoneLength")
     .infoLine
         label
