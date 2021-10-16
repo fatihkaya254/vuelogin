@@ -25,7 +25,7 @@ export default {
         { id, where, value },
       )
       .then(res => {
-        console.log(res.status);
+        console.log(res);
         if (res.data.message == "generated") {
           vuexContext.commit("setChangeNumberMessage", "Doğrulama Kodu");
           vuexContext.commit("setGenerated", "true");

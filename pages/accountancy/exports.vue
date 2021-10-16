@@ -1,5 +1,5 @@
 <template lang="pug">
-div  
+.excover
     div(v-for="(d, dn) in json_data") 
       downloadexcel(
         v-if="json_data != []"
@@ -18,16 +18,13 @@ div
       worksheet="Genel"
       name="Genel"
     )
-    invoice
 </template>
 
 <script>
 import downloadexcel from "vue-json-excel";
-import invoice from "../../components/invoice";
 export default {
   components: {
     downloadexcel,
-    invoice
   },
   data() {
     return {
@@ -179,3 +176,9 @@ export default {
   }
 };
 </script>
+
+<style lang="sass" scoped>
+.excover
+  overflow: auto
+  height: 70vh
+</style>

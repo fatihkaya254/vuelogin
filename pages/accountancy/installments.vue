@@ -1,5 +1,8 @@
 <template lang="pug">
 .cover
+    .invoice(v-show="iPop")
+      .close(@click="closeIPop()") Kapat
+      invoice
     .messageBox(v-show="generating")
       label Oluşturuluyor...
     .search
@@ -38,13 +41,19 @@
                     option(value="cek") Çek
                     option(value="iyzico") Webpos
                   input(type="submit" value="Ödeme Onayla" @click="appPay(i.paymentTotal, i.installmentOrder, i.installmentTotal)")
+                  input(type="submit" value="Fatura Düzenle" @click="invoice(i)")
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import invoice from "../../components/invoice";
 export default {
+  components: {
+    invoice
+  },
   data() {
     return {
+      iPop: false,
       paymentMethod: "",
       paymentTotal: "",
       installmentId: "",
@@ -52,6 +61,11 @@ export default {
       installment: 1,
       date: "",
       paymentDate: "",
+      a1: "",
+      a2: "",
+      a3: "",
+      taxOffice: "",
+      taxNumber: "",
       total: 0,
       loans: [],
       dates: [],
@@ -67,13 +81,65 @@ export default {
     ...mapActions("economics", ["getPayments"]),
     ...mapGetters("economics", ["payment"]),
     ...mapGetters(["userId"]),
+    ...mapGetters("economics", [
+      "iFullName",
+      "iTaxOffice",
+      "iTaxNumber",
+      "iDate",
+      "iDesc",
+      "iQuantity",
+      "iFee",
+      "ia1",
+      "ia2",
+      "ia3",
+      "iUserId"
+    ]),
+    ...mapActions("economics", [
+      "setiFullName",
+      "setiTaxOffice",
+      "setiTaxNumber",
+      "setiDate",
+      "setiDesc",
+      "setiQuantity",
+      "setiFee",
+      "setia1",
+      "setia2",
+      "setia3",
+      "setiUserId"
+    ]),
+
+    invoice: function(p) {
+      this.closeIPop()
+      this.setiFee("" + (p.paymentTotal / 108) * 100);
+      this.setiUserId(p.user._id);
+      this.setiFullName(p.user.name + " " + p.user.surname);
+      if (p.user.invoiceInfo != undefined) {
+        this.setiTaxOffice(p.user.invoiceInfo.taxOffice);
+        this.setiTaxNumber(p.user.invoiceInfo.taxNumber);
+        this.setia1(p.user.invoiceInfo.addressLine1);
+        this.setia2(p.user.invoiceInfo.addressLine2);
+        this.setia3(p.user.invoiceInfo.addressLine3);
+      }
+      this.iPop = true;
+    },
+    closeIPop: function() {
+      this.iPop = false;
+      this.setiTaxOffice("");
+      this.setiTaxNumber("");
+      this.setia1("");
+      this.setia2("");
+      this.setia3("");
+      this.setiFee("");
+      this.setiUserId("");
+      this.setiFullName("");
+    },
     getPurchases: async function() {
       await this.$axios.get(`${process.env.OUR_HOST}/getActives`).then(res => {
         this.purchases = res.data;
       });
     },
     fixDate: function(mydate) {
-      if(mydate == undefined) return "Ödeme Yapılmadı"
+      if (mydate == undefined) return "Ödeme Yapılmadı";
       let datetime = mydate;
       let date = datetime.split("-");
       let year = date[0];
@@ -144,7 +210,7 @@ export default {
     createPayment: async function(user, purchase, student) {
       this.generating = true;
       var newPayment = {};
-      newPayment.student = student
+      newPayment.student = student;
       newPayment.user = user;
       newPayment.purchase = purchase;
       for (let i = 0; i < this.installment; i++) {
@@ -174,7 +240,7 @@ export default {
       if (this.paymentMethod == "") return alert("Ödeme Şeklini Giriniz");
       if (pt + ept > it) return alert("Ödeme Miktarı Ödenmemiş Tutardan Fazla");
       if (pt + ept == it) changes.closed = true;
-      changes.paymentTotal = pt+ept;
+      changes.paymentTotal = pt + ept;
       changes.paymentDate = this.paymentDate;
       changes.paymentMethod = this.paymentMethod;
       changes.approver = this.userId();
@@ -315,4 +381,44 @@ export default {
 
 ::-webkit-scrollbar-thumb:hover
     background: #555
+
+.invoice
+  height: 60vh
+  overflow: auto
+  position: absolute
+  z-index: 2
+  background: white
+.generate
+  overflow: auto
+  position: absolute
+  z-index: 3
+  background: gray
+  padding: 20px
+  width: 500px
+.close
+  background: white
+  height: 30px
+  padding: 10px
+  text-align: center
+  cursor: pointer
+  &:hover
+    font-weight: 700
+
+input
+    width: 100%
+    line-height: 150%
+    font-family: montserrat, arial, verdana
+    padding: 7px 10px
+    border: none
+
+input[type="submit"]
+    cursor: pointer
+    margin-top: 5px
+    &:hover
+        background-color: #edd0d0
+
+label
+    font-family: montserrat, arial, verdana
+    font-size: 10pt
+    margin: 5px
 </style>

@@ -47,6 +47,9 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'schoolCourse'
     },
+    invoiceInfo:{
+        type: Object
+    },
     createdAt: { 
         type: Date, 
         default: Date.now 

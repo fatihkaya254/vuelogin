@@ -52,5 +52,39 @@ export default {
 
   setLockedPackage(vuexContext, lockedPackage){
     vuexContext.commit("setLockedPackage", lockedPackage);
+  },
+
+  setiFullName(vuexContext, iFullName){
+    vuexContext.commit("setiFullName", iFullName);
+  },
+  setiTaxOffice(vuexContext, iTaxOffice){
+    vuexContext.commit("setiTaxOffice", iTaxOffice);
+  },
+  setiTaxNumber(vuexContext, iTaxNumber){
+    vuexContext.commit("setiTaxNumber", iTaxNumber);
+  },
+  setiDate(vuexContext, iDate){
+    vuexContext.commit("setiDate", iDate);
+  },
+  setiDesc(vuexContext, iDesc){
+    vuexContext.commit("setiDesc", iDesc);
+  },
+  setiQuantity(vuexContext, iQuantity){
+    vuexContext.commit("setiQuantity", iQuantity);
+  },
+  setiFee(vuexContext, iFee){
+    vuexContext.commit("setiFee", iFee);
+  },
+  setia1(vuexContext, ia1){
+    vuexContext.commit("setia1", ia1);
+  },
+  setia2(vuexContext, ia2){
+    vuexContext.commit("setia2", ia2);
+  },
+  setia3(vuexContext, ia3){
+    vuexContext.commit("setia3", ia3);
+  },
+  setiUserId(vuexContext, iUserId){
+    vuexContext.commit("setiUserId", iUserId);
   }
 };
