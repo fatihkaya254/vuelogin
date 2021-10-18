@@ -313,7 +313,7 @@ export default {
     align-content: center
     text-align: center
 .list
-    height: 70vh
+    height: 65vh
     overflow: auto
 .installments
     display: flex
