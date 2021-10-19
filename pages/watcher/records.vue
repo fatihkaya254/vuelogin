@@ -83,6 +83,8 @@ export default {
 .rm
     height: 60vh
     overflow: auto
+    @media screen and (max-width: 1200px)
+      height: 50vh
 .teachers
     display: flex
     flex-wrap: wrap
@@ -93,6 +95,10 @@ export default {
     height: 30px
     border: 0.7px solid black
     margin: 4px
+    @media screen and (max-width: 1200px)
+      width: 40%
+      height: 60px
+
 .aTeacher
     background-color: black
     color: #fff

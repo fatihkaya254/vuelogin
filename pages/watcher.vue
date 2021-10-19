@@ -11,7 +11,8 @@
                     | {{ userName() }} {{ userSurname() }}
             .links
                 NuxtLink(:to="'/watcher/records'", class="nuxt-link active" active) 
-                    p Öğretmen Girişleri
+                    p Ders Girişleri
+
         .content
             nuxt-child
 </template>
@@ -128,6 +129,8 @@ a.nuxt-link-active
     position: relative
     top: 55%
     transform: perspective(1px) translateY(-50%)
+    @media screen and (max-width: 1200px)
+        width: 90vw
 
 .sidebar
     float: left
@@ -140,7 +143,6 @@ a.nuxt-link-active
         float: none
         min-height: 140px
         height: 25vh
-        overflow: auto
         border-bottom: 1px solid black
 
 
@@ -151,12 +153,19 @@ a.nuxt-link-active
     & h4, h5
         color: $gray6-dark
         margin: 2px
+    @media screen and (max-width: 1200px)
+        height: 7vh
+        display: flex
+        
 .content
     height: 90vh
     width: 80%
     float: left
     padding: 30px
     padding-top: 50px
+    @media screen and (max-width: 1200px)
+        width: 100%
+        padding: 5px
 
 .profilePhoto
     height: 144px
@@ -165,11 +174,17 @@ a.nuxt-link-active
     margin: auto
     margin-bottom: 6px
     cursor: pointer
+    @media screen and (max-width: 1200px)
+        height: 32px
+        width: 100px
+        margin: 0
     & img
         height: 144px
         width: 144px
         border-radius: 50%
-
+        @media screen and (max-width: 1200px)
+            height: 32px
+            width: 32px
     .changeText
         margin-top: 22px
         height: 144px
@@ -197,7 +212,8 @@ a.nuxt-link-active
 .links
     height: 32vh
     overflow: auto
-
+    @media screen and (max-width: 1200px)
+        height: 16vh
 ::-webkit-scrollbar
     width: 1px
     border-radius: 1em
