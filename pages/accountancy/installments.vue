@@ -21,8 +21,9 @@
                 input(type="text" v-model="loans[i-1]" @input="changeLoan(i-1)")
                 label {{dates[i-1]}}
             input(type="submit" value="Oluştur" @click="createPayment(p.parent._id, p.purchases, p.student._id)")
-          .set(v-if="payment()[p.student._id] != undefined")
+          .set(v-if="payment()[p.student._id] != undefined && !edit")
             .installments
+              input(type="submit" value="Düzenle" @click="startEdit(p.student._id, p.totalFee)" style="background: #00000046")
               .installment(v-for="i in payment()[p.student._id]" :style="[i.closed ? {'background-color': '#3EB595'} : {'background-color': 'antiquewhite'}]")
                 .title(@click="subDrop(i._id)")
                   label {{i.installmentOrder}}. Taksit 
@@ -42,6 +43,13 @@
                     option(value="iyzico") Webpos
                   input(type="submit" value="Ödeme Onayla" @click="appPay(i.paymentTotal, i.installmentOrder, i.installmentTotal)")
                   input(type="submit" value="Fatura Düzenle" @click="invoice(i)")
+          .set(v-if="payment()[p.student._id] != undefined && edit")
+            .installment(v-for="i in payment()[p.student._id]" :style="[i.closed ? {'background-color': '#3EB595'} : {'background-color': 'antiquewhite'}]")
+              .title
+                label {{i.installmentOrder}}. Taksit 
+                input(type="text" v-model="newIns[i._id]" v-if="!i.closed")
+                label(v-if="i.closed") {{i.installmentTotal}}
+            input(type="submit" value="Kaydet" @click="saveEdits()")
 </template>
 
 <script>
@@ -53,6 +61,7 @@ export default {
   },
   data() {
     return {
+      edit: false,
       iPop: false,
       paymentMethod: "",
       paymentTotal: "",
@@ -74,7 +83,9 @@ export default {
       studentId: "",
       purchases: {},
       ourhost: process.env.OUR_URL,
-      generating: false
+      generating: false,
+      newIns: {},
+      remains: 0
     };
   },
   methods: {
@@ -107,9 +118,50 @@ export default {
       "setia3",
       "setiUserId"
     ]),
-
+    startEdit: function(student, total) {
+      this.edit = true;
+      var remains = 0;
+      const p = this.payment()[student];
+      for (const pId in p) {
+        if (p[pId].closed) {
+          total -= p[pId].paymentTotal;
+        } else {
+          remains++;
+        }
+      }
+      this.remains = remains;
+      var first = parseInt(total / remains);
+      while ((total - first) % (remains - 1) != 0 && total - first > 0) {
+        first++;
+      }
+      var others = (total - first) / (remains - 1);
+      var isFirst = 1;
+      for (const pId in p) {
+        if (!p[pId].closed) {
+          this.newIns[pId] = others;
+          if (isFirst) this.newIns[pId] = first;
+          isFirst = 0;
+        }
+      }
+    },
+    saveEdits: async function() {
+      for (const key in this.newIns) {
+        var changes = { installmentTotal: this.newIns[key] };
+        await this.$axios
+          .put(`${process.env.OUR_HOST}/updatePayment`, {
+            id: key,
+            changes
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+      this.edit = false;
+      this.getPayments();
+      this.getPurchases();
+    },
     invoice: function(p) {
-      this.closeIPop()
+      this.closeIPop();
       this.setiFee("" + (p.paymentTotal / 108) * 100);
       this.setiUserId(p.user._id);
       this.setiFullName(p.user.name + " " + p.user.surname);
@@ -293,11 +345,19 @@ export default {
 
 <style lang="sass" scoped>
 .title
+  display: flex
   cursor: pointer
-  height: 30px
   padding-left: 8px
+  align-items: center
   &:hover
     border: 0.4px dotted black
+  input
+      width: 100px
+      font-family: montserrat, arial, verdana
+      padding: 7px 10px
+      border: none
+  label
+      width: 100px
 .pay
   display: flex
   flex-direction: column
@@ -414,6 +474,7 @@ input
 input[type="submit"]
     cursor: pointer
     margin-top: 5px
+    margin-left: 0
     &:hover
         background-color: #edd0d0
 

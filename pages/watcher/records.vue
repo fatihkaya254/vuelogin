@@ -3,19 +3,20 @@
     input(type="date" v-model="date")
     .teachers
         .teacher(v-for="i in teacher()" @click="setTeacher(i._id)" :class="[i._id != teacherId ? '' : 'aTeacher']") {{i.name}} {{i.surname}}
-    .record(v-for="c in teachersDaily()")
-        .hour {{c.hour}}:00
-        div(v-if="c.student != undefined") 
-            .name {{c.student.name}} {{c.student.surname}}
-            .sms(v-if="lessonRecords[c.student._id] != undefined" :class="[lessonRecords[c.student._id].join ? '' : 'red']")  
-                fa-icon(:icon="['fas', 'sms']")
-                label {{lessonRecords[c.student._id].sms}}
-        div(v-if="c.group != undefined") 
-            .name {{c.group.groupName}}
-            div(v-for="s in c.group.student") 
-                .sms(v-if="lessonRecords[s] != undefined" :class="[lessonRecords[s].join ? '' : 'red']") 
-                    fa-icon(:icon="['fas', 'sms']")
-                    label {{lessonRecords[s].sms}}
+    div(v-for="c in teachersDaily()")  
+      .record(v-if="c.student != undefined" :style="[lessonRecords[c.student._id] != undefined ? { backgroundColor: colors[lessonRecords[c.student._id].smsApp]} : { backgroundColor: colors[0]}]")
+          .hour {{c.hour}}:00
+          div(v-if="c.student != undefined") 
+              .name {{c.student.name}} {{c.student.surname}}
+              .sms(v-if="lessonRecords[c.student._id] != undefined" :class="[lessonRecords[c.student._id].join ? '' : 'red']")  
+                  fa-icon(:icon="['fas', 'sms']")
+                  label {{lessonRecords[c.student._id].sms}}
+          div(v-if="c.group != undefined") 
+              .name {{c.group.groupName}}
+              div(v-for="s in c.group.student") 
+                  .sms(v-if="lessonRecords[s] != undefined" :class="[lessonRecords[s].join ? '' : 'red']") 
+                      fa-icon(:icon="['fas', 'sms']")
+                      label {{lessonRecords[s].sms}}
 </template>
 
 <script>
@@ -28,6 +29,7 @@ export default {
   ],
   data() {
     return {
+      colors: ["#ff605c", "#ffbd44", "#00ca4e"],
       date: "",
       teacherId: "",
       turkDays: [6, 0, 1, 2, 3, 4, 5],

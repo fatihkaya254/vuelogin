@@ -72,7 +72,6 @@ exports.getAllPurchases = async (req, res) => {
 
 exports.actives = async (req, res) => {
   Purchase.find({
-    cancel: { $ne: true },
     fee: { $ne: 0 }
   })
     .populate({ path: "student" })
@@ -101,6 +100,7 @@ exports.actives = async (req, res) => {
           purchaseMap[p.student._id].life = p.installment;
         }
         purchaseMap[p.student._id].totalFee += p.fee;
+        if(p.cancel) purchaseMap[p.student._id].totalFee -= p.waivedWage;
       });
       res.send(purchaseMap);
     });
