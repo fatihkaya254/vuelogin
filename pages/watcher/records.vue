@@ -4,7 +4,7 @@
     .teachers
         .teacher(v-for="i in teacher()" @click="setTeacher(i._id)" :class="[i._id != teacherId ? '' : 'aTeacher']") {{i.name}} {{i.surname}}
     div(v-for="c in teachersDaily()")  
-      .record(v-if="c.student != undefined || c.group != undefined" :style="[lessonRecords[c.student] != undefined ? { backgroundColor: colors[lessonRecords[c.student._id].smsApp]} : { backgroundColor: colors[0]}]")
+      .record(v-if="c.student != undefined || c.group != undefined" :style="[(c.student != undefined && lessonRecords[c.student._id] != undefined) ? { backgroundColor: colors[lessonRecords[c.student._id].smsApp]} : { backgroundColor: colors[0]}]")
           .hour {{c.hour}}:00
           div(v-if="c.student != undefined") 
               .name {{c.student.name}} {{c.student.surname}}
