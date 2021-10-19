@@ -97,8 +97,8 @@ export default {
     margin: 4px
     @media screen and (max-width: 1200px)
       width: 40%
-      height: 60px
-
+      height: 30px
+      overflow: hidden
 .aTeacher
     background-color: black
     color: #fff
