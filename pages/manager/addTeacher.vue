@@ -11,7 +11,7 @@
         input(type="text" placeholder="Matematik Öğretmeni" v-model="mainBranch")
     .infoLine(v-show="id != ''")
         label
-            img(:src=" ourhost + photo" v-show="photo != ''")       
+            img(:src="photo" v-show="photo != ''")       
         p {{ name }} {{ surname }} {{ id }}
     .infoLine(v-show="id != ''")
         label
@@ -53,7 +53,6 @@ export default {
       email: "",
       mainBranchLabel: "Ana Branş",
       mainBranch: "",
-      ourhost: process.env.OUR_URL,
       selectedGrade: ""
     };
   },

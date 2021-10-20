@@ -82,7 +82,6 @@ export default {
       studentId: "",
       studentId: "",
       purchases: {},
-      ourhost: process.env.OUR_URL,
       generating: false,
       newIns: {},
       remains: 0

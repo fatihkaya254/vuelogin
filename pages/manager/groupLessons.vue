@@ -17,12 +17,12 @@
           .infoes(@click="setLesson(lesson._id)")
             .lessonInfo {{lesson.status}} {{days[lesson.day]}} {{hours[lesson.hour]}} {{lesson.teacher.name}} {{lesson.teacher.surname}} 
             .linePhoto
-              img(:src=" ourhost + lesson.teacher.profilePic" v-show="lesson.teacher.profilePic")
+              img(:src="lesson.teacher.profilePic" v-show="lesson.teacher.profilePic")
               img(src="../../assets/basic-profile.png" v-show="!lesson.teacher.profilePic")
           .infoes(v-if="lesson.student != undefined && lesson.student != null" :style="{ color: warnings[lesson._id] }")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.student.name}} {{lesson.student.surname}} 
             .linePhoto
-              img(:src=" ourhost + lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
+              img(:src="lesson.student.profilePic" v-show="lesson.student.profilePic" @click="emptyLesson(lesson._id)")
               img(src="../../assets/basic-profile.png" v-show="!lesson.student.profilePic" @click="emptyLesson(lesson._id)")
           .infoes(v-if="lesson.group != undefined && lesson.group != null")
             .lessonInfo  {{lesson.branch.grade.gradeName}} {{lesson.branch.branchName}} {{lesson.group.groupName}}
@@ -91,7 +91,6 @@ export default {
       addingGroup: "",
       addingBranch: "",
       mainBranch: "",
-      ourhost: process.env.OUR_URL,
       selectedGrade: "",
       studentLessons: [],
       students: [],

@@ -136,7 +136,6 @@ export default {
       a: false,
       b: false,
       c: false,
-      ourhost: process.env.OUR_URL
     };
   },
   methods: {

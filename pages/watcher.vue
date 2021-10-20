@@ -6,7 +6,7 @@
         .sidebar
             .profileInfo
                 .profilePhoto(@click="$refs.file.click()")
-                    img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+                    img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
                 h4
                     | {{ userName() }} {{ userSurname() }}
             .links
@@ -31,7 +31,6 @@ export default {
       name: "",
       surname: "",
       file: "",
-      ourhost: process.env.OUR_URL
     };
   },
   methods: {

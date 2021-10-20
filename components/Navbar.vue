@@ -114,7 +114,6 @@ import { gsap } from "gsap";
 export default {
   data() {
     return {
-      ourhost:  process.env.OUR_URL,
       form: "loginForm",
       login: "login",
       phoneNumber: "",
@@ -291,7 +290,7 @@ header
   width: 100%
   background-color: black
   @media screen and (max-width: 1200px)
-    height: 70px
+    height: 56px
 
 .header
   margin: auto
@@ -299,7 +298,7 @@ header
   max-width: 1350px
   -webkit-appearance: none
   @media screen and (max-width: 1200px)
-    height: 60px
+    height: 48px
 
 .logo
   height: 70px
@@ -309,8 +308,8 @@ header
   float: left
   border: 0px solid black
   @media screen and (max-width: 1200px)
-    height: 60px
-    width: 60px
+    height: 48px
+    width: 48px
   & img
     margin: 0
     margin-top: 16px
@@ -334,22 +333,7 @@ header
   margin-left: -165px
   transition: all .1s ease
   color: white
-#login
-  height: 36px
-  width: 96px
-  font-family: 'Open Sans', sans-serif
-  font-weight: 700
-  letter-spacing: 1px
-  font-size: 9pt
-  float: right
-  background-color: white
-  border-radius: 1em
-  border: 0px solid black
-  position: relative
-  z-index: 2
-  &:focus
-    outline: 0px
-    cursor: pointer
+
 #user
   margin-top: 35px
   margin-left: -200px
@@ -364,7 +348,7 @@ header
   z-index: 1
   @media screen and (max-width: 1200px)
     font-size: 0pt
-
+    display: none
   &input[type=text]
     background-color: rgba(0, 0, 0, 0)
     height: 40px
@@ -379,9 +363,9 @@ header
     margin-top: -6px
     background-color: white
     @media screen and (max-width: 1200px)
-      margin-left: 20px
-      height: 52px
-      width: 52px
+      margin-left: 10px
+      height: 32px
+      width: 32px
       margin-top: -16px
 #phone
   height: 40px
@@ -538,9 +522,27 @@ header
       &:hover
         cursor: pointer
         transform: scale(0.95)
+#login
+  height: 36px
+  width: 96px
+  font-family: 'Open Sans', sans-serif
+  font-weight: 700
+  letter-spacing: 1px
+  font-size: 9pt
+  float: right
+  background-color: white
+  border-radius: 1em
+  border: 0px solid black
+  position: relative
+  z-index: 2
+  &:focus
+    outline: 0px
+    cursor: pointer
+  @media screen and (max-width: 1200px)
+    height: 30px
 
 .login
-  height: 36px
+  height: 32px
   width: 96px
   margin: 0
   margin-top: 23px
@@ -549,7 +551,9 @@ header
   border-radius: 1em
   border: 0px solid black
   transition: all .3s ease
-
+  @media screen and (max-width: 1200px)
+    height: 30px
+    margin-top: 20px
 
 .loginForm
   height: 220px
@@ -579,5 +583,6 @@ header
   text-decoration: none
   &:hover
     text-decoration: underline
+
 
 </style>

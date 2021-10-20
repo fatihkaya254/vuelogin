@@ -3,35 +3,19 @@ div
   Navbar
   .top
     Navbar
-  .lockServicePop(v-show="getPackagePop()")
-    LockService
-  .mainImage
-    img(:src="'/logo.png'")
-  //TeacherList
-  //HomePageCharts
-  //ServiceList
   .bottom(v-if="this.$store.getters.isAuthenticated")
     Bottombar
-  footer
-    Footer
   Bottombar
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Bottombar from "@/components/Bottombar.vue";
-import Footer from "@/components/footer.vue";
-import HomePageCharts from "@/components/HomePageCharts.vue";
-import ServiceList from "@/components/ServiceList.vue";
-import TeacherList from "@/components/TeacherList.vue";
-import LockService from "@/components/LockService.vue";
-import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
-    return {
-    };
+    return {};
   },
-  middleware: ["session-control", "homeAuth"],
+  middleware: ["session-control", "myrecords"],
   components: {
     HomePageCharts,
     Navbar,
@@ -41,10 +25,6 @@ export default {
     TeacherList,
     Bottombar
   },
-  methods: {
-    ...mapActions(["setPackagePop"]),
-    ...mapGetters(["getPackagePop"]),
-  }
 };
 </script>
 

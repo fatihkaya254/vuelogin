@@ -6,7 +6,7 @@
         .sidebar
             .profileInfo
                 .profilePhoto(@click="$refs.file.click()")
-                    img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+                    img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
                     input(
                         type="file"
                         class="input-field"
@@ -61,7 +61,6 @@ export default {
       name: "",
       surname: "",
       file: "",
-      ourhost: process.env.OUR_URL
     };
   },
   methods: {

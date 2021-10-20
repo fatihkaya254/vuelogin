@@ -2,7 +2,7 @@
 div 
     .profileInfo
       .profilePhoto(@click="$refs.file.click()")
-          img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+          img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
           input(
               type="file"
               class="input-field"
@@ -50,7 +50,6 @@ export default {
       phone: "",
       birthDay: "",
       email: "",
-      ourhost: process.env.OUR_URL,
       grade: "",
       phoneLength: 11,
       selectedFile: null,

@@ -82,7 +82,6 @@ export default {
       adress: "",
       email: "",
       mainBranch: "",
-      ourhost: process.env.OUR_URL,
       selectedGrade: "",
       schedule: {}
     };
