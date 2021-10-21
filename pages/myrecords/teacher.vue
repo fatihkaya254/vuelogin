@@ -1,95 +1,61 @@
 <template lang="pug">
-.mainContainer
-  .aboutDay {{dateOfDay}} {{dayNames[day]}} 
-  .lessonContainer  
-    .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
-      .linePhoto
-        img(:src="'/' + lessonsPhotos[lesson._id]" v-if="lessonsPhotos[lesson._id] != undefined")
-        img(src="../../assets/basic-profile.png" v-if="lessonsPhotos[lesson._id] == undefined")
-      .lessonInfoes
-        .clock {{ hours[lesson.hour] }} 
-        .branch {{ lessonsBranches[lesson._id] }}
-        .student {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
-        .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}
-      .lessonInfoesSMS
-        .student(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined") {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
-        .changeRecord(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != undefined && lessonRecords[findMyRecord(lesson._id)].smsApp != 2" @click="appSMS(findMyRecord(lesson._id), lessonRecords[findMyRecord(lesson._id)].smsApp, lesson._id )" ) {{lessonRecords[findMyRecord(lesson._id)].smsApp ? 'SMS Onay Kaldır' : 'SMS Onayla'}}
-    .lessonCard {{dateOfDay}} {{dayNames[day]}} 
-  .changeHours(v-show="private")
-    .close(@click="close()")
-    .topBar 
-      .branch {{ lessonsBranches[id] }}
-      .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
-    .subTopics
-      .subjectName(v-for="(topic, index) in branchProcess[braid]") 
-       p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
-        div( v-for="subtopic in topic" style="border-bottom: 1px solid black;")
-          label(:for="subtopic._id" class="rounded-checkbox") 
-            input(type="checkbox" :id="subtopic._id" :value="subtopic._id" v-model="recordSubtopics" ) 
-            span(class="rounded-checkbox__outer")
-              span(class="rounded-checkbox__inner")
-            p {{subtopic.subTopicName}}
-    .lastHomework {{preHomework()}}
-    .homeworkStatus
-      .not(:style="[join ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="join = !join")
-        | Derse Katılım Durumu
-    .homeworkStatus(v-if="preHomework() != ''")
-      .not(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
-        | Yapılmadı
-      .half(:style="[homeworkStatus == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 2")
-        | Eksik
-      .done(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
-        | Tam
-    .nextHomework
-      .infoLine
-        label
-            | Bir Sonraki Ödev
-        input(type="text" placeholder="Ödev" v-model="nextHomework")
-    .apply
-      .infoLine
-        input(type="submit" value="Onayla" @click="updateRecord()")
-  // --------------------------------- Grup Kartı Bundan Sonra
-  .changeHours(v-show="gPop")
-    .close(@click="close()")
-    .topBar 
-      .branch {{ LGBranchName }}
-      .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
-    .subTopics
-      .subjectName(v-for="(topic, index) in this.branchProcess[LGBranchId]") 
-       p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
-        div( v-for="subtopic in topic" style="border-bottom: 1px solid black;")
-          label(:for="subtopic._id" class="rounded-checkbox") 
-            input(type="checkbox" :id="subtopic._id" :value="subtopic._id" v-model="recordSubtopics" ) 
-            span(class="rounded-checkbox__outer")
-              span(class="rounded-checkbox__inner")
-            p {{subtopic.subTopicName}}
-    .lastHomework(v-if="groupPres[Object.keys(groupPres)[0]]") {{groupPres[Object.keys(groupPres)[0]].homework}}
-    .homeworkStatus(v-for="stua in LGGs")
-      .not(:style="[gJoin[stua] ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="changeGroupJoin(stua)")
-        | {{students[stua]}} Katılım
-    .homeworkStatus(v-for="stua in LGGs" v-if="groupPres[Object.keys(groupPres)[0]]")  {{students[stua]}}
-      .not(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 1)")
-        | Yapılmadı
-      .half(:style="[LGHomeworkStatus[stua] == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 2)")
-        | Eksik
-      .done(:style="[LGHomeworkStatus[stua] == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 3)")
-        | Tam
-    .nextHomework
-      .infoLine
-        label
-            | Bir Sonraki Ödev
-        input(type="text" placeholder="Ödev" v-model="nextHomework")
-    .apply
-      .infoLine
-        input(type="submit" value="Onayla" @click="updateGroupRecord()")
+.body
+    .generals
+        .container(style="height: 30px;")
+            .block() {{id}}
+                .string {{dateOfDay}} {{dayNames[day]}} 
+        div(:class="[lesson._id == id ? 'containerBig' : 'container']" v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
+            .bottomButtons
+                .cancel(@click="close()" v-if="page==0") İptal
+                .nP(@click="page -= 1"  v-if="page>0")
+                    fa-icon(:icon="['fas', 'chevron-circle-left']")
+                .app(v-if="page==3") Onayla
+                .nP(@click="page += 1" v-if="page<3")
+                    fa-icon(:icon="['fas', 'chevron-circle-right']")
+                
+            div(:class="[lesson._id == id ? 'blockBig' : 'block']")
+                .string {{ hours[lesson.hour] }} 
+                .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
+                .string {{ lessonsBranches[lesson._id] }}
+                .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" v-if="lesson._id != id" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}      
+                div(v-if="lesson._id == id")
+                    .subTopics( v-if="lesson._id == id && branchProcess[braid] != undefined")
+                        .subjectName(v-for="(topic, index) in branchProcess[braid]") 
+                          p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
+                          .topics( v-for="subtopic in topic")
+                            input(type="checkbox" :id="subtopic._id"  class="input-checkbox" :value="subtopic._id" v-model="recordSubtopics" ) 
+                            label(:for="subtopic._id" class="input-label") {{subtopic.subTopicName}}
+                div(v-if="lesson._id == id")
+                    .lastHomework {{preHomework()}}
+                    .homeworkStatus
+                      .not(:style="[join ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="join = !join")
+                        | Derse Katılım Durumu
+                    .homeworkStatus(v-if="preHomework() != ''")
+                      .not(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
+                        | Yapılmadı
+                      .half(:style="[homeworkStatus == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 2")
+                        | Eksik
+                      .done(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
+                        | Tam
+                    .nextHomework
+                        .infoLine
+                            label
+                                | Bir Sonraki Ödev
+                            input(type="text" placeholder="Ödev" v-model="nextHomework")
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  imports: [
+    {
+      set: "@fortawesome/free-solid-svg-icons"
+    }
+  ],
   data() {
     return {
-      colors: ["#ff605c", "#ffbd44", "#00ca4e"],
+      page: 0,
+      colors: ["white", "#ffbd44", "#00ca4e"],
       homeworkStatus: "",
       nextHomework: "yok",
       preHWL: "Önceki ödev bilgisi yok",
@@ -158,7 +124,7 @@ export default {
         "20:00",
         "21:00",
         "22:00",
-        "23:00",
+        "23:00"
       ],
       turkMonths: [
         "Ocak",
@@ -172,7 +138,7 @@ export default {
         "Eylül",
         "Ekim",
         "Kasım",
-        "Aralık",
+        "Aralık"
       ],
       dayNames: [
         "Pazartesi",
@@ -181,11 +147,11 @@ export default {
         "Perşembe",
         "Cuma",
         "Cumartesi",
-        "Pazar",
+        "Pazar"
       ],
       studentName: "",
       dateOfDay: "",
-      groupRights: [],
+      groupRights: []
     };
   },
   methods: {
@@ -193,7 +159,7 @@ export default {
     ...mapActions("users", [
       "getMyPurchases",
       "getMyPayments",
-      "getTeachersDaily",
+      "getTeachersDaily"
     ]),
     ...mapActions("branches", ["getBranches"]),
     ...mapGetters("branches", ["branch"]),
@@ -210,9 +176,9 @@ export default {
       "userBirthDayForInput",
       "userGoogleId",
       "isTeacher",
-      "userBranch",
+      "userBranch"
     ]),
-    close: function () {
+    close: function() {
       this.recordSubtopics = [];
       this.id = "";
       this.homeworkStatus = "";
@@ -233,25 +199,22 @@ export default {
       this.join = true;
       this.gJoin = [];
     },
-    appSMS: async function (id, stat, lesson) {
+    appSMS: async function(id, stat, lesson) {
       const myLesson = this.teachersDaily()[lesson];
       this.findMyGroupRecords(lesson);
       if (myLesson.group != undefined) {
         for (const stu in this.group()[myLesson.group._id].student) {
-          console.log(
-            this.groupRecords[this.group()[myLesson.group._id].student[stu]]._id
-          );
-          const recordId =
-            this.groupRecords[this.group()[myLesson.group._id].student[stu]]
-              ._id;
+          const recordId = this.groupRecords[
+            this.group()[myLesson.group._id].student[stu]
+          ]._id;
           let newStat = "1";
           if (stat) newStat = "0";
           await this.$axios
             .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
               id: recordId,
-              changes: { smsApp: newStat },
+              changes: { smsApp: newStat }
             })
-            .then((res) => {
+            .then(res => {
               console.log(res);
             });
         }
@@ -262,15 +225,15 @@ export default {
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id,
-            changes: { smsApp: newStat },
+            changes: { smsApp: newStat }
           })
-          .then((res) => {
+          .then(res => {
             console.log(res);
           });
       }
       this.start();
     },
-    setDates: function () {
+    setDates: function() {
       this.teacher = this.userId();
       const now = new Date();
       this.day = this.turkDays[now.getDay()];
@@ -282,14 +245,14 @@ export default {
         now.getFullYear();
       var month = now.getMonth() + 1;
     },
-    addLessonRecord: function (lesson) {
+    addLessonRecord: function(lesson) {
       const now = new Date();
       const ml = this.teachersDaily()[lesson];
       var record = {};
       record.day = ml.day;
       record.hour = ml.hour;
       record.lesson = lesson;
-      record.join = true
+      record.join = true;
       record.teacher = this.teacher;
       record.student = this.lessonsStudentId[lesson];
       record.branch = this.lessonsBranchId[lesson];
@@ -302,25 +265,25 @@ export default {
           record.student = groupStudents[stu];
           this.$axios
             .post(`${process.env.OUR_HOST}/addLessonRecord`, {
-              lessonRecord: record,
+              lessonRecord: record
             })
-            .then((res) => {
+            .then(res => {
               console.log(res);
             });
         }
       } else {
         this.$axios
           .post(`${process.env.OUR_HOST}/addLessonRecord`, {
-            lessonRecord: record,
+            lessonRecord: record
           })
-          .then((res) => {
+          .then(res => {
             console.log(res);
           });
       }
       console.log(record);
       this.start();
     },
-    getLessonRecords: function () {
+    getLessonRecords: function() {
       const teacher = this.teacher;
       const now = new Date();
       var month = now.getMonth() + 1;
@@ -328,24 +291,27 @@ export default {
       this.$axios
         .post(`${process.env.OUR_HOST}/dailyTeacherRecords`, {
           teacher,
-          date,
+          date
         })
-        .then((res) => {
+        .then(res => {
           this.lessonRecords = res.data;
         });
     },
-    getSubTopics: function () {
+    getSubTopics: function() {
       this.$axios
         .post(`${process.env.OUR_HOST}/branchProcess`, {
-          branch: this.userBranch(),
+          branch: this.userBranch()
         })
-        .then((res) => {
+        .then(res => {
           this.branchProcess = res.data.branchMap;
           this.branchSubjects = res.data.subjectMap;
           this.branchSubTopics = res.data.branchSubtopics;
+          console.log("this.branchProcess");
+          console.log(this.branchProcess);
+          console.log("this.branchProcess");
         });
     },
-    dealCards: function () {
+    dealCards: function() {
       for (const index in this.teachersDaily()) {
         if (
           this.teachersDaily()[index].branch != undefined &&
@@ -397,14 +363,14 @@ export default {
         }
       }
     },
-    findMyRecord: function (lesson) {
+    findMyRecord: function(lesson) {
       for (const index in this.lessonRecords) {
         if (this.lessonRecords[index].lesson == lesson) {
           return index;
         }
       }
     },
-    findMyGroupRecords: function (lesson) {
+    findMyGroupRecords: function(lesson) {
       var indexes = [];
       for (const index in this.lessonRecords) {
         if (this.lessonRecords[index].lesson == lesson) {
@@ -416,14 +382,18 @@ export default {
               this.lessonRecords[index].join
             );
           }
-          indexes[this.lessonRecords[index].student] =
-            this.lessonRecords[index];
+          indexes[this.lessonRecords[index].student] = this.lessonRecords[
+            index
+          ];
         }
       }
       this.groupRecords = indexes;
     },
-    clickOnLesson: async function (lesson, h) {
+    clickOnLesson: async function(lesson, h) {
       this.lessonHour = this.hours[h];
+      console.log(lesson);
+      console.log("basla");
+      console.log("basla");
       if (this.findMyRecord(lesson)) {
         if (
           this.lessonRecords[this.findMyRecord(lesson)].student ==
@@ -440,9 +410,15 @@ export default {
           this.id = lesson;
           this.private = true;
           this.braid = this.lessonsBranchId[lesson];
+          console.log(this.branchProcess);
+          console.log(this.braid);
+          console.log(this.branchProcess[this.braid]);
+
+          console.log("this.id");
           console.log(this.id);
+          console.log("this.id");
           this.findPreRecord(lesson);
-          console.log("a");
+          console.log("ssda");
         } else if (
           this.lessonRecords[this.findMyRecord(lesson)].group ==
             this.lessonsGroupId[lesson] &&
@@ -466,8 +442,9 @@ export default {
               );
             }
           }
-          const theRecord =
-            this.groupRecords[Object.keys(this.groupRecords)[0]];
+          const theRecord = this.groupRecords[
+            Object.keys(this.groupRecords)[0]
+          ];
           this.recordSubtopics = theRecord.subTopics;
           this.nextHomework = theRecord.homework;
           this.LGId = theRecord.group;
@@ -493,20 +470,20 @@ export default {
         console.log("c");
       }
     },
-    preHomework: function () {
+    preHomework: function() {
       if (this.preRecord == null || this.preRecord == undefined) {
         return "";
       } else {
         return this.preRecord.homework;
       }
     },
-    homeworkStatusConvert: async function (stat) {
+    homeworkStatusConvert: async function(stat) {
       if (stat == 1) return "yapılmadı";
       if (stat == 2) return "eksik";
       if (stat == 3) return "tam yapıldı";
       return "-";
     },
-    updateRecord: async function () {
+    updateRecord: async function() {
       const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus);
       const id = this.recordId;
       var preId = "";
@@ -531,11 +508,11 @@ export default {
         this.userSurname();
       if (!join) {
         sms =
-          this.lessonsStudents[this.id]+
+          this.lessonsStudents[this.id] +
           ", " +
           this.hours[this.teachersDaily()[this.id].hour] +
           ", " +
-          this.lessonsBranches[this.id]+
+          this.lessonsBranches[this.id] +
           " öğrenci derse katılmadı" +
           ", " +
           this.userName() +
@@ -546,23 +523,23 @@ export default {
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
           id,
-          changes: { subTopics, homework, sms, join },
+          changes: { subTopics, homework, sms, join }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
         });
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
           id: preId,
-          changes: { homeworkStatus },
+          changes: { homeworkStatus }
         })
-        .then((res) => {
+        .then(res => {
           console.log(res);
         });
       this.start();
       this.close();
     },
-    updateGroupRecord: async function () {
+    updateGroupRecord: async function() {
       for (const student in this.group()[this.LGId].student) {
         const studentId = this.group()[this.LGId].student[student];
         const homeworkStatus = this.LGHomeworkStatus[studentId];
@@ -606,18 +583,18 @@ export default {
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id: recordId,
-            changes: { subTopics, homework, sms, join },
+            changes: { subTopics, homework, sms, join }
           })
-          .then((res) => {
+          .then(res => {
             console.log(res);
           });
         if (preId != undefined && preId != null && preId != "") {
           await this.$axios
             .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
               id: preId._id,
-              changes: { homeworkStatus },
+              changes: { homeworkStatus }
             })
-            .then((res) => {
+            .then(res => {
               console.log(res);
               console.log(homeworkStatus);
               console.log("hw");
@@ -627,7 +604,7 @@ export default {
       this.start();
       this.close();
     },
-    findPreRecord: async function (lesson) {
+    findPreRecord: async function(lesson) {
       const record = this.findMyRecord(lesson);
       const conditions = {};
       const student = this.lessonsStudentId[lesson];
@@ -641,20 +618,19 @@ export default {
       console.log(conditions);
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
-          conditions,
+          conditions
         })
-        .then((res) => {
+        .then(res => {
           this.preRecord = res.data.preRecord;
           if (res.data.preRecord != null) {
             this.homeworkStatus = this.preRecord.homeworkStatus;
           }
         });
     },
-    findGroupPreRecord: async function (record, student) {
+    findGroupPreRecord: async function(record, student) {
       const now = new Date();
       var month = now.getMonth() + 1;
       var dateToday = now.getFullYear() + "-" + month + "-" + now.getDate();
-      console.log(dateToday);
       const conditions = {};
       if (student != "" && student != undefined && student != null) {
         conditions.student = student;
@@ -665,14 +641,13 @@ export default {
       conditions.teacher = this.userId();
       await this.$axios
         .post(`${process.env.OUR_HOST}/findLessonRecord`, {
-          conditions,
+          conditions
         })
-        .then((res) => {
+        .then(res => {
           this.$set(this.groupPres, student, res.data.preRecord);
-          console.log(this.groupPres);
         });
     },
-    start: async function () {
+    start: async function() {
       this.getGroups();
       this.setDates();
       await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
@@ -680,12 +655,12 @@ export default {
       this.dealCards();
       this.getSubTopics();
     },
-    getRights: async function () {
+    getRights: async function() {
       console.log("as");
       try {
         await this.$axios
           .get(`${process.env.OUR_HOST}/groupRights`)
-          .then((res) => {
+          .then(res => {
             this.groupRights = res.data;
             console.log("res");
           });
@@ -701,271 +676,214 @@ export default {
             this.groupRights[right].student.surname
         );
       }
-      console.log("this.students");
-      console.log(this.students);
     },
-    LGHomeworkStatusChange: function (student, hs) {
+    LGHomeworkStatusChange: function(student, hs) {
       this.$set(this.LGHomeworkStatus, student, hs);
       console.log(this.LGHomeworkStatus);
     },
-    changeGroupJoin: function (student) {
+    changeGroupJoin: function(student) {
       var newStatus = !this.gJoin[student];
       this.$set(this.gJoin, student, newStatus);
-    },
+    }
   },
   watch: {},
   async mounted() {
     await this.getRights();
     this.getBranches();
     this.start();
-  },
+  }
   // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };
 </script>
 
 <style lang="sass" scoped>
-$darkGreen: #5F9595
-$somon: #FFB6A3
-$white: #F7F3F0
-$greenBlue: #AAB8BB
-$ligthGreen: #C4D7D1
-
-.apply
-  padding: 1px
-.infoLine
-  margin: auto
-  margin-top: 10px
-  padding-top: 8px
-  height: 40px
-  border-bottom: 0.75px solid gray
-  width: 80%
-  @media screen and (max-width: 1200px)
-    display: flex
-    flex-direction: column
-    height: 100px
-  & input
-    float: right
-    margin-right: 20%
-    height: 28px
-    margin-top: -8px
-    border: none
-    min-width: 50%
-    -webkit-appearance: none
-    padding-left: 16px
-    padding-right: 16px
-    border-radius: 1em
-    @media screen and (max-width: 1200px)
-      margin-top: 10px
-      height: 40px
-      width: 100%
-      border: 0.5px solid black
-    &:focus
-      -webkit-appearance: none
-
-
-
-    &[type="submit"]
-      background-color: black
-      color: white
-
-      &:hover
-        cursor: pointer
-
-.homeworkStatus
-  width: 100%
-  display: flex
-  gap: 20px
-  padding: 20px
-
-.lastHomework
-  text-align: center
-  padding-left: 20px
-  padding-right: 20px
-.not
-  border: 0.5px solid gray
-  border-radius: 1em
-  width: 100%
-  text-align: center
-  height: 30px
-  padding: 5px
-  cursor: pointer
-.half
-  border: 0.5px solid gray
-  width: 100%
-  border-radius: 1em
-  text-align: center
-  padding: 5px
-  height: 30px
-  cursor: pointer
-.done
-  border: 0.5px solid gray
-  width: 100%
-  border-radius: 1em
-  text-align: center
-  height: 30px
-  padding: 5px
-  cursor: pointer
-
-.mainContainer
-  overflow: auto
+.pop
   height: 60vh
-  padding-bottom: 200px
-.lessonContainer
-  height: 400px
-  padding: 50px
-  height: 60vh
-  @media screen and (max-width: 1200px)
-    padding: 0
-    height: 100vh
-
-.subTopics
-  margin: 20px
-  height: 300px
-  width: 90vw
-  overflow: auto
-  border: 0.5px solid black
-  border-radius: 1em
-
-.subjectName
-  margin: 15px
-
-.lessonInfoes
-  display: flex
-  flex-direction: row
-  @media screen and (max-width: 1200px)
-    flex-direction: column
-
-.lessonInfoesSMS
-  display: flex
-  flex-direction: column
-
-.clock
-  background-color: $darkGreen
-  color: $white
-  text-align: center
-  padding: 5px
-  border-radius: 1em
-
-.changeRecord
-  width: 100px
-  background-color: $darkGreen
-  color: $white
-  text-align: center
-  padding: 5px
-  border-radius: 1em
-  margin-left: 20px
-  cursor: pointer
-  @media screen and (max-width: 1200px)
-    margin: auto
-  &:hover
-    color: black
-    background-color: $somon
-
-.branch
-  text-align: center
-  padding: 5px
-  border-radius: 1em
-  margin-left: 10px
-
-.student
-  text-align: center
-  margin-left: 10px
-  padding: 5px
-  border-radius: 1em
-
-.lessonCard
-  //background-color: $ligthGreen
-  padding: 36px
-  margin: auto
-  margin-top: 15px
-  border-radius: 1em
-  min-height: 200px
-  @media screen and (max-width: 1200px)
-    padding: 10px
-    margin-bottom: 40px
-    display: flex
-    flex-direction: column
-
-.changeHours
-    bottom:0
-    right: 0
-    height: 100%
-    overflow: auto
-    width: 100%
-    position: absolute
-    z-index: 3
-    background-color: white
-    @media screen and (max-width: 1200px)
-      bottom: 0
-      left: 0
-      height: 100%
-
-.close
-    margin: 15px
-    position: absolute
-    z-index: 4
-    height: 13px
-    width: 13px
-    border-radius: 50%
-    background-color: #ff605c
-    &:hover
-      height: 15px
-      width: 15px
-
-.topBar
-    width: 100%
-    height: 60px
-    text-align: center
-    padding: 20px
-.aboutDay
-  background-color: $darkGreen
-  color: $white
-  text-align: center
-  padding: 5px
-
-
-
-.linePhoto
-  position: relative
+  width: 60vw
+  background-color: white
+  position: absolute
   z-index: 1
-  margin-top: -48px
-  margin-left: -48px
-  height: 48px
-  width: 48px
-  border-radius: 50%
-  transition: all 0.5s ease
-  @media screen and (max-width: 1200px)
-    margin: 0px
-    z-index: 2
-    margin-bottom: -40px
-  & img
-      height: 48px
-      width: 48px
-      border-radius: 50%
-      transition: all 0.5s ease
+  right: 20vw
+  border-radius: 8px
+  box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+  overflow: hidden
+.chartPop
+  height: 60vh
+  width: 60vw
+  background-color: white
+  position: absolute
+  z-index: 1
+  right: 20vw
+  border-radius: 8px
+  box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+  overflow: auto
+.close
+  width: 60vw
+  background-color: #EF5350
+  color: white
+  justify-content: center
+  align-items: center
+  text-align: center
+  font-family: "Lato", Arial
+  padding: 12px
 
-.backgroundPhotoOverlay
-  position: fixed
-  z-index: -1
-  width: 100%
-  height: 100%
-  top: 0
-  left: 0
-  background-color: rgba(252, 252, 252, 0.8)
-
-.backgroundPhoto
-  position: fixed
-  z-index: -2
-  width: 100%
-  border-radius: 50%
+.list
+  height: 50vh
+  overflow: auto
+  justify-content: center
+  text-align: center
+  margin-top: 16px
+  ol
+    display: table
+    margin: 0 auto
+    padding: 0
+  li
+    margin: 10px
+.subs
   transition: all 0.5s ease
-  top: 0
-  left: 0
-  & img
-      width:100%
+
+.body
+  transition: all 0.5s ease
+  width: 100vw
+  min-height: 100vh
+  justify-content: center
+  align-items: center
+  background: #EF5350
+  font-family: "Lato", Arial
+  color: #263238
+  transition: all 0.5s ease
+  .generals
+    transition: all 0.5s ease
+    width: 100vw
+    padding-top: 10px
+    display: flex
+    gap: 20px
+    align-items: center
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+      gap: 0px
+  .container
+    transition: all 0.5s ease
+    margin: auto
+    margin-bottom: 20px
+    display: flex
+    flex-direction: row
+    justify-content: space-around
+    width: 60vw
+    background: white
+    align-items: center
+    border-radius: 8px
+    box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+    @media screen and (min-width: 1200px)
+      height: 100px
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+    .block
       transition: all 0.5s ease
+      text-align: center
+      height: 100px
+      width: 200px
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      @media screen and (max-width: 1200px)
+        height: 100px
+        width: 100%
+      &:hover
+        color: #EF5350
+      .number
+        font-size: 16px
+        font-weight: bold
+      .string
+        font-size: 12px
+        line-height: 24px
+        color: gray
+    .bottomButtons
+        display: none
+
+  .generalsBig
+    transition: all 0.5s ease
+    width: 100vw
+    display: flex
+    gap: 20px
+    margin: auto
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+      gap: 0px
+  .containerBig
+    transition: all 0.5s ease
+    position: fixed
+    height: 80vh
+    margin: auto
+    margin-bottom: 20px
+    display: flex
+    flex-direction: row
+    justify-content: space-around
+    width: 90vw
+    background: white
+    align-items: center
+    border-radius: 18px
+    box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
+    overflow: hidden
+    @media screen and (min-width: 1200px)
+      height: 100px
+    @media screen and (max-width: 1200px)
+      flex-direction: column
+    .blockBig
+      flex-grow: 1
+      transition: all 0.5s ease
+      transition: all 0.5s ease
+      text-align: center
+      height: 100%
+      width: 200px
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      @media screen and (max-width: 1200px)
+        height: 200px
+        width: 100%
+
+      .number
+        font-size: 16px
+        font-weight: bold
+      .string
+        font-size: 12px
+        line-height: 24px
+        color: gray
+    .bottomButtons
+        transition: all 0.5s ease
+        position: absolute
+        display: flex
+        justify-content: center
+        align-items: stretch
+        width: 100%
+        z-index: 4
+        bottom: 0
+    .cancel
+        transition: all 0.5s ease
+        background: #ffbd44
+        text-align: center
+        padding: 5px
+        font-size: 9pt
+        width: 50%
+    .nP
+        transition: all 0.5s ease
+        background: white
+        text-align: center
+        padding: 5px
+        font-size: 9pt
+        width: 50%
+    .app
+        transition: all 0.5s ease
+        font-size: 9pt
+        background: #00ca4e
+        padding: 5px
+        width: 50%
+        text-align: center
 ::-webkit-scrollbar
-  width: 5px
+  width: 0px
   border-radius: 1em
 
 ::-webkit-scrollbar-track
@@ -979,54 +897,30 @@ $ligthGreen: #C4D7D1
 ::-webkit-scrollbar-thumb:hover
   background: #555
 
-@mixin box-shadow($shad)
-  -webkit-box-shadow: $shad
-  -moz-box-shadow: $shad
-  box-shadow: $shad
+.subTopics
+  margin: 20px
+  height: 300px
+  width: 90vw
+  overflow: auto
+  border: 0.5px solid black
+  border-radius: 1em
+.topics
+    text-align: left
+.subjectName
+  margin: 15px
+  font-size: 10pt
 
-@mixin transition($transition)
-  -moz-transition:    $transition
-  -o-transition:      $transition
-  -webkit-transition: $transition
-  transition:         $transition
-
-
-
-.rounded-checkbox
-  $heigth: 22px
-
-  display: flex
-  flex-wrap: wrap
-  gap: 12px
-  padding: 3px
-  border-radius: $heigth
-  input[type="checkbox"]
+input[type=checkbox].input-checkbox
+    transition: all 0.5s ease
     display: none
-    &:checked + .rounded-checkbox__outer
-      background-color: green
-      .rounded-checkbox__inner
-        left: 38%
-
-
-
-  &__outer
-    width: $heigth*2
-    height: $heigth
-    border-radius: $heigth
-    background-color: #f67676
-    display: block
-    @include box-shadow(inset 0 0 10px rgba(#000, 0.4))
-    position: relative
-    @include transition(background-color 0.3s)
-
-  &__inner
-    position: absolute
-    left: 2%
-    top: 4%
-    height: 92%
-    width: 60%
-    background-color: #efedea
-    border-radius: $heigth
-    @include transition(left 0.3s)
-    @include box-shadow(inset 0 -1px 2px rgba(#000, 0.4))
+    & + label
+        &.input-label
+            cursor: pointer
+    &:checked
+        & + label
+            &.input-label
+                color: green
+.input-label
+    transition: all 0.5s ease
+    color: blue
 </style>

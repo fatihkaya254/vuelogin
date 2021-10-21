@@ -14,7 +14,7 @@ div
     Bottombar
   footer
     Footer
-  Bottombar
+  Bottombar(v-if="this.$store.getters.isAuthenticated")
 </template>
 
 <script>
@@ -70,8 +70,7 @@ export default {
   z-index: 5
   width: 100vw
   bottom: 0
-  @media screen and (min-width: 1200px)
-    display: none
+
 body
   font-family: 'Lemon/Milk light Regular'
   letter-spacing: 1px

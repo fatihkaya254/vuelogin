@@ -6,7 +6,7 @@
         fa-icon(:icon="['fas', 'history']")
     NuxtLink(:to="'/profile/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'calendar']")
-    NuxtLink(:to="'/'", class="nuxt-link") 
+    NuxtLink(:to="'/myrecords/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'bookmark']")
     NuxtLink(:to="'/profile/userInfo'", class="nuxt-link")     
         img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
@@ -36,7 +36,8 @@ export default {
     height: 48px
     background-color: #fefefe
     align-items: stretch
-
+    @media screen and (min-width: 1200px)
+      display: none
 
 
 

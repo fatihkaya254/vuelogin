@@ -1,8 +1,8 @@
 <template lang="pug">
 div    
+    .navWrapper
+        Navbar
     .adminDashboard
-        .navWrapper
-            Navbar
         .container
             .sidebar
                 .profileInfo
@@ -34,7 +34,8 @@ div
             .content
                 nuxt-child
     .bottom(v-if="this.$store.getters.isAuthenticated")
-        Bottombar    
+        Bottombar
+    Bottombar(v-if="this.$store.getters.isAuthenticated")    
 </template>
 
 <script>
@@ -125,7 +126,8 @@ a.nuxt-link-active
 .navWrapper
     position: fixed
     width: 100%
-
+    top: 0
+    z-index: 1
 .adminheader
     background-color: $gray
     height: 70px

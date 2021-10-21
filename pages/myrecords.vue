@@ -3,6 +3,7 @@ div
   Navbar
   .top
     Navbar
+  nuxt-child  
   .bottom(v-if="this.$store.getters.isAuthenticated")
     Bottombar
   Bottombar
@@ -15,14 +16,9 @@ export default {
   data() {
     return {};
   },
-  middleware: ["session-control", "myrecords"],
+  middleware: ["session-control", "myRecords"],
   components: {
-    HomePageCharts,
     Navbar,
-    Footer,
-    ServiceList,
-    LockService,
-    TeacherList,
     Bottombar
   },
 };

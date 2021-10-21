@@ -100,7 +100,7 @@ exports.actives = async (req, res) => {
           purchaseMap[p.student._id].life = p.installment;
         }
         purchaseMap[p.student._id].totalFee += p.fee;
-        if(p.cancel) purchaseMap[p.student._id].totalFee -= p.waivedWage;
+        if (p.cancel) purchaseMap[p.student._id].totalFee -= p.waivedWage;
       });
       res.send(purchaseMap);
     });
@@ -237,8 +237,6 @@ exports.listAll = async (req, res) => {
 };
 
 exports.yearlyEarns = async (req, res) => {
-  console.log(req);
-
   Purchase.find()
     .sort("parent student")
     .populate([{ path: "branch", populate: { path: "grade" } }])
@@ -295,14 +293,16 @@ exports.yearlyEarns = async (req, res) => {
       earns.groupPMC = {};
       earns.cronosStudent = {};
       var parent = "";
+      var cparent = "";
       var student = "";
+      var cstudent = "";
       var nextP = "";
       var nextS = "";
       purchases.forEach(function(p) {
         nextP = "" + p.parent._id;
         nextS = "" + p.student._id;
         if (p.cancel) {
-          if (parent != nextP) {
+          if (cparent != nextP) {
             if (earns.cpList[p.parent._id] == undefined) {
               earns.cpList[p.parent._id] = {};
               earns.cpList[p.parent._id].fee = 0;
@@ -312,7 +312,7 @@ exports.yearlyEarns = async (req, res) => {
             earns.cparents += 1;
           }
           earns.cpList[p.parent._id].fee += p.waivedWage;
-          if (student != nextS) {
+          if (cstudent != nextS) {
             if (earns.csList[p.student._id] == undefined) {
               earns.csList[p.student._id] = {};
               earns.csList2[p.student._id] = {};
@@ -358,8 +358,8 @@ exports.yearlyEarns = async (req, res) => {
           earns.totalWaived += p.waivedWage;
           earns.totalUnWaived += p.fee - p.waivedWage;
           earns.total += p.fee - p.waivedWage;
-          parent = nextP;
-          student = nextS;
+          cparent = nextP;
+          cstudent = nextS;
           return;
         }
         // grup sınıflarını say
@@ -441,21 +441,21 @@ exports.yearlyEarns = async (req, res) => {
 
         // veli ve öğrencileri say
 
+        if (earns.pList[p.parent._id] == undefined) {
+          earns.pList[p.parent._id] = {};
+          earns.pList[p.parent._id].fee = 0;
+        }
         if (parent != nextP) {
-          if (earns.pList[p.parent._id] == undefined) {
-            earns.pList[p.parent._id] = {};
-            earns.pList[p.parent._id].fee = 0;
-          }
           earns.pList[p.parent._id].name =
             p.parent.name + " " + p.parent.surname;
           earns.parents += 1;
         }
         earns.pList[p.parent._id].fee += p.fee;
+        if (earns.sList[p.student._id] == undefined) {
+          earns.sList[p.student._id] = {};
+          earns.sList[p.student._id].fee = 0;
+        }
         if (student != nextS) {
-          if (earns.sList[p.student._id] == undefined) {
-            earns.sList[p.student._id] = {};
-            earns.sList[p.student._id].fee = 0;
-          }
           earns.sList[p.student._id].name =
             p.student.name + " " + p.student.surname;
           earns.students += 1;
