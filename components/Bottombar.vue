@@ -2,9 +2,9 @@
 .bar
     NuxtLink(:to="'/profile/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'bell']")
-    NuxtLink(:to="'/profile/'", class="nuxt-link") 
+    NuxtLink(:to="'/history/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'history']")
-    NuxtLink(:to="'/profile/'", class="nuxt-link") 
+    NuxtLink(:to="'/schedule/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'calendar']")
     NuxtLink(:to="'/myrecords/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'bookmark']")

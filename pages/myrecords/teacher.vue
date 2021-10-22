@@ -2,46 +2,112 @@
 .body
     .generals
         .container(style="height: 30px;")
-            .block() {{id}}
+            .block() 
                 .string {{dateOfDay}} {{dayNames[day]}} 
         div(:class="[lesson._id == id ? 'containerBig' : 'container']" v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
             .bottomButtons
-                .cancel(@click="close()" v-if="page==0") İptal
-                .nP(@click="page -= 1"  v-if="page>0")
+                .cancel(@click="close()" v-show="page==1") İptal
+                .nP(@click="page -= 1"  v-show="page>1")
                     fa-icon(:icon="['fas', 'chevron-circle-left']")
-                .app(v-if="page==3") Onayla
-                .nP(@click="page += 1" v-if="page<3")
+                .app(v-show="page==4 && !gPop") Hazırlanıyor...
+                .app(v-show="page==4 && gPop" @click="updateRecord(lesson.group != undefined)") Onayla
+                .nP(@click="page += 1" v-show="page<4")
                     fa-icon(:icon="['fas', 'chevron-circle-right']")
                 
-            div(:class="[lesson._id == id ? 'blockBig' : 'block']")
-                .string {{ hours[lesson.hour] }} 
-                .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
-                .string {{ lessonsBranches[lesson._id] }}
+            div(:class="[lesson._id == id ? 'blockBig' : 'block']" v-if="lesson.group == undefined")
+                .studentInfoes
+                  .string {{ hours[lesson.hour] }} 
+                  .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
+                  .string {{ lessonsBranches[lesson._id] }}
+                  
                 .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" v-if="lesson._id != id" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}      
-                div(v-if="lesson._id == id")
+                .info(v-show="branchProcess[braid] == undefined && page == 3") 
+                  .subjectName Yükleniyor...
+                .info(v-show="lesson._id == id && page == 3")
                     .subTopics( v-if="lesson._id == id && branchProcess[braid] != undefined")
                         .subjectName(v-for="(topic, index) in branchProcess[braid]") 
-                          p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
+                          .mainTopic {{branchSubjects[index].subjectName}}
                           .topics( v-for="subtopic in topic")
                             input(type="checkbox" :id="subtopic._id"  class="input-checkbox" :value="subtopic._id" v-model="recordSubtopics" ) 
                             label(:for="subtopic._id" class="input-label") {{subtopic.subTopicName}}
-                div(v-if="lesson._id == id")
-                    .lastHomework {{preHomework()}}
-                    .homeworkStatus
-                      .not(:style="[join ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="join = !join")
-                        | Derse Katılım Durumu
-                    .homeworkStatus(v-if="preHomework() != ''")
-                      .not(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
-                        | Yapılmadı
-                      .half(:style="[homeworkStatus == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 2")
-                        | Eksik
-                      .done(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
-                        | Tam
-                    .nextHomework
-                        .infoLine
-                            label
-                                | Bir Sonraki Ödev
-                            input(type="text" placeholder="Ödev" v-model="nextHomework")
+                .info(v-show="lesson._id == id && page == 1")
+                    .div
+                      .nextHomework
+                          .infoLine
+                              label
+                                  | Bir Sonraki Ödev
+                              input(type="text" placeholder="Ödev" v-model="nextHomework")
+                      .join(:style="[join ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="join = !join")
+                        label(style="width: 70%;") Derse Katılım
+                        fa-icon(:icon="['fas', 'check-circle']" v-show="join" )
+                        fa-icon(:icon="['fas', 'times-circle']" v-show="!join")
+                .info(v-show="lesson._id == id && page == 2")
+                    .div
+                      .lastHomework {{preHomework()}}
+                      .homeworkStatus(v-if="preHomework() != ''")
+                        .hs(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
+                          | Yapılmadı
+                        .hs(:style="[homeworkStatus == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 2")
+                          | Eksik
+                        .hs(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
+                          | Tam
+                .info(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lesson._id == id && page == 4")
+                  .string {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
+                  .subjectName
+                    .topicsSms  
+                      input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
+                      label(for="sms" class="input-label") Sms'i onaylıyorum
+                .page( v-if="lesson._id == id") {{ page }}/4
+            // grup kayıtları
+            div(:class="[lesson._id == id ? 'blockBig' : 'block']" v-if="lesson != undefined && lesson.group != undefined")
+                .studentInfoes
+                  .string {{ hours[lesson.hour] }} 
+                  .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
+                  .string {{ lessonsBranches[lesson._id] }}
+                  
+                .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" v-if="lesson._id != id" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}      
+                .info(v-show="branchProcess[LGBranchId] == undefined && page == 3") 
+                  .subjectName Yükleniyor...
+                .info(v-show="lesson._id == id && page == 3")
+                    .subTopics( v-if="lesson._id == id &&  branchProcess[LGBranchId] != undefined")
+                        .subjectName(v-for="(topic, index) in branchProcess[LGBranchId]") 
+                          .mainTopic {{branchSubjects[index].subjectName}}
+                          .topics( v-for="subtopic in topic")
+                            input(type="checkbox" :id="subtopic._id"  class="input-checkbox" :value="subtopic._id" v-model="recordSubtopics" ) 
+                            label(:for="subtopic._id" class="input-label") {{subtopic.subTopicName}}
+                .info(v-show="lesson._id == id && page == 1")
+                    .div
+                      .nextHomework
+                          .infoLine
+                              label
+                                  | Bir Sonraki Ödev
+                              input(type="text" placeholder="Ödev" v-model="nextHomework")
+                          .string Derse Katılım
+                      .homeworkStatus(v-for="stua in LGGs")
+                        .join(:style="[gJoin[stua] ? {'background-color': '#00ca4e'} : {'background-color': '#ff605c'}]" @click="changeGroupJoin(stua)")
+                          label(style="width: 70%") {{students[stua]}}
+                          fa-icon(:icon="['fas', 'check-circle']" v-show="gJoin[stua]")
+                          fa-icon(:icon="['fas', 'times-circle']" v-show="!gJoin[stua]")
+                .info(v-show="lesson._id == id && page == 2")
+                    .div
+                      .lastHomework(v-if="groupPres[Object.keys(groupPres)[0]]") {{groupPres[Object.keys(groupPres)[0]].homework}}
+                      .homeworkStatus(v-for="stua in LGGs" v-if="groupPres[Object.keys(groupPres)[0]]") 
+                        .hs
+                          |  {{students[stua]}}
+                        .hs(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 1)")
+                          | Yapılmadı
+                        .hs(:style="[LGHomeworkStatus[stua] == 2 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 2)")
+                          | Eksik
+                        .hs(:style="[LGHomeworkStatus[stua] == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 3)")
+                          | Tam
+                .info(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lesson._id == id && page == 4")
+                  .groupSms
+                    .string(v-for="stua in LGGs") {{newSms(stua, LGHomeworkStatus[stua], gJoin[stua])}}
+                  .subjectName
+                    .topicsSms  
+                      input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
+                      label(for="sms" class="input-label") Sms'i onaylıyorum
+                .page( v-if="lesson._id == id") {{ page }}/4
 </template>
 
 <script>
@@ -54,8 +120,9 @@ export default {
   ],
   data() {
     return {
-      page: 0,
-      colors: ["white", "#ffbd44", "#00ca4e"],
+      smsApp: true,
+      page: 1,
+      colors: ["white", "#f7ddae", "#a8dfbd"],
       homeworkStatus: "",
       nextHomework: "yok",
       preHWL: "Önceki ödev bilgisi yok",
@@ -93,6 +160,7 @@ export default {
       lessonsGroupId: [],
       lessonsPhotos: [],
       lessonsGroups: [],
+      groupSMS: [],
       lessonsBranches: [],
       lessonsBranchId: [],
       lessonRecords: [],
@@ -178,7 +246,42 @@ export default {
       "isTeacher",
       "userBranch"
     ]),
+    newSms: function(student, homeworkStatus, join) {
+      var homeworkS = ""
+      if(student == undefined) student = this.lessonsStudents[this.id]
+      if(homeworkStatus == undefined) homeworkStatus = this.homeworkStatus
+      switch (homeworkStatus) {
+        case 0: homeworkS = "yapılmadı"
+        case 1: homeworkS = "eksik yapıldı"
+        case 2: homeworkS = "tam yapıldı"
+        default: ""
+      }
+      var preId = "";
+      if(join == undefined) join = this.join;
+      if (this.preRecord != undefined) preId = this.preRecord._id;
+      const subTopics = this.recordSubtopics;
+      var homework = "yok";
+      if (this.nextHomework != undefined) homework = this.nextHomework;
+      var sms = ""+ student
+      sms += ", "
+      sms += this.hours[this.teachersDaily()[this.id].hour]
+      sms += ", "
+      sms += this.lessonsBranches[this.id]
+      if(!join) sms += ", öğrenci derse katılmadı"
+      if(join) sms += ", önceki derste verilen ödev: "
+      if(join) sms += homeworkS
+      if(homework != "") sms += ", bir sonraki ödev: "
+      if(homework != "") sms += homework
+      sms += ", "
+      sms += this.userName()
+      sms += " "
+      sms += this.userSurname()
+      return sms;
+    },
     close: function() {
+      this.gPop = false
+      this.smsApp = true;
+      this.page = 1;
       this.recordSubtopics = [];
       this.id = "";
       this.homeworkStatus = "";
@@ -295,6 +398,8 @@ export default {
         })
         .then(res => {
           this.lessonRecords = res.data;
+          console.log('df');
+          console.log(this.lessonRecords);
         });
     },
     getSubTopics: function() {
@@ -391,9 +496,6 @@ export default {
     },
     clickOnLesson: async function(lesson, h) {
       this.lessonHour = this.hours[h];
-      console.log(lesson);
-      console.log("basla");
-      console.log("basla");
       if (this.findMyRecord(lesson)) {
         if (
           this.lessonRecords[this.findMyRecord(lesson)].student ==
@@ -458,7 +560,6 @@ export default {
             this.branch()[this.LGBranchId].grade.gradeName +
             " " +
             this.branch()[this.LGBranchId].branchName;
-          this.gPop = true;
         } else {
           await this.addLessonRecord(lesson);
           this.start();
@@ -469,6 +570,7 @@ export default {
         this.start();
         console.log("c");
       }
+      this.gPop = true;
     },
     preHomework: function() {
       if (this.preRecord == null || this.preRecord == undefined) {
@@ -483,7 +585,8 @@ export default {
       if (stat == 3) return "tam yapıldı";
       return "-";
     },
-    updateRecord: async function() {
+    updateRecord: async function(condition) {
+      if (condition) return this.updateGroupRecord();
       const homeworkS = await this.homeworkStatusConvert(this.homeworkStatus);
       const id = this.recordId;
       var preId = "";
@@ -492,33 +595,7 @@ export default {
       const subTopics = this.recordSubtopics;
       var homework = "yok";
       if (this.nextHomework != undefined) homework = this.nextHomework;
-      var sms =
-        this.lessonsStudents[this.id] +
-        ", " +
-        this.hours[this.teachersDaily()[this.id].hour] +
-        ", " +
-        this.lessonsBranches[this.id] +
-        ", önceki derste verilen ödev: " +
-        homeworkS +
-        ", bir sonraki ödev: " +
-        homework +
-        ", " +
-        this.userName() +
-        " " +
-        this.userSurname();
-      if (!join) {
-        sms =
-          this.lessonsStudents[this.id] +
-          ", " +
-          this.hours[this.teachersDaily()[this.id].hour] +
-          ", " +
-          this.lessonsBranches[this.id] +
-          " öğrenci derse katılmadı" +
-          ", " +
-          this.userName() +
-          " " +
-          this.userSurname();
-      }
+      var sms = this.newSms()
       const homeworkStatus = this.homeworkStatus;
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
@@ -536,57 +613,39 @@ export default {
         .then(res => {
           console.log(res);
         });
+      if (this.smsApp) {
+        this.appSMS(this.findMyRecord(this.id), 0, this.id);
+      } else {
+        this.appSMS(this.findMyRecord(this.id), 1, this.id);
+      }
       this.start();
       this.close();
     },
     updateGroupRecord: async function() {
+      console.log("this.group()")
+      console.log(this.LGId)
       for (const student in this.group()[this.LGId].student) {
+        console.log(this.LGId)
+        console.log(this.group()[this.LGId].student[student])
         const studentId = this.group()[this.LGId].student[student];
         const homeworkStatus = this.LGHomeworkStatus[studentId];
         var preId = "";
         preId = this.groupPres[studentId];
         var join = this.gJoin[studentId];
-        console.log(join);
         const recordId = this.groupRecords[studentId]._id;
         const subTopics = this.recordSubtopics;
         const branch = this.LGBranchId;
         var homework = "yok";
         if (this.nextHomework != undefined) homework = this.nextHomework;
         const homeworkS = await this.homeworkStatusConvert(homeworkStatus);
-        var sms =
-          this.students[studentId] +
-          ", " +
-          this.lessonHour +
-          ", " +
-          this.branch()[branch].branchName +
-          ", önceki derste verilen ödev: " +
-          homeworkS +
-          ", bir sonraki ödev: " +
-          homework +
-          ", " +
-          this.userName() +
-          " " +
-          this.userSurname();
-        if (!join) {
-          sms =
-            this.students[studentId] +
-            ", " +
-            this.lessonHour +
-            ", " +
-            this.branch()[branch].branchName +
-            " öğrenci derse katılmadı" +
-            ", " +
-            this.userName() +
-            " " +
-            this.userSurname();
-        }
+        var sms = this.newSms(this.students[studentId], homeworkStatus, join)
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id: recordId,
             changes: { subTopics, homework, sms, join }
           })
           .then(res => {
-            console.log(res);
+            console.log(res.status);
           });
         if (preId != undefined && preId != null && preId != "") {
           await this.$axios
@@ -595,11 +654,14 @@ export default {
               changes: { homeworkStatus }
             })
             .then(res => {
-              console.log(res);
-              console.log(homeworkStatus);
-              console.log("hw");
+              console.log(res.status);
             });
         }
+      }
+      if (this.smsApp) {
+        this.appSMS(this.findMyRecord(this.id), 0, this.id);
+      } else {
+        this.appSMS(this.findMyRecord(this.id), 1, this.id);
       }
       this.start();
       this.close();
@@ -799,9 +861,14 @@ export default {
         font-size: 12px
         line-height: 24px
         color: gray
+    .changeRecord
+        font-size: 9pt
+        background-color: #00000033
+        padding: 3px
+        width: 70%
+        border-radius: 6px
     .bottomButtons
         display: none
-
   .generalsBig
     transition: all 0.5s ease
     width: 100vw
@@ -841,17 +908,100 @@ export default {
       flex-direction: column
       align-items: center
       justify-content: center
+      padding-top: 20px
+      padding-bottom: 36px
       @media screen and (max-width: 1200px)
         height: 200px
         width: 100%
 
       .number
         font-size: 16px
+        flex-grow: 1
         font-weight: bold
       .string
+        flex-grow: 1
         font-size: 12px
         line-height: 24px
         color: gray
+      .info
+        transition: all 0.5s ease
+        width: 80%
+        flex-grow: 50
+        padding-top: 20px
+        padding-bottom: 20px
+        display: flex
+        flex-direction: column
+        justify-content: flex-end
+        align-items: stretch
+        gap: 20px
+
+
+      .join
+        transition: all 0.5s ease
+        color: white
+        padding: 5px
+        border-radius: 6px
+        display: flex
+        text-align: left
+        justify-content: center
+        gap: 20px
+        width: 100%
+        margin-bottom: 6px
+      .nextHomework
+        margin-bottom: 20px
+      .homeworkStatus
+        display: flex
+        justify-content: center
+        align-items: stretch
+        gap: 5px
+        font-size: 9pt
+        .hs
+          transition: all 0.5s ease
+          width: 33%
+          padding: 4px
+          border-radius: 6px
+      .infoLine
+        display: flex
+        flex-direction: column
+        gap: 5px
+        & input
+          height: 28px
+          border: 0.1px solid gray
+          -webkit-appearance: none
+          padding-left: 16px
+          padding-right: 16px
+          border-radius: 6px
+          &:focus
+            -webkit-appearance: none
+      .page
+        transition: all 0.5s ease
+        position: absolute
+        z-index: 4
+        bottom: 22px
+        font-size: 12px
+        line-height: 24px
+        color: gray
+
+      .subTopics
+        height: 55vh
+        overflow: auto
+        background-color: #e5e5e5
+        border-radius: 1em
+      .topics
+        text-align: left
+        padding: 5px
+        line-height: 20px
+      .topicsSms
+        text-align: center
+        padding: 5px
+        line-height: 20px
+      .mainTopic
+        color: Black
+        font-weight: 700
+        margin-bottom: 5px
+      .subjectName
+        margin: 15px
+        font-size: 10pt
     .bottomButtons
         transition: all 0.5s ease
         position: absolute
@@ -882,6 +1032,17 @@ export default {
         padding: 5px
         width: 50%
         text-align: center
+    .div
+        height: 55vh
+        display: flex
+        flex-direction: column
+        justify-content: center
+    .groupSms
+      height: 40vh
+      overflow: auto
+      display: flex
+      flex-direction: column
+      gap: 15px
 ::-webkit-scrollbar
   width: 0px
   border-radius: 1em
@@ -897,29 +1058,23 @@ export default {
 ::-webkit-scrollbar-thumb:hover
   background: #555
 
-.subTopics
-  margin: 20px
-  height: 300px
-  width: 90vw
-  overflow: auto
-  border: 0.5px solid black
-  border-radius: 1em
-.topics
-    text-align: left
-.subjectName
-  margin: 15px
-  font-size: 10pt
+
 
 input[type=checkbox].input-checkbox
     transition: all 0.5s ease
     display: none
     & + label
         &.input-label
+            border-radius: 8px
+            background-color: #cdcdcd
+            color: gray
+            padding: 4px 8px 4px 8px
             cursor: pointer
     &:checked
         & + label
             &.input-label
-                color: green
+                background-color: #3b8070
+                color: white
 .input-label
     transition: all 0.5s ease
     color: blue
