@@ -291,7 +291,7 @@ export default {
       sms += ", ";
       sms += this.lessonsBranches[this.id];
       if (!join) sms += ", öğrenci derse katılmadı";
-      if (join) sms += ", önceki derste verilen ödev: ";
+      if (join && homeworkS !=0) sms += ", önceki derste verilen ödev: ";
       if (join) sms += homeworkS;
       if (homework != "") sms += ", bir sonraki ödev: ";
       if (homework != "") sms += homework;
