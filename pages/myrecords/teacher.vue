@@ -270,11 +270,11 @@ export default {
       }
       if (homeworkStatus == undefined) homeworkStatus = this.homeworkStatus;
       switch (homeworkStatus) {
-        case 0:
-          homeworkS = "yapılmadı";
         case 1:
-          homeworkS = "eksik yapıldı";
+          homeworkS = "yapılmadı";
         case 2:
+          homeworkS = "eksik yapıldı";
+        case 3:
           homeworkS = "tam yapıldı";
         default:
           "";
