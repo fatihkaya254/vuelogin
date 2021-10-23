@@ -4,6 +4,7 @@ export default async function(context) {
   if (!context.store.getters.isAuthenticated) {
     context.redirect("/");
   } else if (
+    context.route.fullPath == "/schedule/watcher" ||
     context.route.fullPath == "/schedule/teacher" ||
     context.route.fullPath == "/schedule/student"
   ) {
@@ -17,6 +18,15 @@ export default async function(context) {
     return context.$axios
       .post(`${process.env.OUR_HOST}/auth`, { token: token })
       .then(res => {
+        if (res.data.user.role != undefined) {
+          var rank = parseInt(res.data.user.role.rank, 10);
+          console.log("hello manager");
+          if (rank <= 20) {
+            let user = JSON.stringify(res.data.user);
+            context.store.dispatch("setUser", user);
+            context.redirect("/schedule/watcher");
+          }
+        }
         if (
           res.data.user.branch != undefined &&
           res.data.user.branch.length > 0

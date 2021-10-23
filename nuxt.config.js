@@ -27,7 +27,7 @@ export default {
 
   loading: {
     color: "#EF5350",
-    height: "0.75px"
+    height: "2px"
   },
 
   server: {

@@ -1,20 +1,32 @@
 <template lang="pug">
 .body
-    .generals 
-        .container
-            .block
-                .string {{userName()}} {{userSurname()}}
-        .container(v-for="(n, day) in 7")
-            .block
-                .string {{days[day]}}
-            .container(v-for="(n, hour) in 24"  v-if="teachersLessons()[day+'-'+hour] != undefined && teachersLessons()[day+'-'+hour] != 0" ) 
-                .block
-                    .string  {{hours[hour]}} 
-                .block(v-if="schedule[day+'-'+hour]!= undefined && schedule[day+'-'+hour].branch != undefined")
-                  .string {{schedule[day+'-'+hour].branch.grade.gradeName}} {{schedule[day+'-'+hour].branch.branchName}}
-                  .string(v-if="schedule[day+'-'+hour].student != undefined") {{schedule[day+'-'+hour].student.name}} {{schedule[day+'-'+hour].student.surname}}
-                  .string(v-if="schedule[day+'-'+hour].group != undefined") {{schedule[day+'-'+hour].group.groupName}}
+    .container
+        input(type="date" v-model="date")
+    .container
+        select(@change="setTeacher($event.target.value)")
+            option(v-for="i in teacher()" :value="i._id") {{i.name}} {{i.surname}}
+    .container(v-for="(c,b) in lessonRecords") 
+      .block
+        .string {{c.hour}}:00
+        .block(v-if="c.sms != undefined") 
+            .string 
+                fa-icon(:icon="['fas', 'sms']")
+                label {{c.sms}}
+            .number İşlenen Konular
+              .string(v-for="t in c.subTopics")
+                .string(v-if="branchSubTopics[t] != undefined") {{branchSubTopics[t].subTopicName}}
+    div(v-for="c in teachersDaily()")  
+      .generals(v-if="c.student != undefined || c.group != undefined")
+        .container(v-if="!((c.student != undefined && lessonRecords[c._id+''+c.student._id] != undefined)  || (c.group != undefined && lessonRecords[c._id+''+c.group.student[0]] != undefined))")  
+          .block( :style=" {backgroundColor: 'antiquewhite'}")
+              .string {{c.hour}}:00
+              .block(v-if="c.student != undefined")
+                  .string {{c.student.name}} {{c.student.surname}}
+              .block(v-if="c.group != undefined") 
+                  .string {{c.group.groupName}}
+
 </template>
+
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
@@ -22,88 +34,32 @@ export default {
     return $axios
       .post(`${process.env.OUR_HOST}/auth`, { token: store.getters.getAuthkey })
       .then(res => {
-        if (
-          res.data.user.branch == undefined ||
-          res.data.user.branch.length < 1
-        ) {
-          redirect("/schedule");
+        if (res.data.user.role != undefined) {
+          var rank = parseInt(res.data.user.role.rank, 10);
+          console.log(rank + "rank");
+          if (rank > 20) {
+            redirect("/history");
+          }
         }
       });
   },
+  imports: [
+    {
+      set: "@fortawesome/free-solid-svg-icons"
+    }
+  ],
   data() {
     return {
       colors: ["white", "#ffbd44", "#00ca4e"],
-      selectedBranch: "none",
-      selectedGrade: "none",
-      name: "",
-      id: "",
-      teacherHours: "",
-      branches: [],
-      days: [
-        "Pazartesi",
-        "Salı",
-        "Çarşamba",
-        "Perşembe",
-        "Cuma",
-        "Cumartesi",
-        "Pazar"
-      ],
-      hours: [
-        "00:00",
-        "01:00",
-        "02:00",
-        "03:00",
-        "04:00",
-        "05:00",
-        "06:00",
-        "07:00",
-        "08:00",
-        "09:00",
-        "10:00",
-        "11:00",
-        "12:00",
-        "13:00",
-        "14:00",
-        "15:00",
-        "16:00",
-        "17:00",
-        "18:00",
-        "19:00",
-        "20:00",
-        "21:00",
-        "22:00",
-        "23:00"
-      ],
-      phoneLength: 11,
-      surname: "",
-      phone: "",
       date: "",
-      photo: "",
-      adress: "",
-      email: "",
-      mainBranch: "",
-      selectedGrade: "",
-      schedule: {}
+      teacherId: "",
+      turkDays: [6, 0, 1, 2, 3, 4, 5],
+      lessonRecords: {},
+      branchSubjects: [],
+      branchSubTopics: []
     };
   },
-  mounted() {
-    this.getGrades();
-    this.getBranches();
-    this.getTeachers();
-  },
   methods: {
-    ...mapActions("users", ["addUser"]),
-    ...mapGetters("students", ["grade", "schoolCourse"]),
-    ...mapActions("branches", ["getBranches"]),
-    ...mapActions("students", ["getGrades"]),
-    ...mapGetters("students", ["grade"]),
-    ...mapGetters("branches", ["branch"]),
-    ...mapGetters("users", ["teacher", "teachersLessons"]),
-    ...mapActions("users", [
-      "getTeachers",
-      "addTeacherLessons",
-      "getTeachersLessons"
-    ]),
     ...mapGetters([
       "userId",
       "userName",
@@ -117,32 +73,66 @@ export default {
       "isTeacher",
       "userBranch"
     ]),
-
-    getSchedule: async function(teacher) {
-      console.log("teacher");
-      console.log(teacher);
-      this.id = teacher;
-      try {
-        await this.$axios
-          .post(`${process.env.OUR_HOST}/teachersSchedule`, {
-            teacher: this.id
-          })
-          .then(res => {
-            this.schedule = res.data;
-          });
-      } catch (error) {
-        console.log(error);
-      }
+    ...mapActions("branches", ["getBranches", "getSubjects", "getSubTopics"]),
+    ...mapGetters("branches", ["branch", "subject", "subTopic"]),
+    ...mapGetters("users", ["teacher", "teachersDaily"]),
+    ...mapActions("users", ["getTeachers", "getTeachersDaily"]),
+    setTeacher: function(id) {
+      if (id == "") return;
+      this.teacherId = id;
+      var date = new Date();
+      if (this.date != "") date = new Date(this.date);
+      this.getTeachersDaily({ teacher: id, day: this.turkDays[date.getDay()] });
+      this.getLessonRecords();
+    },
+    getSubTopics: function() {
+      this.$axios
+        .post(`${process.env.OUR_HOST}/branchProcess`, {
+          branch: this.userBranch()
+        })
+        .then(res => {
+          this.branchProcess = res.data.branchMap;
+          this.branchSubjects = res.data.subjectMap;
+          this.branchSubTopics = res.data.branchSubtopics;
+          console.log("this.branchProcess");
+          console.log(this.branchProcess);
+          console.log("this.branchProcess");
+        });
+    },
+    getLessonRecords: function() {
+      this.lessonRecords = {};
+      if (this.teacherId == "") return;
+      const teacher = this.teacherId;
+      var now = new Date();
+      if (this.date != "") now = new Date(this.date);
+      var month = now.getMonth() + 1;
+      const date = now.getFullYear() + "-" + month + "-" + now.getDate();
+      this.$axios
+        .post(`${process.env.OUR_HOST}/dailyTeacherRecords`, {
+          teacher,
+          date
+        })
+        .then(res => {
+          for (const el in res.data) {
+            this.$set(
+              this.lessonRecords,
+              res.data[el].lesson + "" + res.data[el].student,
+              res.data[el]
+            );
+          }
+          console.log(this.lessonRecords);
+        });
     }
   },
-  async mounted() {
-    await this.getTeachers();
-    this.getSchedule(this.userId());
-    let ta = this.teacher()[this.userId()];
-    this.name = ta.name;
-    this.surname = ta.surname;
-    this.mainBranch = ta.mainBranch;
-    this.getTeachersLessons(this.userId());
+  watch: {
+    date: function() {
+      this.getLessonRecords();
+      this.setTeacher(this.teacherId);
+    }
+  },
+  mounted() {
+    this.getSubTopics();
+    this.getTeachers();
   }
 };
 </script>
@@ -197,6 +187,7 @@ export default {
   transition: all 0.5s ease
   width: 100vw
   min-height: 100vh
+  overflow: auto
   justify-content: center
   align-items: center
   background: #EF5350
@@ -223,12 +214,11 @@ export default {
     width: 90vw
     background: white
     align-items: center
+    padding: 10px
     border-radius: 8px
     box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
-    @media screen and (min-width: 1200px)
-      height: 100px
     @media screen and (max-width: 1200px)
-      flex-direction: column
+        flex-direction: column
     &:first-child
       margin-top: 5px
     input[type=date]
@@ -238,8 +228,10 @@ export default {
     .block
       transition: all 0.5s ease
       text-align: center
+      width: 200px
       display: flex
-      flex-direction: row
+      gap:20px
+      flex-direction: column
       align-items: center
       justify-content: center
       @media screen and (max-width: 1200px)
@@ -253,7 +245,6 @@ export default {
         font-size: 12px
         line-height: 24px
         color: gray
-        width: 30%
     .changeRecord
         font-size: 9pt
         background-color: #00000033
@@ -471,4 +462,16 @@ input[type=checkbox].input-checkbox
 .input-label
     transition: all 0.5s ease
     color: blue
+select
+  height: 28px
+  border: none
+  width: 60%
+  border-radius: 1em
+
+option
+  height: 28px
+  border: none
+  min-width: 60%
+  -webkit-appearance: none
+  border-radius: 1em
 </style>

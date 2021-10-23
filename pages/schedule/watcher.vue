@@ -2,15 +2,17 @@
 .body
     .generals 
         .container
+          select(@change="setTeacher($event.target.value)")
+              option(v-for="i in teacher()" :value="i._id") {{i.name}} {{i.surname}}
+        .container
             .block
                 .string {{userName()}} {{userSurname()}}
         .container(v-for="(n, day) in 7")
             .block
                 .string {{days[day]}}
             .container(v-for="(n, hour) in 24"  v-if="teachersLessons()[day+'-'+hour] != undefined && teachersLessons()[day+'-'+hour] != 0" ) 
-                .block
-                    .string  {{hours[hour]}} 
                 .block(v-if="schedule[day+'-'+hour]!= undefined && schedule[day+'-'+hour].branch != undefined")
+                  .string  {{hours[hour]}} 
                   .string {{schedule[day+'-'+hour].branch.grade.gradeName}} {{schedule[day+'-'+hour].branch.branchName}}
                   .string(v-if="schedule[day+'-'+hour].student != undefined") {{schedule[day+'-'+hour].student.name}} {{schedule[day+'-'+hour].student.surname}}
                   .string(v-if="schedule[day+'-'+hour].group != undefined") {{schedule[day+'-'+hour].group.groupName}}
@@ -22,11 +24,12 @@ export default {
     return $axios
       .post(`${process.env.OUR_HOST}/auth`, { token: store.getters.getAuthkey })
       .then(res => {
-        if (
-          res.data.user.branch == undefined ||
-          res.data.user.branch.length < 1
-        ) {
-          redirect("/schedule");
+        if (res.data.user.role != undefined) {
+          var rank = parseInt(res.data.user.role.rank, 10);
+          console.log(rank + "rank");
+          if (rank > 20) {
+            redirect("/schedule");
+          }
         }
       });
   },
@@ -133,6 +136,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    setTeacher: function(id) {
+      this.getSchedule(id);
+      let ta = this.teacher()[id];
+      this.name = ta.name;
+      this.surname = ta.surname;
+      this.mainBranch = ta.mainBranch;
+      this.getTeachersLessons(id);
     }
   },
   async mounted() {

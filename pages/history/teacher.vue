@@ -1,8 +1,7 @@
 <template lang="pug">
 .body
-    input(type="date" v-model="date")
-    .teachers
-        .teacher(v-for="i in teacher()" @click="setTeacher(i._id)" :class="[i._id != teacherId ? '' : 'aTeacher']") {{i.name}} {{i.surname}}
+    .container
+      input(type="date" v-model="date")
     .container(v-for="(c,b) in lessonRecords") 
       .block
         .string {{c.hour}}:00
@@ -33,6 +32,18 @@ export default {
       set: "@fortawesome/free-solid-svg-icons"
     }
   ],
+  middleware({ store, redirect, $axios }) {
+    return $axios
+      .post(`${process.env.OUR_HOST}/auth`, { token: store.getters.getAuthkey })
+      .then(res => {
+        if (
+          res.data.user.branch == undefined ||
+          res.data.user.branch.length < 1
+        ) {
+          redirect("/history");
+        }
+      });
+  },
   data() {
     return {
       colors: ["white", "#ffbd44", "#00ca4e"],
@@ -85,7 +96,7 @@ export default {
         });
     },
     getLessonRecords: function() {
-      this.lessonRecords = {}
+      this.lessonRecords = {};
       if (this.teacherId == "") return;
       const teacher = this.teacherId;
       var now = new Date();
@@ -99,7 +110,11 @@ export default {
         })
         .then(res => {
           for (const el in res.data) {
-            this.$set(this.lessonRecords, res.data[el].lesson+""+res.data[el].student, res.data[el]);
+            this.$set(
+              this.lessonRecords,
+              res.data[el].lesson + "" + res.data[el].student,
+              res.data[el]
+            );
           }
           console.log(this.lessonRecords);
         });
@@ -107,13 +122,13 @@ export default {
   },
   watch: {
     date: function() {
-      this.getLessonRecords()
-      this.setTeacher(this.teacherId);
+      this.getLessonRecords();
+      this.setTeacher(this.userId());
     }
   },
   mounted() {
-    this.getSubTopics()
-    this.getTeachers();
+    this.getSubTopics();
+    this.setTeacher(this.userId());
   }
 };
 </script>
@@ -200,6 +215,11 @@ export default {
     box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
     @media screen and (max-width: 1200px)
       flex-direction: column
+    &:first-child
+      margin-top: 5px
+    input[type=date]
+      border: none
+      width: 80%
     .block
       transition: all 0.5s ease
       text-align: center
@@ -416,6 +436,8 @@ export default {
 
 ::-webkit-scrollbar-thumb:hover
   background: #555
+
+
 
 
 

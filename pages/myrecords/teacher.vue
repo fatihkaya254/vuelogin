@@ -3,20 +3,20 @@
     .generals
         .container(style="height: 30px;")
             .block() 
-                .string {{dateOfDay}} {{dayNames[day]}} 
+                .string {{dateOfDay}} {{dayNames[day]}}
         div(:class="[lesson._id == id ? 'containerBig' : 'container']" v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
             .bottomButtons
                 .cancel(@click="close()" v-show="page==1") İptal
                 .nP(@click="page -= 1"  v-show="page>1")
                     fa-icon(:icon="['fas', 'chevron-circle-left']")
-                .app(v-show="page==4 && !gPop") Hazırlanıyor...
-                .app(v-show="page==4 && gPop" @click="updateRecord(lesson.group != undefined)") Onayla
+                .app(v-show="page==4 && (lesson.group != undefined && (group()[LGId] == undefined || group()[LGId].student == undefined))") Hazırlanıyor...
+                .app(v-show="page==4 && (lesson.group == undefined || (group()[LGId] != undefined && group()[LGId].student != undefined))" @click="updateRecord(lesson.group != undefined)") Onayla
                 .nP(@click="page += 1" v-show="page<4")
                     fa-icon(:icon="['fas', 'chevron-circle-right']")
                 
             div(:class="[lesson._id == id ? 'blockBig' : 'block']" v-if="lesson.group == undefined")
                 .studentInfoes
-                  .string {{ hours[lesson.hour] }} 
+                  .string {{ hours[lesson.hour] }}
                   .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
                   .string {{ lessonsBranches[lesson._id] }}
                   
@@ -43,7 +43,9 @@
                         fa-icon(:icon="['fas', 'times-circle']" v-show="!join")
                 .info(v-show="lesson._id == id && page == 2")
                     .div
-                      .lastHomework {{preHomework()}}
+                      .lastHomework(@click="homeworkStatus = 0") {{preHomework()}}
+                      .lastHomework ---------------------------------------
+                      .homeworkStatus(v-if="preHomework() == ''") Ödev Verilmedi
                       .homeworkStatus(v-if="preHomework() != ''")
                         .hs(:style="[homeworkStatus == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 1")
                           | Yapılmadı
@@ -52,7 +54,7 @@
                         .hs(:style="[homeworkStatus == 3 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="homeworkStatus = 3")
                           | Tam
                 .info(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lesson._id == id && page == 4")
-                  .string {{ lessonRecords[findMyRecord(lesson._id)].sms }} 
+                  .string {{newSms()}}
                   .subjectName
                     .topicsSms  
                       input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
@@ -61,7 +63,7 @@
             // grup kayıtları
             div(:class="[lesson._id == id ? 'blockBig' : 'block']" v-if="lesson != undefined && lesson.group != undefined")
                 .studentInfoes
-                  .string {{ hours[lesson.hour] }} 
+                  .string {{ hours[lesson.hour] }}
                   .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
                   .string {{ lessonsBranches[lesson._id] }}
                   
@@ -90,9 +92,10 @@
                           fa-icon(:icon="['fas', 'times-circle']" v-show="!gJoin[stua]")
                 .info(v-show="lesson._id == id && page == 2")
                     .div
+                      .lastHomework(v-if="!groupPres[Object.keys(groupPres)[0]]") Ödev Verilmedi
                       .lastHomework(v-if="groupPres[Object.keys(groupPres)[0]]") {{groupPres[Object.keys(groupPres)[0]].homework}}
                       .homeworkStatus(v-for="stua in LGGs" v-if="groupPres[Object.keys(groupPres)[0]]") 
-                        .hs
+                        .hs(@click="LGHomeworkStatusChange(stua, 0)")
                           |  {{students[stua]}}
                         .hs(:style="[LGHomeworkStatus[stua] == 1 ? {'background-color': '#FFB6A3'} : {'background-color': ''}]" @click="LGHomeworkStatusChange(stua, 1)")
                           | Yapılmadı
@@ -113,6 +116,18 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
+  middleware({ store, redirect, $axios }) {
+    return $axios
+      .post(`${process.env.OUR_HOST}/auth`, { token: store.getters.getAuthkey })
+      .then(res => {
+        if (
+          res.data.user.branch == undefined ||
+          res.data.user.branch.length < 1
+        ) {
+          redirect("/myrecords");
+        }
+      });
+  },
   imports: [
     {
       set: "@fortawesome/free-solid-svg-icons"
@@ -247,39 +262,47 @@ export default {
       "userBranch"
     ]),
     newSms: function(student, homeworkStatus, join) {
-      var homeworkS = ""
-      if(student == undefined) student = this.lessonsStudents[this.id]
-      if(homeworkStatus == undefined) homeworkStatus = this.homeworkStatus
+      var homeworkS = "";
+      if (student == undefined){
+        student = this.lessonsStudents[this.id];
+      } else {
+        student = this.students[student]
+      }
+      if (homeworkStatus == undefined) homeworkStatus = this.homeworkStatus;
       switch (homeworkStatus) {
-        case 0: homeworkS = "yapılmadı"
-        case 1: homeworkS = "eksik yapıldı"
-        case 2: homeworkS = "tam yapıldı"
-        default: ""
+        case 0:
+          homeworkS = "yapılmadı";
+        case 1:
+          homeworkS = "eksik yapıldı";
+        case 2:
+          homeworkS = "tam yapıldı";
+        default:
+          "";
       }
       var preId = "";
-      if(join == undefined) join = this.join;
+      if (join == undefined) join = this.join;
       if (this.preRecord != undefined) preId = this.preRecord._id;
       const subTopics = this.recordSubtopics;
       var homework = "yok";
       if (this.nextHomework != undefined) homework = this.nextHomework;
-      var sms = ""+ student
-      sms += ", "
-      sms += this.hours[this.teachersDaily()[this.id].hour]
-      sms += ", "
-      sms += this.lessonsBranches[this.id]
-      if(!join) sms += ", öğrenci derse katılmadı"
-      if(join) sms += ", önceki derste verilen ödev: "
-      if(join) sms += homeworkS
-      if(homework != "") sms += ", bir sonraki ödev: "
-      if(homework != "") sms += homework
-      sms += ", "
-      sms += this.userName()
-      sms += " "
-      sms += this.userSurname()
+      var sms = "" + student;
+      sms += ", ";
+      sms += this.hours[this.teachersDaily()[this.id].hour];
+      sms += ", ";
+      sms += this.lessonsBranches[this.id];
+      if (!join) sms += ", öğrenci derse katılmadı";
+      if (join) sms += ", önceki derste verilen ödev: ";
+      if (join) sms += homeworkS;
+      if (homework != "") sms += ", bir sonraki ödev: ";
+      if (homework != "") sms += homework;
+      sms += ", ";
+      sms += this.userName();
+      sms += " ";
+      sms += this.userSurname();
       return sms;
     },
     close: function() {
-      this.gPop = false
+      this.gPop = false;
       this.smsApp = true;
       this.page = 1;
       this.recordSubtopics = [];
@@ -398,7 +421,7 @@ export default {
         })
         .then(res => {
           this.lessonRecords = res.data;
-          console.log('df');
+          console.log("df");
           console.log(this.lessonRecords);
         });
     },
@@ -595,7 +618,7 @@ export default {
       const subTopics = this.recordSubtopics;
       var homework = "yok";
       if (this.nextHomework != undefined) homework = this.nextHomework;
-      var sms = this.newSms()
+      var sms = this.newSms();
       const homeworkStatus = this.homeworkStatus;
       await this.$axios
         .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
@@ -622,11 +645,11 @@ export default {
       this.close();
     },
     updateGroupRecord: async function() {
-      console.log("this.group()")
-      console.log(this.LGId)
+      if(this.group()[this.LGId] == undefined || this.group()[this.LGId].student == undefined) return
+      console.log(this.group()[this.LGId] == undefined +" +++ "+ this.group()[this.LGId].student == undefined)
       for (const student in this.group()[this.LGId].student) {
-        console.log(this.LGId)
-        console.log(this.group()[this.LGId].student[student])
+        console.log(this.LGId);
+        console.log(this.group()[this.LGId].student[student]);
         const studentId = this.group()[this.LGId].student[student];
         const homeworkStatus = this.LGHomeworkStatus[studentId];
         var preId = "";
@@ -638,7 +661,8 @@ export default {
         var homework = "yok";
         if (this.nextHomework != undefined) homework = this.nextHomework;
         const homeworkS = await this.homeworkStatusConvert(homeworkStatus);
-        var sms = this.newSms(this.students[studentId], homeworkStatus, join)
+        var sms = this.newSms(studentId, homeworkStatus, join);
+        console.log(sms);
         await this.$axios
           .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
             id: recordId,
@@ -753,7 +777,8 @@ export default {
     await this.getRights();
     this.getBranches();
     this.start();
-  }
+  },
+
   // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };
 </script>

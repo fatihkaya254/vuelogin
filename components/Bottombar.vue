@@ -1,6 +1,6 @@
 <template lang="pug">
 .bar
-    NuxtLink(:to="'/profile/'", class="nuxt-link") 
+    NuxtLink(:to="'/notification/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'bell']")
     NuxtLink(:to="'/history/'", class="nuxt-link") 
         fa-icon(:icon="['fas', 'history']")
