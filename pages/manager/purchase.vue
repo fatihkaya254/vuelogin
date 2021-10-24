@@ -163,7 +163,6 @@ export default {
       packageId: "",
       mainBranchLabel: "Ana Branş",
       mainBranch: "",
-      ourhost: process.env.OUR_URL,
       selectedGrade: "",
       selectedBranch: "none",
       selectedGrade: "none",

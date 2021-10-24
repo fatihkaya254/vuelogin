@@ -4,7 +4,7 @@
   .lessonContainer  
     .lessonCard(v-for="lesson in teachersDaily()" v-show="lesson.branch != undefined && lesson.branch != null" :style="[lessonRecords[findMyRecord(lesson._id)] != undefined ? { backgroundColor: colors[lessonRecords[findMyRecord(lesson._id)].smsApp]} : { backgroundColor: colors[0]}]")
       .linePhoto
-        img(:src=" ourhost + '/' + lessonsPhotos[lesson._id]" v-if="lessonsPhotos[lesson._id] != undefined")
+        img(:src="'/' + lessonsPhotos[lesson._id]" v-if="lessonsPhotos[lesson._id] != undefined")
         img(src="../../assets/basic-profile.png" v-if="lessonsPhotos[lesson._id] == undefined")
       .lessonInfoes
         .clock {{ hours[lesson.hour] }} 
@@ -21,7 +21,7 @@
       .branch {{ lessonsBranches[id] }}
       .student {{ lessonsStudents[id] }} {{ lessonsGroups[id] }}
     .subTopics
-      .subjectName(v-for="(topic, index) in this.branchProcess[braid]") 
+      .subjectName(v-for="(topic, index) in branchProcess[braid]") 
        p(style="color: red; font-weight: 700;") {{branchSubjects[index].subjectName}}
         div( v-for="subtopic in topic" style="border-bottom: 1px solid black;")
           label(:for="subtopic._id" class="rounded-checkbox") 
@@ -186,7 +186,6 @@ export default {
       studentName: "",
       dateOfDay: "",
       groupRights: [],
-      ourhost: process.env.OUR_URL,
     };
   },
   methods: {

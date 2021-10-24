@@ -1,55 +1,59 @@
 <template lang="pug">
-.adminDashboard
+div    
     .navWrapper
         Navbar
-    .container
-        .sidebar
-            .profileInfo
-                .profilePhoto(@click="$refs.file.click()")
-                    img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
-                    img(src="../assets/basic-profile.png" v-show="!this.$store.getters.userPic")
-                    input(
-                        type="file"
-                        class="input-field"
-                        ref="file"
-                        @change="sendFile"
-                    )
-                    .changeText
-                        p
-                            | Değiştir
-                h4
-                    | {{ userName() }} {{userSurname()}}
+    .adminDashboard
+        .container
+            .sidebar
+                .profileInfo
+                    .profilePhoto(@click="$refs.file.click()")
+                        img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+                        img(src="../assets/basic-profile.png" v-show="!this.$store.getters.userPic")
+                        input(
+                            type="file"
+                            class="input-field"
+                            ref="file"
+                            @change="sendFile"
+                        )
+                        .changeText
+                            p
+                                | Değiştir
+                    h4
+                        | {{ userName() }} {{userSurname()}}
 
-            NuxtLink(:to="'/profile/lessons'", class="nuxt-link", v-if="isTeacher()") 
-                p( v-if="isTeacher()") Günlük Program
-            NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
-                p Kullanıcı Bilgileri
-            NuxtLink(:to="'/profile/myPackages'", class="nuxt-link") 
-                p Paketler
-            NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
-                p Dersler
-            NuxtLink(:to="'/profile/lessonRecords'", class="nuxt-link") 
-                p Ders Kayıtları
-        .content
-            nuxt-child
-            
+                NuxtLink(:to="'/profile/lessons'", class="nuxt-link", v-if="isTeacher()") 
+                    p( v-if="isTeacher()") Günlük Program
+                NuxtLink(:to="'/profile/userInfo'", class="nuxt-link") 
+                    p Kullanıcı Bilgileri
+                NuxtLink(:to="'/profile/myPackages'", class="nuxt-link") 
+                    p Paketler
+                NuxtLink(:to="'/profile/lessonSchedule'", class="nuxt-link") 
+                    p Dersler
+                NuxtLink(:to="'/profile/lessonRecords'", class="nuxt-link") 
+                    p Ders Kayıtları
+            .content
+                nuxt-child
+    .bottom(v-if="this.$store.getters.isAuthenticated")
+        Bottombar
+    Bottombar(v-if="this.$store.getters.isAuthenticated")    
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import Bottombar from "@/components/Bottombar.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   middleware: ["session-control", "auth"],
   components: {
-    Navbar
+    Navbar,
+    Bottombar
   },
   data() {
     return {
       name: "",
       surname: "",
       file: "",
-      ourhost:  process.env.OUR_URL,
     };
   },
   methods: {
@@ -122,7 +126,8 @@ a.nuxt-link-active
 .navWrapper
     position: fixed
     width: 100%
-
+    top: 0
+    z-index: 1
 .adminheader
     background-color: $gray
     height: 70px
@@ -226,6 +231,11 @@ a.nuxt-link-active
     position: absolute
     cursor: pointer
     display: none
-
-
+.bottom
+  position: fixed
+  z-index: 5
+  width: 100vw
+  bottom: 0
+  @media screen and (min-width: 1200px)
+    display: none
 </style>

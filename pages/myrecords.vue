@@ -1,59 +1,25 @@
 <template lang="pug">
 div
-  .mainImage(v-if="loading")
-    Loader
-  .other(:style="[loading ? {filter: 'blur(1px)'} : '']")
+  Navbar
+  .top
     Navbar
-    .top
-      Navbar
-    .lockServicePop(v-show="getPackagePop()")
-      LockService
-    //TeacherList
-    //HomePageCharts
-    //ServiceList
-    .bottom(v-if="this.$store.getters.isAuthenticated")
-      Bottombar
-    footer
-      Footer
-    Bottombar(v-if="this.$store.getters.isAuthenticated")
+  nuxt-child  
+  .bottom(v-if="this.$store.getters.isAuthenticated")
+    Bottombar
+  Bottombar
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import Bottombar from "@/components/Bottombar.vue";
-import Footer from "@/components/footer.vue";
-import HomePageCharts from "@/components/HomePageCharts.vue";
-import ServiceList from "@/components/ServiceList.vue";
-import TeacherList from "@/components/TeacherList.vue";
-import LockService from "@/components/LockService.vue";
-import Loader from "@/components/loader.vue";
-import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      loading: true
-    };
+    return {};
   },
-  middleware: ["session-control", "homeAuth"],
+  middleware: ["session-control", "myRecords"],
   components: {
-    HomePageCharts,
     Navbar,
-    Footer,
-    ServiceList,
-    LockService,
-    TeacherList,
-    Bottombar,
-    Loader
-  },
-  methods: {
-    ...mapActions(["setPackagePop"]),
-    ...mapGetters(["getPackagePop"]),
-  },
-  beforeCreate(){
-    this.loading = true
-  },
-  beforeMount() {
-    this.loading = false
+    Bottombar
   },
 };
 </script>
@@ -80,9 +46,9 @@ export default {
   z-index: 5
   width: 100vw
   bottom: 0
-
+  @media screen and (min-width: 1200px)
+    display: none
 body
-  filter: blur(12px)
   font-family: 'Lemon/Milk light Regular'
   letter-spacing: 1px
   font-size: 12pt
@@ -111,9 +77,9 @@ img
   width: 100%
 
 .mainImage
-  width: 100vw
-  background: rgb(240, 240, 240,0.2)
-  height: 100vh
-  position: absolute
-  z-index: 20
+  width: 80%
+  margin: auto
+  text-align: center
+  @media screen and (max-width: 1200px)
+    width: 100%
 </style>

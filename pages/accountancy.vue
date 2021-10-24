@@ -3,7 +3,7 @@
     .accountancyContainer
         .adminheader
             .profilePhoto
-                img(:src=" ourhost + this.$store.getters.userPic" v-show="this.$store.getters.userPic")
+                img(:src="this.$store.getters.userPic" v-show="this.$store.getters.userPic")
             .profileName
                 p {{userName()}} {{userSurname()}}
         .sidebar
@@ -27,7 +27,6 @@ export default {
   middleware: ["session-control", "accountantAuth"],
   data() {
     return {
-      ourhost: process.env.OUR_URL
     };
   },
   methods: {

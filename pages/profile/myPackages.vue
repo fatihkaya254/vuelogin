@@ -16,7 +16,7 @@
         .close(@click="closeStudentInfo()")
           p Kapat
         .profilePhoto
-          img(:src=" ourhost + studentPhoto" v-show="studentPhoto != '' ")
+          img(:src="studentPhoto" v-show="studentPhoto != '' ")
           img(src="../../assets/basic-profile.png" v-show="studentPhoto == '' ")
         .profileContent
           p {{ studentName }}
@@ -60,7 +60,6 @@ export default {
       name: "",
       phoneLength: 11,
       phone: "",
-      ourhost:  process.env.OUR_URL,
     };
   },
   methods: {
