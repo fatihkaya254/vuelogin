@@ -244,8 +244,8 @@ export default {
       "getMyPayments",
       "getTeachersDaily"
     ]),
-    ...mapActions("branches", ["getBranches"]),
-    ...mapGetters("branches", ["branch"]),
+    ...mapActions("branches", ["getBranches", "getSubTopics", "getSubjects"]),
+    ...mapGetters("branches", ["branch", "subTopic", "subject"]),
     ...mapActions("students", ["getGrades", "getGroups"]),
     ...mapGetters("students", ["grade", "group"]),
     ...mapGetters([
@@ -261,6 +261,18 @@ export default {
       "isTeacher",
       "userBranch"
     ]),
+    getSubjectsInfo: function(subTopics){
+      var sub = ""
+      var subs = {}
+      for(const [key, value] of Object.entries(subTopics)){
+        var sn = this.subject()[this.subTopic()[value].subject].subjectName
+        subs[sn] = sn
+      }
+      for(const [key, value] of Object.entries(subs)){
+        sub += value + ", "
+      }
+      return sub
+    },
     newSms: function(student, homeworkStatus, join) {
       var homeworkS = "";
       if (student == undefined){
@@ -283,19 +295,19 @@ export default {
       if (join == undefined) join = this.join;
       if (this.preRecord != undefined) preId = this.preRecord._id;
       const subTopics = this.recordSubtopics;
+      const subjectName = this.getSubjectsInfo(subTopics)
       var homework = "yok";
       if (this.nextHomework != undefined) homework = this.nextHomework;
       var sms = "" + student;
       sms += ", ";
       sms += this.hours[this.teachersDaily()[this.id].hour];
       sms += ", ";
-      sms += this.lessonsBranches[this.id];
-      if (!join) sms += ", öğrenci derse katılmadı";
-      if (join && homeworkS !=0) sms += ", önceki derste verilen ödev: ";
-      if (join) sms += homeworkS;
+      sms += this.lessonsBranches[this.id] + " Konu: " + subjectName;
+      if (!join) sms += " öğrenci derse katılmadı, ";
+      if (join && homeworkS !=0) sms += " önceki derste verilen ödev: ";
+      if (join) sms += homeworkS + ", "
       if (homework != "") sms += ", bir sonraki ödev: ";
-      if (homework != "") sms += homework;
-      sms += ", ";
+      if (homework != "") sms += homework + ", "
       sms += this.userName();
       sms += " ";
       sms += this.userSurname();
@@ -425,7 +437,7 @@ export default {
           console.log(this.lessonRecords);
         });
     },
-    getSubTopics: function() {
+    getSubTopicsM: function() {
       this.$axios
         .post(`${process.env.OUR_HOST}/branchProcess`, {
           branch: this.userBranch()
@@ -739,7 +751,7 @@ export default {
       await this.getTeachersDaily({ teacher: this.teacher, day: this.day });
       this.getLessonRecords();
       this.dealCards();
-      this.getSubTopics();
+      this.getSubTopicsM();
     },
     getRights: async function() {
       console.log("as");
@@ -776,6 +788,8 @@ export default {
   async mounted() {
     await this.getRights();
     this.getBranches();
+    this.getSubjects();
+    this.getSubTopics();
     this.start();
   },
 
@@ -844,39 +858,30 @@ export default {
     width: 100vw
     padding-top: 10px
     display: flex
-    gap: 20px
     align-items: center
-    @media screen and (max-width: 1200px)
-      flex-direction: column
-      gap: 0px
+    flex-direction: column
+    gap: 0px
   .container
     transition: all 0.5s ease
     margin: auto
     margin-bottom: 20px
     display: flex
-    flex-direction: row
     justify-content: space-around
     width: 60vw
     background: white
     align-items: center
     border-radius: 8px
     box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
-    @media screen and (min-width: 1200px)
-      height: 100px
-    @media screen and (max-width: 1200px)
-      flex-direction: column
+    flex-direction: column
     .block
       transition: all 0.5s ease
       text-align: center
-      height: 100px
-      width: 200px
       display: flex
       flex-direction: column
       align-items: center
       justify-content: center
-      @media screen and (max-width: 1200px)
-        height: 100px
-        width: 100%
+      height: 100px
+      width: 100%
       &:hover
         color: #EF5350
       .number
@@ -898,11 +903,9 @@ export default {
     transition: all 0.5s ease
     width: 100vw
     display: flex
-    gap: 20px
     margin: auto
-    @media screen and (max-width: 1200px)
-      flex-direction: column
-      gap: 0px
+    flex-direction: column
+    gap: 0px
   .containerBig
     transition: all 0.5s ease
     position: fixed
@@ -910,7 +913,6 @@ export default {
     margin: auto
     margin-bottom: 20px
     display: flex
-    flex-direction: row
     justify-content: space-around
     width: 90vw
     background: white
@@ -918,26 +920,20 @@ export default {
     border-radius: 18px
     box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
     overflow: hidden
-    @media screen and (min-width: 1200px)
-      height: 100px
-    @media screen and (max-width: 1200px)
-      flex-direction: column
+    flex-direction: column
     .blockBig
       flex-grow: 1
       transition: all 0.5s ease
       transition: all 0.5s ease
       text-align: center
-      height: 100%
-      width: 200px
       display: flex
       flex-direction: column
       align-items: center
       justify-content: center
       padding-top: 20px
       padding-bottom: 36px
-      @media screen and (max-width: 1200px)
-        height: 200px
-        width: 100%
+      height: 200px
+      width: 100%
 
       .number
         font-size: 16px
