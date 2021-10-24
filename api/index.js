@@ -36,6 +36,11 @@ import Sharp from "sharp";
 import fs from "fs";
 import path from "path";
 
+
+app.listen(80, () => {
+  console.log(`Example app listening at http://izders.com:80`)
+})
+
 var corsOptions = {
   origin: process.env.OUR_URL,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
