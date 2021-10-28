@@ -4,7 +4,7 @@ exports.update = async (req, res, next) => {
   if (lock == key) {
       next()
   }else{
-    res.send({message: "harici istek"})
+    res.redirect('https://izders.com')
     
   }
 };
