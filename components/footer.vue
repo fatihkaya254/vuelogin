@@ -44,7 +44,7 @@
                         p
                             a İLETİŞİM
                         p
-                            a PROFİL
+                            a(href="/teacherport") PROFİL
             .subFootersR.logos 
                 .baslik 
                     .payLogo

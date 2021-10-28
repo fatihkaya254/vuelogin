@@ -3,7 +3,6 @@ div
   .mainImage(v-if="loading")
     Loader
   .other(:style="[loading ? {filter: 'blur(1px)'} : '']")
-    Navbar
     .top
       Navbar
     .lockServicePop(v-show="getPackagePop()")
@@ -15,7 +14,6 @@ div
       Bottombar
     footer
       Footer
-    Bottombar(v-if="this.$store.getters.isAuthenticated")
 </template>
 
 <script>
@@ -71,13 +69,11 @@ export default {
   color: #2c3e50
 .top
   position: fixed
-  z-index: 5
   top: 0
   width: 100vw
 
 .bottom
   position: fixed
-  z-index: 5
   width: 100vw
   bottom: 0
 
@@ -116,4 +112,8 @@ img
   height: 100vh
   position: absolute
   z-index: 20
+
+.other
+  padding-top: 50px
+  padding-bottom: 50px
 </style>

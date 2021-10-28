@@ -44,7 +44,10 @@
       label
         | Apple Bağlı Değil
       input(type="submit" value="Apple Hesabınızı Bağlayın" @click="")
-
+    .infoLine
+      label
+          | Yeni Şifre
+      input(type="text" v-model="newPass" maxlength="8")
 
 </template>
 
@@ -55,11 +58,12 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
+      newPass:"",
       file: "",
       name: "",
       surname: "",
       phone: "",
-      grade: "",      
+      grade: "",
       phoneLength: 11,
       selectedFile: null,
       code: "",
@@ -76,7 +80,7 @@ export default {
     };
   },
   methods: {
-    ...mapGetters("users", ["getGenerated","getChangeNumberMessage"]),
+    ...mapGetters("users", ["getGenerated", "getChangeNumberMessage"]),
     ...mapActions("users", ["changeUserInfo", "changePhoneCheck"]),
     ...mapActions(["refreshUser"]),
     ...mapGetters([
@@ -194,6 +198,17 @@ export default {
           phone: this.phone
         });
       }
+    },
+    async newPass(value) {
+      var pass = value.length;
+      if (pass == 8) {
+        await this.$axios.post("/changePass", {
+          user: this.$store.getters.userId,
+          passcode: this.newPass
+        }).then(res => {
+          console.log(res.message);
+        });
+      }
     }
   },
   components: {
@@ -253,7 +268,7 @@ $gray6-dark: rgb(28, 28, 30)
   border-bottom: 0.75px solid $gray
   @media screen and (max-width: 1200px)
     height: 60px
-    
+
   & input
     float: right
     margin-right: 20%

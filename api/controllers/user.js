@@ -2,11 +2,12 @@ import User from "../models/user.js";
 import axios from "axios";
 import PhoneAuth from "../models/phoneAuth.js";
 import jwt from "jsonwebtoken";
-
+import bcrypt from "bcrypt";
+const saltRounds = 10;
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
+const createToken = id => {
   return jwt.sign({ id }, "G@#FCs5,2Bpy!wN}YCVE", {
-    expiresIn: maxAge,
+    expiresIn: maxAge
   });
 };
 exports.generateCode = async (req, res) => {
@@ -18,36 +19,36 @@ exports.generateCode = async (req, res) => {
       request: {
         authentication: {
           username: "5073857166",
-          password: "Up3QKbnUGxGp9TL",
+          password: "Up3QKbnUGxGp9TL"
         },
         order: {
           sender: "ISLYNZHNLR",
           message: {
             text: "İzders.com giriş kodu: " + passcode,
             receipents: {
-              number: [phoneNumber],
-            },
-          },
-        },
-      },
+              number: [phoneNumber]
+            }
+          }
+        }
+      }
     })
-    .then(async (resp) => {
+    .then(async resp => {
       console.log(resp.status);
       console.log(resp.statusText);
       if (resp.status == 200) {
         res.status(201).json({
-          smsStatus: "success",
+          smsStatus: "success"
         });
       } else {
         console.log("sms gönderilemedi");
       }
     })
-    .catch((resp) => {
+    .catch(resp => {
       console.log(resp.status);
       console.log(resp.statusText);
       if (resp.response.status == 452) {
         res.status(201).json({
-          smsStatus: "numberInvalid",
+          smsStatus: "numberInvalid"
         });
       }
     });
@@ -92,6 +93,49 @@ exports.authCode = async (req, res) => {
       res.status(201).json({ auth: false });
     }
   } catch (error) {}
+};
+
+exports.changePass = async (req, res) => {
+  const id = req.body.user;
+  const enteredCode = req.body.passcode;
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(enteredCode, salt, function(err, hash) {
+      console.log("saltRounds");
+      console.log(saltRounds);
+      console.log(salt);
+      console.log(hash);
+      User.findByIdAndUpdate({ _id: id }, { password: hash }, () => {
+        res.status(200).json({
+          message: "updated"
+        });
+      });
+    });
+  });
+};
+exports.authPass = async (req, res) => {
+  const enteredCode = req.body.code;
+  const phoneNumber = req.body.phone;
+  try {
+    const auth = { phone: phoneNumber };
+    const userInfo = await User.findOne(auth);
+    if (userInfo) {
+      bcrypt.compare(enteredCode, userInfo.password, function(err, result) {
+        if (result) {
+          const token = createToken(userInfo._id);
+          res
+            .status(201)
+            .json({ auth: true, userInfo: userInfo, authKey: token });
+        } else {
+          res.status(201).json({ auth: false });
+        }
+      });
+    } else {
+      res.status(201).json({ auth: false });
+    }
+  } catch (error) {
+    res.status(201).json({ auth: false });
+    console.log(error);
+  }
 };
 
 exports.authGoogle = async (req, res) => {
@@ -148,7 +192,7 @@ exports.changePhoneCheck = async (req, res) => {
       const userInfo = await User.findOne({ phone: phoneNumber });
       if (userInfo) {
         res.status(200).json({
-          message: "alreadyUsed",
+          message: "alreadyUsed"
         });
       } else {
         try {
@@ -160,7 +204,7 @@ exports.changePhoneCheck = async (req, res) => {
               request: {
                 authentication: {
                   username: "5073857166",
-                  password: "Up3QKbnUGxGp9TL",
+                  password: "Up3QKbnUGxGp9TL"
                 },
                 order: {
                   sender: "ISLYNZHNLR",
@@ -170,20 +214,20 @@ exports.changePhoneCheck = async (req, res) => {
                       name +
                       " izders.com profilinizdeki telefon numaranız değiştirilmiştir. İşlem bilginiz dahilinde değilse lütfen iletişme geçiniz.",
                     receipents: {
-                      number: [oldPhone],
-                    },
-                  },
-                },
-              },
+                      number: [oldPhone]
+                    }
+                  }
+                }
+              }
             })
-            .then(async (resp) => {
+            .then(async resp => {
               console.log("res: " + resp.status);
               if (resp.status == 200) {
               } else {
                 console.log("habu rizeye emicen vefat etti");
               }
             })
-            .catch((resp) => {
+            .catch(resp => {
               console.log(resp.response.status);
               if (resp.response.status == 452) {
               }
@@ -195,7 +239,7 @@ exports.changePhoneCheck = async (req, res) => {
             { phone: phoneNumber },
             () => {
               res.status(200).json({
-                message: "updated",
+                message: "updated"
               });
             }
           );
@@ -217,7 +261,7 @@ async function generateSMS(phone) {
       request: {
         authentication: {
           username: "5073857166",
-          password: "Up3QKbnUGxGp9TL",
+          password: "Up3QKbnUGxGp9TL"
         },
         order: {
           sender: "ISLYNZHNLR",
@@ -226,19 +270,19 @@ async function generateSMS(phone) {
               "İzders.com telefon numarası değişrimek için onay kodu: " +
               passcode,
             receipents: {
-              number: [phoneNumber],
-            },
-          },
-        },
-      },
+              number: [phoneNumber]
+            }
+          }
+        }
+      }
     })
-    .then(async (resp) => {
+    .then(async resp => {
       if (resp.status == 200) {
       } else {
         console.log("habu rizeye emicen vefat etti");
       }
     })
-    .catch((resp) => {
+    .catch(resp => {
       if (resp.response.status == 452) {
       }
     });
@@ -266,7 +310,7 @@ exports.update = async (req, res) => {
     try {
       User.findByIdAndUpdate({ _id: id }, { [where]: value }, () => {
         res.status(200).json({
-          message: "updated",
+          message: "updated"
         });
       });
     } catch (error) {
@@ -275,15 +319,15 @@ exports.update = async (req, res) => {
   } else {
     await generateSMS(value);
     res.status(200).json({
-      message: "generated",
+      message: "generated"
     });
   }
 };
 
 exports.getAll = async (req, res) => {
-  User.find().then((users) => {
+  User.find().then(users => {
     var userMap = {};
-    users.forEach(function (user) {
+    users.forEach(function(user) {
       userMap[user._id] = user;
     });
 
@@ -292,9 +336,9 @@ exports.getAll = async (req, res) => {
 };
 // belirli bir branşı aramak için $elemMatch : { $eq: "60a38a65252c3e2968a6e0f7"}
 exports.getTeachers = async (req, res) => {
-  User.find({ branch: { $exists: true, $ne: null, $ne: [] } }).then((users) => {
+  User.find({ branch: { $exists: true, $ne: null, $ne: [] } }).then(users => {
     var userMap = {};
-    users.forEach(function (user) {
+    users.forEach(function(user) {
       userMap[user._id] = user;
     });
 
@@ -305,15 +349,15 @@ exports.getTeachers = async (req, res) => {
 exports.getUserRole = async (req, res) => {
   User.find()
     .populate("role")
-    .then((users) => {
+    .then(users => {
       var userMap = {};
-      users.forEach(function (user) {
+      users.forEach(function(user) {
         userMap[user._id] = user;
       });
 
       res.send(userMap);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
     });
 };
@@ -338,7 +382,7 @@ exports.getOneUser = async (req, res) => {
   try {
     const userInfo = await User.findOne({ phone: phone }).populate({
       path: "branch",
-      populate: { path: "grade" },
+      populate: { path: "grade" }
     });
     res.status(201).json({ user: userInfo });
   } catch (error) {
