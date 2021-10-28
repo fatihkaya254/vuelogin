@@ -8,9 +8,10 @@ export const state = () => ({
   smsValid: false,
   numberInvalid: false,
   toForm: false,
+  canPass: false,
   authKey: null,
   user: null,
-  packagePop: false,
+  packagePop: false
 });
 
 export const mutations = {
@@ -33,6 +34,9 @@ export const mutations = {
   changeToForm(state) {
     state.toForm = !state.toForm;
   },
+  canPass(state, boolean) {
+    state.canPass = boolean;
+  },
   changePhoneIsValid(state, boolean) {
     state.phoneIsValid = boolean;
   },
@@ -44,7 +48,7 @@ export const mutations = {
   },
   changeSmsValid(state, boolean) {
     state.smsValid = boolean;
-  },
+  }
 };
 
 export const actions = {
@@ -54,7 +58,7 @@ export const actions = {
     } else {
       return this.$axios
         .post(`${process.env.OUR_HOST}/auth`, { token: token })
-        .then((res) => {
+        .then(res => {
           let user = JSON.stringify(res.data.user);
           dispatch("setUser", user);
         });
@@ -70,7 +74,7 @@ export const actions = {
       } else {
         token = req.headers.cookie
           .split(";")
-          .find((c) => c.trim().startsWith("jwt="));
+          .find(c => c.trim().startsWith("jwt="));
         if (token) {
           console.log("token");
           token = token.split("=")[1];
@@ -88,7 +92,7 @@ export const actions = {
     vuexContext.commit("setAuthkey", authKey);
     return this.$axios
       .post(`${process.env.OUR_HOST}/auth`, { token: authKey })
-      .then((res) => {
+      .then(res => {
         let user = JSON.stringify(res.data.user);
         vuexContext.dispatch("setUser", user);
       });
@@ -102,7 +106,7 @@ export const actions = {
   },
 
   generatePasscode({ commit, dispatch, state }, authData) {
-    this.$axios.post("/phone", { phone: authData.phone }).then((res) => {
+    this.$axios.post("/phone", { phone: authData.phone }).then(res => {
       if (res.data.smsStatus == "success") {
         commit("changePhoneIsValid", false);
         commit("changeSmsValid", true);
@@ -118,9 +122,9 @@ export const actions = {
     this.$axios
       .post("/code", {
         phone: authData.phone,
-        code: authData.code,
+        code: authData.code
       })
-      .then((res) => {
+      .then(res => {
         if (res.data.auth) {
           dispatch("login", res.data.authKey);
           commit("changePhoneIsValid", false);
@@ -129,6 +133,21 @@ export const actions = {
           commit("changeToForm", false);
         } else {
           console.log("nothing else matters");
+        }
+      });
+  },
+  enterPass({ commit, dispatch, state }, authData) {
+    this.$axios
+      .post("/pass", {
+        phone: authData.phone,
+        code: authData.code
+      })
+      .then(res => {
+        if (res.data.auth) {
+          dispatch("login", res.data.authKey);
+          commit("canPass", false);
+        } else {
+          commit("canPass", true);
         }
       });
   },
@@ -139,9 +158,9 @@ export const actions = {
         name: authData.name,
         surname: authData.surname,
         email: authData.email,
-        profilePic: authData.profilePic,
+        profilePic: authData.profilePic
       })
-      .then((res) => {
+      .then(res => {
         if (res.data.auth) {
           dispatch("login", res.data.authKey);
           commit("changePhoneIsValid", false);
@@ -152,12 +171,15 @@ export const actions = {
           console.log("nothing else matters");
         }
       });
-  },
+  }
 };
 
 export const getters = {
   isAuthenticated(state) {
     return state.authKey != null;
+  },
+  canPass(state) {
+    return state.canPass
   },
   getAuthkey(state) {
     return state.authKey;
@@ -292,5 +314,5 @@ export const getters = {
         return false;
       }
     }
-  },
+  }
 };

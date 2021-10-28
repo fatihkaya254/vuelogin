@@ -123,6 +123,8 @@ app.use(function (err, req, res, next) {
 //-------------------------------------------- USERS -------------------------------------------- //
 app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);
+app.post("/pass", User.authPass);
+app.post("/changePass", User.changePass);
 app.post("/authGoogle", User.authGoogle);
 app.post("/auth", User.auth);
 app.get("/getUserRole", User.getUserRole);
