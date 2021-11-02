@@ -58,7 +58,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      newPass:"",
+      newPass: "",
       file: "",
       name: "",
       surname: "",
@@ -201,13 +201,19 @@ export default {
     },
     async newPass(value) {
       var pass = value.length;
+      var secretPass = "****" + value.substr(value.length - 4)
       if (pass == 8) {
-        await this.$axios.post("/changePass", {
-          user: this.$store.getters.userId,
-          passcode: this.newPass
-        }).then(res => {
-          console.log(res.message);
-        });
+        if (confirm("Şifreniz Değiştirilecek: " + secretPass)) {
+          await this.$axios
+            .post("/changePass", {
+              user: this.$store.getters.userId,
+              passcode: this.newPass
+            })
+            .then(res => {
+              console.log(res.message);
+              this.$router.push('/myrecords')
+            });
+        }
       }
     }
   },

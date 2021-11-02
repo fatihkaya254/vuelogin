@@ -146,6 +146,7 @@ export const actions = {
         if (res.data.auth) {
           dispatch("login", res.data.authKey);
           commit("canPass", false);
+          this.$router.push('/myrecords');
         } else {
           commit("canPass", true);
         }
