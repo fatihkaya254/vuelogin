@@ -4,7 +4,7 @@ exports.update = async (req, res, next) => {
   if (lock == key) {
       next()
   }else{
-    res.redirect('https://izders.com')
+    res.redirect(process.env.OUR_URL)
     
   }
 };
