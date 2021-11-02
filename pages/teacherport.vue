@@ -7,7 +7,7 @@ div
             #loginArea
                 .part
                     label Telefon Numarası
-                    input(type="text" v-model="phoneNumber" :maxlength="phoneLength" suggested="user-name")
+                    input(type="tel" v-model="phoneNumber" :maxlength="phoneLength" suggested="user-name")
                 .part
                     label Şifre
                     input(type="password" v-model="pass" maxlength="8" suggested="current-password" autocomplete="on")
