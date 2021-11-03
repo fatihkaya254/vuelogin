@@ -5,26 +5,29 @@
             .header
                 .title
                     label matematikanalizi.com
-                .nav
-                    label Hakkımızda
-                    label Ücretler
-                    label İletişim
     .promotion-carousel
      .promotions
        div
          #section1.promotion(style='background-image: url(https://picsum.photos/1440/900?image=319)')
-           .shade
-           .promo-detail.cycle-overlay
+            .shade
+            .promo-detail.cycle-overlay
              .promo-text
-               span.dash
-               span.promo-flag New Series From Sacha Baron Cohen
-               a.copy(href='#')
-                 .headline Who Is America?
+                .forMobile
+                span.dash
+                span.promo-flag 4, 5 ve 6. Sınıflar İçin
+                a.copy(href='#')
+                 .headline Matematik Analizi Nedir?
                  p.body.long Season Finale: Sacha Baron Cohen explores our unique nation.
-               .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
-                 a.button.see-all(href='#') All Episodes
+                .buttons
+                 a.button.sho-play-link(href='#' style="background: none;") Daha Fazla Oku
+                .form
+                    .label
+                        input(typte="text" id="name" placeholder="Ad Soyad")
+                    .label
+                        input(typte="tel" id="phone" placeholder="Telefon Numarası")
+                    .label
+                        .infoRequest  
+                            label Bilgi Almak İstiyorum
          #section2.promotion(style='background-image: url(https://picsum.photos/1440/900?image=325)')
            .shade
            .promo-detail.cycle-overlay
@@ -131,6 +134,13 @@
                    | This collection features films that all take place during the cataclysmic World War II era. Take the time to watch them all.
                .buttons
                  a.button.see-all(href='#') See Entire Collection
+    .contactButtons
+        .contact(@click="contact('m')")
+            fa-icon(:icon="['fas', 'map-marked-alt']")
+        .contact(@click="contact('w')")
+            fa-icon(:icon="['fab', 'whatsapp']")
+    .frame
+        iframe(src="https://player.vimeo.com/video/641853725?h=a78aa06be3&amp;playsinline=0&amp;badge=0&amp;loop=1&amp;muted=1&amp;controls=0&amp;autoplay=1&amp;player_id=0&amp;app_id=58479&title=0&color=218da6&byline=0&portrait=0" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen title="Doğru Kaynak")
     .navigation
      ul
        li
@@ -198,6 +208,11 @@ export default {
         if (this.priceStep == 0) this.priceStep = 3;
         this.priceStep = (this.priceStep - 1) % 3;
       }
+    },
+    contact: function (where) {
+        if(where == "w") window.open("https://wa.me/905316908590?text=Matematikanalizi%20hakkında%20bilgi%20almak%20istiyorum", "_blank");
+        if(where == "m") window.open("https://www.google.com/maps/place/%C4%B0%C5%9Fleyen+Zihinler/@40.9855671,29.0341941,17z/data=!3m2!4b1!5s0x14cab87ae30e302d:0x75a9cfc6ad9589a1!4m5!3m4!1s0x14cab9a9cc4aa989:0xcec15f344c1e148b!8m2!3d40.9855631!4d29.0363828", "_blank");
+        
     }
   },
   mounted() {
@@ -425,6 +440,10 @@ a {
     padding: 15px 20px;
     width: auto;
     display: inline-block;
+    cursor: pointer;
+    label {
+      cursor: pointer;
+    }
   }
 
   .button:first-child {
@@ -552,14 +571,91 @@ a {
     }
   }
 }
+.contactButtons {
+  .contact{
+      width: 100%;
+      text-align: center;
+      height: 40px;
+      padding-top: 5px;
+      :hover{
+          color: $red;
+      }
+  }
+  width: 40px;
+  height: 120px;
+  z-index: 9999;
+  position: fixed;
+  bottom: 120px;
+  right: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  @media screen and (max-width: 800px) {
+    font-size: 20pt;
+    color: white;
+    bottom: 40px;
+    right: 5px;
+  }
+}
+
+.frame {
+  z-index: 9999;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 20%;
+  @media screen and (max-width: 800px) {
+    top: 110px;
+    right: 15px;
+  }
+  iframe {
+    width: 32vw;
+    height: 32vw;
+    @media screen and (max-width: 800px) {
+        width: 180px;
+        height: 100px;
+    }
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    margin: 15px 0;
+    @media screen and (max-width: 800px) {
+      width: 14px;
+      height: 8px;
+      margin: 20px 0;
+    }
+    a {
+      background-color: $white;
+      border-radius: 100%;
+      height: 100%;
+      width: 100%;
+      display: block;
+      transition: 0.2s ease;
+      @media screen and (max-width: 800px) {
+        border-radius: 4px;
+      }
+      &.active {
+        background-color: $red;
+      }
+    }
+  }
+}
 
 .navigation {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
   right: 50px;
-  @media screen and (max-width: 800px){
-      right: 15px;
+  @media screen and (max-width: 800px) {
+    right: 15px;
   }
 
   ul {
@@ -572,10 +668,10 @@ a {
     width: 8px;
     height: 8px;
     margin: 15px 0;
-    @media screen and (max-width: 800px){
-        width: 14px;
-        height: 8px;
-        margin: 20px 0;
+    @media screen and (max-width: 800px) {
+      width: 14px;
+      height: 8px;
+      margin: 20px 0;
     }
     a {
       background-color: $white;
@@ -584,16 +680,15 @@ a {
       width: 100%;
       display: block;
       transition: 0.2s ease;
-    @media screen and (max-width: 800px){
-      border-radius: 4px;
-    }
+      @media screen and (max-width: 800px) {
+        border-radius: 4px;
+      }
       &.active {
         background-color: $red;
       }
     }
   }
 }
-
 </style>
 <style lang="sass" scoped>
 
@@ -659,27 +754,27 @@ $blue: #218da6
 .form
     height: 200px
     width: 300px
-    border-radius: 1em
     display: flex
     flex-direction: column
     justify-content: space-evenly
-    align-items: center
-    background: $blue
+    border-style: solid
+    border-color: white
+    border-width: 2px
+    border-left: 0
+    border-right: 0
 .label
     width: 80%
     input
         height: 30px
         border: none
         width: 100%
-        border-radius: 1em
         text-align: center
 .infoRequest
         height: 30px
         box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px
         border: none
         width: 100%
-        border-radius: 1em
-        background-color: white
+        background-color: $blue
         display: flex
         justify-content: center
         align-items: center
@@ -730,6 +825,8 @@ $blue: #218da6
     height: 50px
     display: flex
     padding: 20px
+    @media screen and (max-width: 840px)
+        height: 30px
 .content
     padding-top: 20px
     width: 100%
@@ -740,13 +837,15 @@ $blue: #218da6
     flex-direction: column
 .title
     height: 100%
-    width: 20%
+    width: 100%
     font-family: 'MuseoModerno'
     display: flex
     justify-content: center
     align-items: center
     color: white
     font-size: 16pt
+    @media screen and (max-width: 840px)
+        font-size: 12pt
 .nav
     font-family: 'MuseoModerno'
     height: 100%
@@ -757,6 +856,11 @@ $blue: #218da6
     font-size: 14pt
     color: white
     gap: 20px
+
+.forMobile
+    @media screen and (max-width: 840px)
+        height: 65px
+        width: 50px
 
 .container
     background: linear-gradient(90deg, $green 0%, $blue 100%)
