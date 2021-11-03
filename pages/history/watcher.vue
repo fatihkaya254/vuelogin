@@ -93,7 +93,7 @@ export default {
         if (record.homework == "") text += " Yeni ödev girilmemiş.";
         if (record.subTopics.length == 0)
           text += " İşlenen konular girilmemiş.";
-      } else if (lesson.group != undefined) {
+      } else if (this.lessonRecords[lesson._id] != undefined && lesson.group != undefined) {
         for (const [key, value] of Object.entries(
           this.lessonRecords[lesson._id]
         )) {
@@ -105,7 +105,7 @@ export default {
       } else {
         text = "Girilmeyen ders kayıtları var.";
       }
-      window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+      window.open(`https://wa.me/90${phone}?text=${text}`, "_blank");
     },
     getLessonRecords: function() {
       this.$axios.get(`${process.env.OUR_HOST}/getTodayRecord`).then(res => {
