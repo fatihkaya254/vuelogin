@@ -49,9 +49,7 @@ exports.getTodays = async (req, res) => {
   var month = now.getMonth() + 1;
   const today = now.getFullYear() + "-" + month + "-" + now.getDate();
   try {
-    const todays = await LessonRecord.find({ recordDate: today }).select(
-      "sms student smsApp recordDate"
-    );
+    const todays = await LessonRecord.find({ recordDate: today }).sort('hour')
     res.status(201).json({ todays });
   } catch (error) {
     console.log(error);

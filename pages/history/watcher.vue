@@ -1,30 +1,21 @@
 <template lang="pug">
 .body
-    .container
-        input(type="date" v-model="date")
-    .container
-        select(@change="setTeacher($event.target.value)")
-            option(v-for="i in teacher()" :value="i._id") {{i.name}} {{i.surname}}
-    .container(v-for="(c,b) in lessonRecords") 
+    .container(@click="sendAll()")
       .block
+        .number {{balance}}
+        .string ({{counter}}) Tüm SMS'leri Gönder
+    .container(v-for="(c,b) in lessons" @click="wp(c)") 
+      .block 
         .string {{c.hour}}:00
-        .block(v-if="c.sms != undefined") 
+        .string {{c.teacher.name}} {{c.teacher.surname}}
+        .string(v-if="c.student != undefined") {{c.student.name}} {{c.student.surname}}
+        .string(v-if="c.group != undefined") {{c.group.groupName}}
+        .block(v-if="lessonRecords[b]") 
+          div(v-for="sub in lessonRecords[b]" :style="{backgroundColor: colors[sub.smsApp]}")
             .string 
                 fa-icon(:icon="['fas', 'sms']")
-                label {{c.sms}}
-            .number İşlenen Konular
-              .string(v-for="t in c.subTopics")
-                .string(v-if="branchSubTopics[t] != undefined") {{branchSubTopics[t].subTopicName}}
-    div(v-for="c in teachersDaily()")  
-      .generals(v-if="c.student != undefined || c.group != undefined")
-        .container(v-if="!((c.student != undefined && lessonRecords[c._id+''+c.student._id] != undefined)  || (c.group != undefined && lessonRecords[c._id+''+c.group.student[0]] != undefined))")  
-          .block( :style=" {backgroundColor: 'antiquewhite'}")
-              .string {{c.hour}}:00
-              .block(v-if="c.student != undefined")
-                  .string {{c.student.name}} {{c.student.surname}}
-              .block(v-if="c.group != undefined") 
-                  .string {{c.group.groupName}}
-
+            .string(v-if="lessonRecords[b] != undefined") {{sub.sms}}
+            .string(v-if="lessonRecords[b] != undefined") {{sub.subTopics.length}}
 </template>
 
 <script>
@@ -50,13 +41,19 @@ export default {
   ],
   data() {
     return {
+      counter: 0,
+      parent: {},
       colors: ["white", "#ffbd44", "#00ca4e"],
+      balance: "",
       date: "",
       teacherId: "",
       turkDays: [6, 0, 1, 2, 3, 4, 5],
       lessonRecords: {},
       branchSubjects: [],
-      branchSubTopics: []
+      whois: {},
+      warnings: {},
+      branchSubTopics: [],
+      lessons: {}
     };
   },
   methods: {
@@ -77,62 +74,134 @@ export default {
     ...mapGetters("branches", ["branch", "subject", "subTopic"]),
     ...mapGetters("users", ["teacher", "teachersDaily"]),
     ...mapActions("users", ["getTeachers", "getTeachersDaily"]),
-    setTeacher: function(id) {
-      if (id == "") return;
-      this.teacherId = id;
-      var date = new Date();
-      if (this.date != "") date = new Date(this.date);
-      this.getTeachersDaily({ teacher: id, day: this.turkDays[date.getDay()] });
-      this.getLessonRecords();
-    },
-    getSubTopics: function() {
-      this.$axios
-        .post(`${process.env.OUR_HOST}/branchProcess`, {
-          branch: this.userBranch()
-        })
-        .then(res => {
-          this.branchProcess = res.data.branchMap;
-          this.branchSubjects = res.data.subjectMap;
-          this.branchSubTopics = res.data.branchSubtopics;
-          console.log("this.branchProcess");
-          console.log(this.branchProcess);
-          console.log("this.branchProcess");
-        });
+    wp: function(lesson) {
+      const phone = lesson.teacher.phone;
+      const hour = lesson.hour + ":00";
+      var student = "";
+      if (lesson.student != undefined)
+        student = lesson.student.name + " " + lesson.student.surname;
+      if (lesson.group != undefined) student = lesson.group.groupName;
+      var text = hour + "%20";
+      text +=
+        student +
+        "%20ile%20olan%20dersin%20kaydını%20kontrol%20eder%20misiniz?";
+      if (
+        this.lessonRecords[lesson._id] != undefined &&
+        lesson.student != undefined
+      ) {
+        const record = this.lessonRecords[lesson._id][lesson.student._id];
+        if (record.homework == "") text += " Yeni ödev girilmemiş.";
+        if (record.subTopics.length == 0)
+          text += " İşlenen konular girilmemiş.";
+      } else if (lesson.group != undefined) {
+        for (const [key, value] of Object.entries(
+          this.lessonRecords[lesson._id]
+        )) {
+          if (value.homework == "") text += " Yeni ödev girilmemiş.";
+          if (value.subTopics.length == 0)
+            text += " İşlenen konular girilmemiş.";
+          break
+        }
+      } else {
+        text = "Girilmeyen ders kayıtları var.";
+      }
+      window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
     },
     getLessonRecords: function() {
-      this.lessonRecords = {};
-      if (this.teacherId == "") return;
-      const teacher = this.teacherId;
-      var now = new Date();
-      if (this.date != "") now = new Date(this.date);
-      var month = now.getMonth() + 1;
-      const date = now.getFullYear() + "-" + month + "-" + now.getDate();
-      this.$axios
-        .post(`${process.env.OUR_HOST}/dailyTeacherRecords`, {
-          teacher,
-          date
-        })
-        .then(res => {
-          for (const el in res.data) {
-            this.$set(
-              this.lessonRecords,
-              res.data[el].lesson + "" + res.data[el].student,
-              res.data[el]
-            );
-          }
-          console.log(this.lessonRecords);
-        });
+      this.$axios.get(`${process.env.OUR_HOST}/getTodayRecord`).then(res => {
+        console.log(res);
+        for (const el in res.data.todays) {
+          if (this.lessonRecords[res.data.todays[el].lesson] == undefined)
+            this.lessonRecords[res.data.todays[el].lesson] = {};
+          this.$set(
+            this.lessonRecords[res.data.todays[el].lesson],
+            res.data.todays[el].student,
+            res.data.todays[el]
+          );
+          if(res.data.todays[el].smsApp == 1) this.counter++
+        }
+        console.log("this.lessonRecords");
+        console.log(this.lessonRecords);
+      });
+    },
+    sendSms: async function(s) {
+      if (s.smsApp == 1) {
+        var dateTime = Date.now();
+        var sms = s.sms;
+        var student = s.student;
+        for (const phone in this.warnings[student]) {
+          var info = {
+            sms,
+            phone,
+            dateTime,
+            student
+          };
+          console.log(info);
+          await this.$axios
+            .post(`${process.env.OUR_HOST}/sendSms`, info)
+            .then(res => {
+              console.log(res);
+            });
+        }
+        await this.$axios
+          .put(`${process.env.OUR_HOST}/updateLessonRecord`, {
+            id: s._id,
+            changes: { smsApp: "2" }
+          })
+          .then(res => {
+            console.log(res);
+          });
+      }
+    },
+    sendAll: function() {
+      console.log("warn");
+      console.log(this.warnings);
+      console.log(this.whois);
+      const lr = this.lessonRecords;
+      var sublr = {};
+      for (const el in lr) {
+        sublr = lr[el];
+        for (const sub in sublr) {
+          this.sendSms(sublr[sub]);
+        }
+      }
+      this.$router.push("/myrecords");
     }
   },
-  watch: {
-    date: function() {
-      this.getLessonRecords();
-      this.setTeacher(this.teacherId);
-    }
-  },
-  mounted() {
+  async mounted() {
+    await this.getLessonRecords();
     this.getSubTopics();
     this.getTeachers();
+    await this.$axios.get(`${process.env.OUR_HOST}/getAllToday`).then(res => {
+      this.lessons = res.data;
+    });
+    await this.$axios.get(`${process.env.OUR_HOST}/smsBalance`).then(res => {
+      this.balance = res.data.sms;
+    });
+    await this.$axios.get(`${process.env.OUR_HOST}/getParentship`).then(res => {
+      this.parent = res.data.todays;
+    });
+    var phones = {};
+    for (const i in this.lessonRecords) {
+      for (const s in this.lessonRecords[i]) {
+        var student = this.lessonRecords[i][s].student;
+        var phones = {};
+        for (const j in this.parent) {
+          if (this.parent[j].student != undefined) {
+            if (student == this.parent[j].student._id) {
+              var name =
+                this.parent[j].parent.name +
+                " " +
+                this.parent[j].parent.surname;
+              var phone = this.parent[j].parent.phone;
+              await this.$set(phones, phone, phone);
+              this.$set(this.warnings, student, phones);
+              this.$set(this.whois, phone, name);
+            }
+          }
+        }
+      }
+    }
   }
 };
 </script>

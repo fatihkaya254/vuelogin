@@ -714,10 +714,11 @@ export default {
     },
   },
   watch: {},
-  async mounted() {
-    await this.getRights();
-    this.getBranches();
-    this.start();
+  async beforeCreate() {
+    this.$router.push("/myrecords")
+    //await this.getRights();
+    //this.getBranches();
+    //this.start();
   },
   // v-if="lessonRecords[findMyRecord(lesson._id)] == undefined"
 };

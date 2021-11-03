@@ -19,7 +19,6 @@
                   .string {{ hours[lesson.hour] }}
                   .number {{ lessonsStudents[lesson._id] }} {{ lessonsGroups[lesson._id] }}
                   .string {{ lessonsBranches[lesson._id] }}
-                  
                 .changeRecord(@click="clickOnLesson(lesson._id, lesson.hour)" v-if="lesson._id != id" ) {{findMyRecord(lesson._id) ? 'Düzenle' : 'Oluştur'}}      
                 .info(v-show="branchProcess[braid] == undefined && page == 3") 
                   .subjectName Yükleniyor...
@@ -109,7 +108,8 @@
                   .subjectName
                     .topicsSms  
                       input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
-                      label(for="sms" class="input-label") Sms'i onaylıyorum
+                      label(for="sms" class="input-label" v-show="smsApp") Sms Onaylanacak
+                      label(for="sms" class="input-label" v-show="!smsApp") Sms Onaylanmayacak
                 .page( v-if="lesson._id == id") {{ page }}/4
 </template>
 
@@ -302,7 +302,8 @@ export default {
       sms += ", ";
       sms += this.hours[this.teachersDaily()[this.id].hour];
       sms += ", ";
-      sms += this.lessonsBranches[this.id] + " Konu: " + subjectName;
+      sms += this.lessonsBranches[this.id] 
+      if(subjectName != "") sms += " Konu: " + subjectName;
       if (!join) sms += " öğrenci derse katılmadı, ";
       if (join && homeworkS !=0) sms += " önceki derste verilen ödev: ";
       if (join) sms += homeworkS + ", "

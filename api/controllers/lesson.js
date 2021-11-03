@@ -174,6 +174,26 @@ exports.getTodaysForTeacher = async (req, res) => {
     });
 };
 
+exports.getTodaysForAll = async (req, res) => {
+  const turkDays = [6, 0, 1, 2, 3, 4, 5]
+  const date = new Date();
+  const day = turkDays[date.getDate()]
+  Lesson.find({ day })
+    .sort('hour')
+    .populate({ path: "teacher" })
+    .populate({ path: "student" })
+    .populate({ path: "group" })
+    .then(lessons => {
+      var lessonMap = {};
+      lessons.forEach(function(lesson) {
+          if (lesson.branch) {
+            lessonMap[lesson._id] = lesson;
+          }
+      });
+      res.send(lessonMap);
+    });
+};
+
 exports.teachersSchedule = async (req, res) => {
   const teacher = req.body.teacher;
   Lesson.find({ teacher })
