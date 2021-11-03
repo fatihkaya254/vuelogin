@@ -114,6 +114,9 @@ img
   z-index: 20
 
 .other
-  padding-top: 50px
   padding-bottom: 50px
+  padding-top: 150px
+  @media screen and (max-width: 1200px)
+    padding-top: 50px
+    padding-bottom: 50px
 </style>
