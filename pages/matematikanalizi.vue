@@ -23,17 +23,74 @@
                         label Bilgi Almak İstiyorum
             .whatIs
                 .prices
-                    h1
-                        | Analiz 90₺
-                    p
-                        | Matematik Analizi tarafından hazırlanan test üzerinden öğrencinin analizi yapılır. Analiz İşleyen Zihinler'de yüz yüze olarak gerçekleştirilir.
-                    label
-                        | Detaylar
+                    .arrow
+                        fa-icon(:icon="['fas', 'chevron-left']" @click="otherPrice(0)")
+                    .priceInfo
+                        h1
+                            | {{prices[priceStep].title}}
+                        p
+                            | {{prices[priceStep].desc}}
+                        label
+                            | Detaylar
+                    .arrow
+                        fa-icon(:icon="['fas', 'chevron-right']" @click="otherPrice(1)")
+
+        .secondRow
+            .whatWeDo Matematik Analizi Nedir?
+            .whatWeDo(style="background:none;")
+                iframe(src="https://player.vimeo.com/video/641853725?h=a78aa06be3&amp;badge=0&amp;controls=0&amp;autoplay=1&amp;player_id=0&amp;app_id=58479&title=0&color=218da6&byline=0&portrait=0" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen style="width:100%;height:100%;min-height:300px" title="Doğru Kaynak")
+
     .background
         img(src="https://source.unsplash.com/AZrBFoXP_3I")
     .overlay
 
 </template>
+
+<script>
+export default {
+  head() {
+    return {
+      script: [
+        {
+          src: "https://player.vimeo.com/api/player.js"
+        }
+      ]
+    };
+  },
+  data() {
+    return {
+      prices: {
+        0: {
+          title: "Analiz 90₺",
+          desc:
+            "Matematik Analizi tarafından hazırlanan test üzerinden öğrencinin analizi yapılır. Analiz İşleyen Zihinler'de yüz yüze olarak gerçekleştirilir."
+        },
+        1: {
+          title: "Özel Ders 100₺/Saat",
+          desc:
+            "Analiz sonrasında öğrencinin grup ders planlaması yapılır. Öğrenciye grup öncesinde analiz yapan öğretmenin gerekli görmesi durumunda özel ders takviyesi planlanır. Özel dersler haftasonunda verilir."
+        },
+        2: {
+          title: "Grup Ders Programı 700₺/Ay",
+          desc:
+            "Haftada 3 matematik. Sadece PAZAR günü saat 9 ile 18 arasında 3 saat olacak şekilde planlanır. Derse giren öğretmenle iletişim sağlanması için öğretmenin numarsı veli ile paylaşılır."
+        }
+      },
+      priceStep: 0
+    };
+  },
+  methods: {
+    otherPrice: function(addition) {
+      if (addition) {
+        this.priceStep = (this.priceStep + 1) % 3;
+      } else {
+        if (this.priceStep == 0) this.priceStep = 3;
+        this.priceStep = (this.priceStep - 1) % 3;
+      }
+    }
+  }
+};
+</script>
 
 <style lang="sass" scoped>
 
@@ -50,7 +107,10 @@ $blue: #218da6
 .firstRow
     display: flex
     gap: 50px
-
+.secondRow
+    display: flex
+    gap: 50px
+    height: 300px
 .whatIs
     height: 200px
     width: 90%
@@ -60,16 +120,39 @@ $blue: #218da6
     display: flex
     justify-content: center
     align-items: center
-
-.prices
-    background-color: red
+.whatWeDo
+    height: 100%
     width: 100%
+    background: white
+    border-radius: 1em
+    animation: slideshow 20s linear infinite
+    display: flex
+    justify-content: center
+    align-items: center
+.prices
+    width: 100%
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    gap: 20px
+
+.priceInfo
     display: flex
     flex-direction: column
     justify-content: center
     align-items: center
+    width: 90%
+    padding: 10px
 
-
+.arrow
+    transition: all 0.1s ease
+    width: 5%
+    text-align: center
+    font-size: 16pt
+    cursor: pointer
+    &:hover
+        opacity: 40%
 .form
     height: 200px
     width: 300px
@@ -143,6 +226,9 @@ $blue: #218da6
     width: 100%
     max-width: 1350px
     margin: auto
+    gap: 60px
+    display: flex
+    flex-direction: column
 .title
     height: 100%
     width: 20%
