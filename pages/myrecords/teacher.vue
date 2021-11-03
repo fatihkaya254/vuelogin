@@ -302,7 +302,8 @@ export default {
       sms += ", ";
       sms += this.hours[this.teachersDaily()[this.id].hour];
       sms += ", ";
-      sms += this.lessonsBranches[this.id] + " Konu: " + subjectName;
+      sms += this.lessonsBranches[this.id] 
+      if(subjectName != "") sms += " Konu: " + subjectName;
       if (!join) sms += " öğrenci derse katılmadı, ";
       if (join && homeworkS !=0) sms += " önceki derste verilen ödev: ";
       if (join) sms += homeworkS + ", "
