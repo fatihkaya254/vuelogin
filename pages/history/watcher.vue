@@ -93,7 +93,7 @@ export default {
         if (record.homework == "") text += " Yeni ödev girilmemiş.";
         if (record.subTopics.length == 0)
           text += " İşlenen konular girilmemiş.";
-      } else if (lesson.group != undefined) {
+      } else if (this.lessonRecords[lesson._id] != undefined && lesson.group != undefined) {
         for (const [key, value] of Object.entries(
           this.lessonRecords[lesson._id]
         )) {
