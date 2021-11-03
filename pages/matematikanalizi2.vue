@@ -137,7 +137,7 @@
     .contactButtons
         .contact(@click="contact('m')")
             fa-icon(:icon="['fas', 'map-marked-alt']")
-        .contact(@click="contact('w')")
+        .contact.wa(@click="contact('w')")
             fa-icon(:icon="['fab', 'whatsapp']")
     .frame
         iframe(src="https://player.vimeo.com/video/641853725?h=a78aa06be3&amp;playsinline=0&amp;badge=0&amp;loop=1&amp;muted=1&amp;controls=0&amp;autoplay=1&amp;player_id=0&amp;app_id=58479&title=0&color=218da6&byline=0&portrait=0" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen title="Doğru Kaynak")
@@ -209,17 +209,36 @@ export default {
         this.priceStep = (this.priceStep - 1) % 3;
       }
     },
-    contact: function (where) {
-        if(where == "w") window.open("https://wa.me/905316908590?text=Matematikanalizi%20hakkında%20bilgi%20almak%20istiyorum", "_blank");
-        if(where == "m") window.open("https://www.google.com/maps/place/%C4%B0%C5%9Fleyen+Zihinler/@40.9855671,29.0341941,17z/data=!3m2!4b1!5s0x14cab87ae30e302d:0x75a9cfc6ad9589a1!4m5!3m4!1s0x14cab9a9cc4aa989:0xcec15f344c1e148b!8m2!3d40.9855631!4d29.0363828", "_blank");
-        
+    contact: function(where) {
+      if (where == "w")
+        window.open(
+          "https://wa.me/905316908590?text=Matematikanalizi%20hakkında%20bilgi%20almak%20istiyorum",
+          "_blank"
+        );
+      if (where == "m")
+        window.open(
+          "https://www.google.com/maps/place/%C4%B0%C5%9Fleyen+Zihinler/@40.9855671,29.0341941,17z/data=!3m2!4b1!5s0x14cab87ae30e302d:0x75a9cfc6ad9589a1!4m5!3m4!1s0x14cab9a9cc4aa989:0xcec15f344c1e148b!8m2!3d40.9855631!4d29.0363828",
+          "_blank"
+        );
     }
   },
   mounted() {
     const ele = ".promotion-carousel";
     const $window = $(window);
     const viewportHeight = $window.height();
-
+    var cols = "#000,#fff".split(",");
+    var cPos = 0;
+    function swapC() {
+      $(".wa").animate({ color: "red" }, 500);
+      cPos++;
+      if (cPos == cols.length) {
+        cPos = 0;
+      }
+      window.setTimeout(function() {
+        swapC();
+      }, 500);
+    }
+    swapC()
     let ui = {
       promo: ele + " .promotion",
       promoText: ele + " .promo-text",
@@ -572,28 +591,31 @@ a {
   }
 }
 .contactButtons {
-  .contact{
-      width: 100%;
-      text-align: center;
-      height: 40px;
-      padding-top: 5px;
-      :hover{
-          color: $red;
-      }
+  .contact {
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    height: 40px;
+    padding-top: 5px;
+    :hover {
+      color: $red;
+    }
   }
+
   width: 40px;
   height: 120px;
   z-index: 9999;
   position: fixed;
   bottom: 120px;
-  right: 20%;
+  font-size: 20pt;
+  right: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: white;
   justify-content: space-around;
   @media screen and (max-width: 800px) {
     font-size: 20pt;
-    color: white;
     bottom: 40px;
     right: 5px;
   }
@@ -613,8 +635,8 @@ a {
     width: 32vw;
     height: 32vw;
     @media screen and (max-width: 800px) {
-        width: 180px;
-        height: 100px;
+      width: 180px;
+      height: 100px;
     }
   }
   ul {
