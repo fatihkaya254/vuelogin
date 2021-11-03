@@ -105,7 +105,7 @@ export default {
       } else {
         text = "Girilmeyen ders kayıtları var.";
       }
-      window.open(`https://wa.me/${phone}?text=${text}`, "_blank");
+      window.open(`https://wa.me/90${phone}?text=${text}`, "_blank");
     },
     getLessonRecords: function() {
       this.$axios.get(`${process.env.OUR_HOST}/getTodayRecord`).then(res => {
