@@ -66,12 +66,13 @@ exports.teacherLessons = async (req, res) => {
 
 exports.teacherLessonsForSelect = async (req, res) => {
   let teacher = req.body.teacher;
-  Lesson.find({ teacher })
+  Lesson.find({ teacher, status: 2 })
     .then(users => {
       if (users != null) {
         var userMap = {};
         users.forEach(function(user) {
-          if (user.status == 2 && user.branch == undefined) userMap[user.day + "-" + user.hour] = user._id;
+          if (user.branch == undefined)
+            userMap[user.day + "-" + user.hour] = user._id;
         });
         res.send(userMap);
       } else {
@@ -88,10 +89,13 @@ exports.teacherLessonCounter = async (req, res) => {
       if (users != null) {
         var userMap = {};
         users.forEach(function(user) {
-          if (userMap[user.teacher] == undefined) userMap[user.teacher] = 0
-          userMap[user.teacher] += 1
-          if (userMap[user.teacher+"-"+user.day] == undefined) userMap[user.teacher+"-"+user.day] = 0
-          userMap[user.teacher+"-"+user.day] += 1
+          if (user.branch == undefined) {
+            if (userMap[user.teacher] == undefined) userMap[user.teacher] = 0;
+            userMap[user.teacher] += 1;
+            if (userMap[user.teacher + "-" + user.day] == undefined)
+              userMap[user.teacher + "-" + user.day] = 0;
+            userMap[user.teacher + "-" + user.day] += 1;
+          }
         });
         res.send(userMap);
       } else {
@@ -158,7 +162,7 @@ exports.getStudentSchedule = async (req, res) => {
   if (groupI != undefined && groupI != null) {
     const group = groupI._id;
     Lesson.find({ $or: [{ student }, { group }] })
-      .sort('day hour')
+      .sort("day hour")
       .populate({ path: "teacher", select: "name surname" })
       .populate({ path: "branch", populate: { path: "grade" } })
       .populate({ path: "group" })
@@ -171,7 +175,7 @@ exports.getStudentSchedule = async (req, res) => {
       });
   } else {
     Lesson.find({ student })
-      .sort('day hour')
+      .sort("day hour")
       .populate({ path: "teacher", select: "name surname" })
       .populate({ path: "branch", populate: { path: "grade" } })
       .populate({ path: "group" })
@@ -194,39 +198,39 @@ exports.getTodaysForTeacher = async (req, res) => {
     .populate({ path: "group" })
     .then(lessons => {
       var lessonMap = {};
-      var last = ""
-      var present = ""
+      var last = "";
+      var present = "";
       lessons.forEach(function(lesson) {
-        present += "" + lesson.day
-        if(lesson.student) present += "" + lesson.student._id
-        if(lesson.group) present += "" + lesson.group._id
-        if(lesson.branch) present += "" + lesson.branch._id
-        if(last != present){
-          console.log(last + " " + present)
+        present += "" + lesson.day;
+        if (lesson.student) present += "" + lesson.student._id;
+        if (lesson.group) present += "" + lesson.group._id;
+        if (lesson.branch) present += "" + lesson.branch._id;
+        if (last != present) {
+          console.log(last + " " + present);
           lessonMap[lesson._id] = lesson;
         }
-        last = present + ""
-        present = ""
+        last = present + "";
+        present = "";
       });
       res.send(lessonMap);
     });
 };
 
 exports.getTodaysForAll = async (req, res) => {
-  const turkDays = [6, 0, 1, 2, 3, 4, 5]
+  const turkDays = [6, 0, 1, 2, 3, 4, 5];
   const date = new Date();
-  const day = turkDays[date.getDate()]
+  const day = turkDays[date.getDate()];
   Lesson.find({ day })
-    .sort('hour')
+    .sort("hour")
     .populate({ path: "teacher" })
     .populate({ path: "student" })
     .populate({ path: "group" })
     .then(lessons => {
       var lessonMap = {};
       lessons.forEach(function(lesson) {
-          if (lesson.branch) {
-            lessonMap[lesson._id] = lesson;
-          }
+        if (lesson.branch) {
+          lessonMap[lesson._id] = lesson;
+        }
       });
       res.send(lessonMap);
     });
@@ -242,7 +246,7 @@ exports.teachersSchedule = async (req, res) => {
     .then(lessons => {
       var lessonMap = {};
       lessons.forEach(function(lesson) {
-          lessonMap[lesson.day + "-" + lesson.hour] = lesson;
+        lessonMap[lesson.day + "-" + lesson.hour] = lesson;
       });
       res.send(lessonMap);
     });

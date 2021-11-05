@@ -248,6 +248,7 @@ app.post("/branchLessons", Lesson.branchLessons);
 app.post("/wholeBranchLessons", Lesson.wholeBranchLessons);
 app.put("/updateLesson", Lesson.update);
 app.get("/allStudentLessons", Lesson.allStudentLessons);
+app.get("/teacherLessonCounter", Lesson.teacherLessonCounter);
 app.post("/getTeacherToday", Lesson.getTodaysForTeacher);
 app.get("/getAllToday", Lesson.getTodaysForAll);
 app.post("/getStudentSchedule", Lesson.getStudentSchedule);

@@ -55,9 +55,9 @@
                 .info(v-if="lessonRecords[findMyRecord(lesson._id)] != undefined && lesson._id == id && page == 4")
                   .string {{newSms()}}
                   .subjectName
-                    .topicsSms  
-                      input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
-                      label(for="sms" class="input-label") Sms'i onaylıyorum
+                    //.topicsSms  
+                    //  input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
+                    //  label(for="sms" class="input-label") Sms'i onaylıyorum
                 .page( v-if="lesson._id == id") {{ page }}/4
             // grup kayıtları
             div(:class="[lesson._id == id ? 'blockBig' : 'block']" v-if="lesson != undefined && lesson.group != undefined")
@@ -106,10 +106,10 @@
                   .groupSms
                     .string(v-for="stua in LGGs") {{newSms(stua, LGHomeworkStatus[stua], gJoin[stua])}}
                   .subjectName
-                    .topicsSms  
-                      input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
-                      label(for="sms" class="input-label" v-show="smsApp") Sms Onaylanacak
-                      label(for="sms" class="input-label" v-show="!smsApp") Sms Onaylanmayacak
+                    //.topicsSms  
+                    //  input(type="checkbox" id="sms" v-model="smsApp" class="input-checkbox")
+                    //  label(for="sms" class="input-label" v-show="smsApp") Sms Onaylanacak
+                    //  label(for="sms" class="input-label" v-show="!smsApp") Sms Onaylanmayacak
                 .page( v-if="lesson._id == id") {{ page }}/4
 </template>
 
