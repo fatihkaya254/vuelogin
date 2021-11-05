@@ -281,16 +281,10 @@ export default {
         student = this.students[student]
       }
       if (homeworkStatus == undefined) homeworkStatus = this.homeworkStatus;
-      switch (homeworkStatus) {
-        case 1:
-          homeworkS = "yapılmadı";
-        case 2:
-          homeworkS = "eksik yapıldı";
-        case 3:
-          homeworkS = "tam yapıldı";
-        default:
-          "";
-      }
+      if (homeworkStatus == 1) homeworkS = "yapılmadı";
+      if (homeworkStatus == 2) homeworkS = "eksik yapıldı";
+      if (homeworkStatus == 3) homeworkS =  "tam yapıldı";
+
       var preId = "";
       if (join == undefined) join = this.join;
       if (this.preRecord != undefined) preId = this.preRecord._id;

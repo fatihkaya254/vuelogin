@@ -64,6 +64,44 @@ exports.teacherLessons = async (req, res) => {
     });
 };
 
+exports.teacherLessonsForSelect = async (req, res) => {
+  let teacher = req.body.teacher;
+  Lesson.find({ teacher })
+    .then(users => {
+      if (users != null) {
+        var userMap = {};
+        users.forEach(function(user) {
+          if (user.status == 2 && user.branch == undefined) userMap[user.day + "-" + user.hour] = user._id;
+        });
+        res.send(userMap);
+      } else {
+        res.status(200).json({ message: "null" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+exports.teacherLessonCounter = async (req, res) => {
+  Lesson.find({ status: 2 })
+    .then(users => {
+      if (users != null) {
+        var userMap = {};
+        users.forEach(function(user) {
+          if (userMap[user.teacher] == undefined) userMap[user.teacher] = 0
+          userMap[user.teacher] += 1
+          if (userMap[user.teacher+"-"+user.day] == undefined) userMap[user.teacher+"-"+user.day] = 0
+          userMap[user.teacher+"-"+user.day] += 1
+        });
+        res.send(userMap);
+      } else {
+        res.status(200).json({ message: "null" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
 exports.branchLessons = async (req, res) => {
   let branch = req.body.branch;
   Lesson.find()

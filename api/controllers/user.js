@@ -341,7 +341,6 @@ exports.getTeachers = async (req, res) => {
     users.forEach(function(user) {
       userMap[user._id] = user;
     });
-
     res.send(userMap);
   });
 };

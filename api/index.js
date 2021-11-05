@@ -242,6 +242,7 @@ app.get("/subjectProcesses", SubjectProcess.getAllSubjectProcesses);
 app.post("/addLesson", Lesson.newLesson);
 app.get("/lessons", Lesson.getAllLessons);
 app.post("/teacherLessons", Lesson.teacherLessons);
+app.post("/teacherLessonsForSelect", Lesson.teacherLessonsForSelect);
 app.post("/teachersSchedule", Lesson.teachersSchedule);
 app.post("/branchLessons", Lesson.branchLessons);
 app.post("/wholeBranchLessons", Lesson.wholeBranchLessons);
