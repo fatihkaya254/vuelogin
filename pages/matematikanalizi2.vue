@@ -15,11 +15,11 @@
                 .forMobile
                 span.dash
                 span.promo-flag 4, 5 ve 6. Sınıflar İçin
-                a.copy(href='#')
+                a.copy(href='#section3')
                  .headline Matematik Analizi Nedir?
-                 p.body.long Season Finale: Sacha Baron Cohen explores our unique nation.
+                 p.body.long  Temel oluşturma dönemindeki çocukların eksiklerini kapatan sistem.
                 .buttons
-                 a.button.sho-play-link(href='#' style="background: none;") Daha Fazla Oku
+                 a.button.sho-play-link(href='#section3' style="background: none;") Daha Fazla Oku
                 .form
                     .label
                         input(typte="text" id="name" placeholder="Ad Soyad")
@@ -33,107 +33,62 @@
            .promo-detail.cycle-overlay
              .promo-text
                span.dash
-               span.promo-flag Season 9 Premieres September 9
-               a.copy(href='#')
-                 .headline Shameless
+               span.promo-flag Ders Takip Sistemi 
+               a.copy(href='#section1')
+                 .headline SMS
                  p.body.long
-                   | A scrappy, fiercely loyal Chicago family makes no apologies. Watch Seasons 1-8 now.
+                   | Grup öncesi yapılan birebir ve grup derslerde işlenen konu, verilen ödev, bir önceki ödevin kontrolü ve derse katılım ile ilgili bilgiler ders sonunda kısa mesaj olarak veliye iletilir.
                .buttons
-                 a.button.info-button(href='#') More Info
+                 a.button.info-button(href='#section1') Seni Arayalım!
          #section3.promotion(style='background-image: url(https://picsum.photos/1440/900?image=22)')
            .shade
            .promo-detail.cycle-overlay
              .promo-text
                span.dash
-               a.copy(href='#')
-                 .headline Baby Driver
+               a.copy(href='#section4')
+                 .headline Analiz Aşaması
                  p.body.long
-                   | A young getaway driver (Ansel Elgort) meets the girl of his dreams (Lily James), and tries to ditch his criminal life.
+                   | Öğrencinin matematik temelindeki eksikleri akademik olarak belirlemek için analiz testi uygulanır. Test sonrasında öğretmen ile birebir yapılan analiz bölümü başlar. Bu bölümde öğretmen test sonucu ile birlikte öğrencinin matematik öğrenimini ve çalışma motivasyonunu etkileyen karakteristik özelliklerini inceler. Analizi yapan öğretmenin değerlendirmeleri ile birebir derslerle uyum süreci tamamlanır. Sonrasında öğrenci için en ideal sınıf belirlenip sosyalleşerek öğrenmesi amaçlanır.
                .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
+                 a.button.sho-play-link(href='#section4') Programlama Aşaması
          #section4.promotion(style='background-image: url(https://picsum.photos/1440/900?image=841)')
            .shade
            .promo-detail.cycle-overlay
              .promo-text
                span.dash
-               a.copy(href='#')
-                 .headline.medium Our Cartoon President
+               a.copy(href='#section5')
+                 .headline.medium Program Yapılma Aşaması 
                  p.body.long
-                   | Season Finale - Militarization: Our Cartoon President militarizes the government.
+                   | Analiz sonrasında öğrencinin grup öncesi telafi derse ihtiyacı var ise öncelikli olarak bu telafi dersler cumartesi ve pazar günü olacak şekilde programlanır. Telafi derslerinin tamamlanması ile öğrenci için en ideal olan grup belirlenir. Grup ders programları Pazar günü olacak şekilde yapılır. Doğrudan gruba katılması uygun olan öğrencinin grup dersleri başlatılır.
                .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
-                 a.button.see-all(href='#') All Episodes
+                 a.button.sho-play-link(href='#section5') Telafi Dersleri
+                 a.button.info-button(href='#section6') Grup Dersleri
          #section5.promotion(style='background-image: url(https://picsum.photos/1440/900?image=832)')
            .shade
            .promo-detail.cycle-overlay
              .promo-text
                span.dash
-               a.copy(href='#')
-                 .headline.medium Captain Fantastic
+               span.promo-flag Özel Ders
+               a.copy(href='#section6')
+                 .headline.medium Grup Öncesi Telafi Programı 
                  p.body.long
-                   | A father (Viggo Mortensen) raising his six kids is forced to leave his paradise, challenging his idea of what it means to be a parent.
+                   | Analiz sonunda öğrencinin akademik yönden eksiklerinin tespit edilmesi ve bu eksikler ile gruba uyum sağlayamayacağı görülürse grup öncesi telafi programı uygulanır. Bu program analiz sonucunda ihtiyaç duyulan ders sayısı ve uygun öğretmen belirlenerek birebir özel ders şeklinde yapılır.
                .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
+                 a.button.sho-play-link(href='#section6') Grup Dersleri
          #section6.promotion(style='background-image: url(https://picsum.photos/1440/900?image=804)')
            .shade
            .promo-detail.cycle-overlay
              .promo-text
                span.dash
-               a.copy(href='#')
-                 .headline Home Again
+               span.promo-flag Çözüm için atılan emin adımlar.
+               a.copy(href='#section1')
+                 .headline Grup Ders Programı
                  p.body.long
-                   | Newly single Alice (Reese Witherspoon) meets three aspiring filmmakers in need of a place to stay.
+                   | Grup dersler 8 kişilik sınıflarda haftada 3 saat olarak yapılır. Okul müfredatına uygun olarak temel kazanımlar ile başlanır. Devam eden süreçte matematiğe karşı olan ön yargıların kırılması ve daha ileri seviyede matematik öğrenmeleri amaçlanır.
                .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
-         #section7.promotion(style='background-image: url(https://picsum.photos/1440/900?image=786)')
-           .shade
-           .promo-detail.cycle-overlay
-             .promo-text
-               span.dash
-               a.copy(href='#')
-                 .headline The Affair
-                 p.body.long
-                   | Noah, Alison, Helen and Cole are on separate journeys, but question what they&rsquo;re holding on to as their lives keep crashing back into one another.
-               .buttons
-                 a.button.info-button(href='#') More Info
-         #section8.promotion(style='background-image: url(https://picsum.photos/1440/900?image=660)')
-           .shade
-           .promo-detail.cycle-overlay
-             .promo-text
-               span.dash
-               a.copy(href='#')
-                 .headline.medium The Girl On The Train
-                 p.body.long
-                   | A woman (Emily Blunt), devastated by her divorce, becomes entangled in a mystery after witnessing a shocking event.
-               .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
-         #section9.promotion(style='background-image: url(https://picsum.photos/1440/900?image=619)')
-           .shade
-           .promo-detail.cycle-overlay
-             .promo-text
-               span.dash
-               a.copy(href='#')
-                 .headline Rosewater
-                 p.body.long A journalist gets arrested in Iran and is held and tortured for 118 days.
-               .buttons
-                 a.button.sho-play-link(href='#') Play Now
-                 a.button.info-button(href='#') More Info
-         #section10.promotion(style='background-image: url(https://picsum.photos/1440/900?image=596)')
-           .shade
-           .promo-detail.cycle-overlay
-             .promo-text
-               span.dash
-               a.copy(href='#')
-                 .headline WWII Collection
-                 p.body.long
-                   | This collection features films that all take place during the cataclysmic World War II era. Take the time to watch them all.
-               .buttons
-                 a.button.see-all(href='#') See Entire Collection
+                 a.button.sho-play-link(href='#section5') Özel Dersler
+                 a.button.info-button(href='#section1') Bilgi Al!
+         
     .contactButtons
         .contact(@click="contact('m')")
             fa-icon(:icon="['fas', 'map-marked-alt']")
@@ -238,11 +193,12 @@ export default {
         swapC();
       }, 500);
     }
-    swapC()
+    swapC();
     let ui = {
       promo: ele + " .promotion",
       promoText: ele + " .promo-text",
-      navigationItems: ".navigation a"
+      navigationItems: ".navigation a",
+      sectionItems: ".promotions a"
     };
 
     function isOnScreen(el) {
@@ -272,7 +228,13 @@ export default {
           smoothScroll($(e.currentTarget.hash));
         });
 
+        $(ui.sectionItems).on("click", e => {
+          e.preventDefault();
+          smoothScroll($(e.currentTarget.hash));
+        });
+
         $window.on("scroll", () => {
+          const $fr = $(".frame")
           $(ui.promo)
             .toArray()
             .forEach(el => {
@@ -283,6 +245,7 @@ export default {
             });
           this.updateNavigation();
           this.fadeAtTop($(ui.promoText));
+          fadeAtFrame($fr)
         });
 
         this.updateNavigation();
@@ -309,7 +272,7 @@ export default {
         el.toArray().forEach(el => {
           const $el = $(el);
           let position =
-            $el.offset().top - $window.scrollTop() + viewportHeight / 6;
+            $(el).offset().top - $window.scrollTop() + viewportHeight / 6;
           let opacity =
             position < viewportHeight * startPos
               ? (position / (viewportHeight * startPos)) * 1
@@ -318,7 +281,19 @@ export default {
           $el.css("opacity", opacity);
         });
       }
+      fadeAtFrame(el) {
+        const startPos = 0.25;
 
+        const $el = $(el);
+        let position =
+          $('#section2').offset().top - $window.scrollTop() + viewportHeight / 6;
+        let opacity =
+          position < viewportHeight * startPos
+            ? (position / (viewportHeight * startPos)) * 1
+            : 1;
+
+        $el.css("opacity", opacity);
+      }
       updateNavigation() {
         $(ui.promo)
           .toArray()
@@ -495,7 +470,7 @@ a {
 
 @media (min-width: 668px) {
   .promo-detail {
-    width: 450px;
+    min-width: 450px;
 
     .headline {
       font-size: 36px;
@@ -627,6 +602,7 @@ a {
   top: 50%;
   transform: translateY(-50%);
   right: 20%;
+  transition: all 2s ease;
   @media screen and (max-width: 800px) {
     top: 110px;
     right: 15px;
