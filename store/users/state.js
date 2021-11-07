@@ -12,6 +12,7 @@ export default () => ({
     myPurchases: [],
     myPayments: [],
     teachersLessons: [],
+    teachersLessonsFS: [],
     isGenerated : false,
     changeNumberMessage: "Doğrulama Kodu"
   });

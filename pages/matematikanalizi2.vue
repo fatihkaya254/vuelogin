@@ -137,7 +137,7 @@
     .contactButtons
         .contact(@click="contact('m')")
             fa-icon(:icon="['fas', 'map-marked-alt']")
-        .contact(@click="contact('w')")
+        .contact.wa(@click="contact('w')")
             fa-icon(:icon="['fab', 'whatsapp']")
     .frame
         iframe(src="https://player.vimeo.com/video/641853725?h=a78aa06be3&amp;playsinline=0&amp;badge=0&amp;loop=1&amp;muted=1&amp;controls=0&amp;autoplay=1&amp;player_id=0&amp;app_id=58479&title=0&color=218da6&byline=0&portrait=0" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen title="Doğru Kaynak")
@@ -226,7 +226,19 @@ export default {
     const ele = ".promotion-carousel";
     const $window = $(window);
     const viewportHeight = $window.height();
-
+    var cols = "#000,#fff".split(",");
+    var cPos = 0;
+    function swapC() {
+      $(".wa").animate({ color: "red" }, 500);
+      cPos++;
+      if (cPos == cols.length) {
+        cPos = 0;
+      }
+      window.setTimeout(function() {
+        swapC();
+      }, 500);
+    }
+    swapC()
     let ui = {
       promo: ele + " .promotion",
       promoText: ele + " .promo-text",

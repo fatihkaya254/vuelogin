@@ -38,6 +38,9 @@ export default {
     setTeachersLessons(state, changes){
       state.teachersLessons = changes
     },
+    setTeachersLessonsFS(state, changes){
+      state.teachersLessonsFS = changes
+    },
     setTeachersDaily(state, changes){
       state.teachersDaily = changes
     },

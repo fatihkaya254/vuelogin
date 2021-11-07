@@ -252,6 +252,18 @@ export default {
     });
   },
 
+  getTeachersLessonsFS(vuexContext, id) {
+    return this.$axios.post("/teacherLessonsForSelect", {teacher: id}).then(res => {
+      let veri = res.data;
+      console.log(veri);
+      vuexContext.dispatch("putTeachersLessonsFS", veri);
+    });
+  },
+  putTeachersLessonsFS(vuexContext, veri) {
+    vuexContext.commit("setTeachersLessonsFS", veri);
+  },
+
+
 
   getTeachersDaily(vuexContext, data) {
     return this.$axios.post(`${process.env.OUR_HOST}/getTeacherToday`, {

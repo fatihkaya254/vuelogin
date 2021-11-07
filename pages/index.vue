@@ -50,7 +50,7 @@ export default {
   beforeCreate(){
     this.loading = true
   },
-  beforeMount() {
+  created() {
     this.loading = false
   },
 };

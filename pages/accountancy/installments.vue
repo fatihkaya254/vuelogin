@@ -28,6 +28,7 @@
                 .title(@click="subDrop(i._id)")
                   label {{i.installmentOrder}}. Taksit 
                   label {{i.installmentTotal}}₺
+                  label {{fixDate(i.installmentDate)}}
                 .pay(v-if="installmentId == i._id")
                   label Yapılmış Ödeme {{i.paymentTotal}} - {{fixDate(i.paymentDate)}}
                   label Ödeme Miktarı

@@ -14,16 +14,16 @@
                     p BİZİ SOSYAL MEDYADAN TAKİP ET
                 .baslik
                     button.socialMedia
-                        a(href="https://twitter.com/isleyenzihinler" target="_blank")
+                        a(href="https://twitter.com/isleyenzihinler" target="_blank" rel="noreferrer") 
                             fa-icon(:icon="['fab', 'twitter']")
                     button.socialMedia
-                        a(href="https://www.instagram.com/isleyenzihinler/" target="_blank")
+                        a(href="https://www.instagram.com/isleyenzihinler/" target="_blank" rel="noreferrer")
                             fa-icon(:icon="['fab', 'instagram']")
                     button.socialMedia
-                        a(href="https://www.youtube.com/c/%C4%B0%C5%9FleyenZihinler" target="_blank")
+                        a(href="https://www.youtube.com/c/%C4%B0%C5%9FleyenZihinler" target="_blank" rel="noreferrer")
                             fa-icon(:icon="['fab', 'youtube']")
                     button.socialMedia
-                        a(href="https://www.facebook.com/isleyenzihinler" target="_blank")
+                        a(href="https://www.facebook.com/isleyenzihinler" target="_blank" rel="noreferrer")
                             fa-icon(:icon="['fab', 'facebook-f']")
         .mainFooters
             .subFootersR 

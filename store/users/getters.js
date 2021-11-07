@@ -22,8 +22,14 @@ export default {
     teacher(state){
         return state.teacher
     },
+    teacherBranch(state){
+        return state.teacherBranch
+    },
     teachersLessons(state){
         return state.teachersLessons
+    },
+    teachersLessonsFS(state){
+        return state.teachersLessonsFS
     },
     teachersDaily(state){
         return state.teachersDaily

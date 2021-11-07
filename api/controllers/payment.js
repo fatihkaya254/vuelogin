@@ -14,6 +14,7 @@ exports.getAllPayments = async (req, res) => {
     .populate({ path: "purchase" })
     .populate({ path: "user" })
     .populate({ path: "student" })
+    .sort("installmentDate")
     .sort("purchase")
     .sort("installmentOrder")
     .then(purchases => {
