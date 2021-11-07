@@ -313,10 +313,11 @@ header
   & img
     margin: 0
     margin-top: 16px
+    width: 70px
     @media screen and (max-width: 1200px)
       margin-top: 12px
       margin-left: 12px
-
+      width: 48px
 .account
   height: 90px
   width: 50%

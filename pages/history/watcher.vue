@@ -5,7 +5,7 @@
         .number {{balance}}
         .string ({{counter}}) Tüm SMS'leri Gönder
     .container(v-for="(c,b) in lessons" @click="wp(c)") 
-      .block 
+      .block
         .string {{c.hour}}:00
         .string {{c.teacher.name}} {{c.teacher.surname}}
         .string(v-if="c.student != undefined") {{c.student.name}} {{c.student.surname}}
@@ -174,6 +174,8 @@ export default {
     this.getTeachers();
     await this.$axios.get(`${process.env.OUR_HOST}/getAllToday`).then(res => {
       this.lessons = res.data;
+      console.log("this.lessons");
+      console.log(this.lessons);
     });
     await this.$axios.get(`${process.env.OUR_HOST}/smsBalance`).then(res => {
       this.balance = res.data.sms;

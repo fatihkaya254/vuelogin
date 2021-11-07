@@ -219,7 +219,7 @@ exports.getTodaysForTeacher = async (req, res) => {
 exports.getTodaysForAll = async (req, res) => {
   const turkDays = [6, 0, 1, 2, 3, 4, 5];
   const date = new Date();
-  const day = turkDays[date.getDate()];
+  const day = turkDays[date.getDay()];
   Lesson.find({ day })
     .sort("hour")
     .populate({ path: "teacher" })
