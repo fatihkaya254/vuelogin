@@ -5,8 +5,8 @@ div
   .other(:style="[loading ? {filter: 'blur(1px)'} : '']")
     .top
       Navbar
-    .lockServicePop(v-show="getPackagePop()")
-      LockService
+    //.lockServicePop(v-show="getPackagePop()")
+    //  LockService
     //TeacherList
     //HomePageCharts
     //ServiceList

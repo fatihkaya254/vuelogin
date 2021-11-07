@@ -19,7 +19,7 @@ exports.generateCode = async (req, res) => {
       request: {
         authentication: {
           username: "5073857166",
-          password: "Up3QKbnUGxGp9TL"
+          password: "ZLeen-hNN4-01"
         },
         order: {
           sender: "ISLYNZHNLR",
