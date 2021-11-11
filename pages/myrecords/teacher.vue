@@ -543,6 +543,7 @@ export default {
           this.private = true;
           this.braid = this.lessonsBranchId[lesson];
           console.log(this.branchProcess);
+          console.log("this.braid");
           console.log(this.braid);
           console.log(this.branchProcess[this.braid]);
 

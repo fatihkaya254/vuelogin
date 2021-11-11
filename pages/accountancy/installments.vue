@@ -10,7 +10,8 @@
     .list
       .students(v-for="p in purchases" :style="[(payment()[p.student._id] != undefined) ? {'background-color': 'antiquewhite'} : {'background-color': '#FF665A'}]"  v-show="search(p.student.name, p.student.surname, p.parent.name, p.parent.surname)")
         .title(@click="drop(p.student._id)")
-          p {{p.parent.name}} {{p.parent.surname}} ({{p.student.name}} {{p.student.surname}}) {{p.totalFee}} 
+          p {{p.parent.name}} {{p.parent.surname}} ({{p.student.name}} {{p.student.surname}}) {{p.totalFee}}  
+          p(style="color: red; font-size: 9pt; font-weight: 700;") {{paymentProgress(p.student._id)}}
         .index(v-if="studentId == p.student._id")
           .create(v-if="payment()[p.student._id] == undefined")
             input(type="number" v-model="changeInstallment")
@@ -47,8 +48,9 @@
           .set(v-if="payment()[p.student._id] != undefined && edit")
             .installment(v-for="i in payment()[p.student._id]" :style="[i.closed ? {'background-color': '#3EB595'} : {'background-color': 'antiquewhite'}]")
               .title
-                label {{i.installmentOrder}}. Taksit 
+                label {{i.installmentOrder}}. Taksit
                 input(type="text" v-model="newIns[i._id]" v-if="!i.closed")
+                input(type="date" v-model="newDates[i._id]" v-if="!i.closed")
                 label(v-if="i.closed") {{i.installmentTotal}}
             input(type="submit" value="Kaydet" @click="saveEdits()")
 </template>
@@ -77,6 +79,7 @@ export default {
       taxOffice: "",
       taxNumber: "",
       total: 0,
+      packageColor: [],
       loans: [],
       dates: [],
       searchText: "",
@@ -85,6 +88,7 @@ export default {
       purchases: {},
       generating: false,
       newIns: {},
+      newDates: {},
       remains: 0
     };
   },
@@ -123,6 +127,7 @@ export default {
       var remains = 0;
       const p = this.payment()[student];
       for (const pId in p) {
+        this.newDates[pId] = this.cdfi(p[pId].installmentDate);
         if (p[pId].closed) {
           total -= p[pId].paymentTotal;
         } else {
@@ -144,9 +149,30 @@ export default {
         }
       }
     },
+    paymentProgress: function(student) {
+      const inst = this.payment()[student];
+      if (inst == undefined) {
+        return "";
+      }
+      var pay = 0;
+      var tot = 0;
+      var rem = 0;
+      for (const [key, val] of Object.entries(inst)) {
+        tot += val.installmentTotal;
+        pay += val.paymentTotal;
+      }
+      rem = tot - pay;
+      if (rem == 0) {
+        this.packageColor[student] = true;
+      }
+      return "TT: " + tot + " ÖT: " + pay + " ---> K: " + rem;
+    },
     saveEdits: async function() {
       for (const key in this.newIns) {
-        var changes = { installmentTotal: this.newIns[key] };
+        var changes = {
+          installmentTotal: this.newIns[key],
+          installmentDate: this.newDates[key]
+        };
         await this.$axios
           .put(`${process.env.OUR_HOST}/updatePayment`, {
             id: key,
@@ -306,6 +332,13 @@ export default {
           console.log(res);
         });
       this.getPayments();
+    },
+    cdfi: function(dt) {
+      let date = dt.split("-");
+      let year = date[0];
+      let month = date[1];
+      let day = date[2].charAt(0) + date[2].charAt(1);
+      return year + "-" + month + "-" + day;
     }
   },
   mounted() {
@@ -346,13 +379,16 @@ export default {
 <style lang="sass" scoped>
 .title
   display: flex
+  justify-content: flex-start
   cursor: pointer
   padding-left: 8px
   align-items: center
+  p
+    width: 45%
   &:hover
     border: 0.4px dotted black
   input
-      width: 100px
+      width: 30%
       font-family: montserrat, arial, verdana
       padding: 7px 10px
       border: none

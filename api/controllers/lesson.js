@@ -206,7 +206,6 @@ exports.getTodaysForTeacher = async (req, res) => {
         if (lesson.group) present += "" + lesson.group._id;
         if (lesson.branch) present += "" + lesson.branch._id;
         if (last != present) {
-          console.log(last + " " + present);
           lessonMap[lesson._id] = lesson;
         }
         last = present + "";
@@ -221,16 +220,25 @@ exports.getTodaysForAll = async (req, res) => {
   const date = new Date();
   const day = turkDays[date.getDay()];
   Lesson.find({ day })
+    .sort("teacher")
     .sort("hour")
     .populate({ path: "teacher" })
     .populate({ path: "student" })
     .populate({ path: "group" })
     .then(lessons => {
       var lessonMap = {};
+      var last = "";
+      var present = "";
       lessons.forEach(function(lesson) {
-        if (lesson.branch) {
+        present += "" + lesson.day;
+        if (lesson.student) present += lesson.student._id;
+        if (lesson.group) present +=  lesson.group._id;
+        if (lesson.branch) present += lesson.branch._id;
+        if (lesson.branch && last != present) {
           lessonMap[lesson._id] = lesson;
         }
+        last = present + "";
+        present = "";
       });
       res.send(lessonMap);
     });

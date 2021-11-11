@@ -13,24 +13,29 @@
       .block
           .string Kalan
           .number {{doThousandsRegExp(g.remainder)}}₺
-    .subs(v-show="period == g.period")
-        .container(v-for="p in json_data[g.period]" style="background: #d6ffff;")
-          .blockSub
-              h5 {{p.student}}
-          .blockSub
-              .string Alacak
-              .number {{doThousandsRegExp(p.total)}}₺
-          .blockSub
-              .string Ödenen
-              .number {{doThousandsRegExp(p.ptotal)}}₺
-          .blockSub
-              .string Taksit Tarihi
-              .number {{doThousandsRegExp(p.installmentDate)}}₺
+    .container(style="background: #d6ffff;" v-show="period == g.period")
+
+          table
+            thead
+              tr
+                th Öğrenci
+                th Alacak
+                th Ödenen
+                th Tarih
+                th Kalan
+            tbody
+              tr(v-for="p in json_data[g.period]")
+                td {{p.student}}
+                td {{doThousandsRegExp(p.total)}}₺
+                td {{doThousandsRegExp(p.ptotal)}}₺
+                td {{p.installmentDate}}
+                td {{doThousandsRegExp(p.total - p.ptotal)}}₺
 
 </template>
 <script>
 import downloadexcel from "vue-json-excel";
 export default {
+  middleware: ["session-control", "lookAuth"],
   components: {
     downloadexcel
   },
@@ -87,10 +92,10 @@ export default {
     doThousandsRegExp: function(n) {
       return n.toLocaleString("tr-TR");
     },
-    click: function (n) {
-      if(n == this.period) n = 0
+    click: function(n) {
+      if (n == this.period) n = 0;
       console.log(n);
-      this.period = n
+      this.period = n;
     },
     getPaylogs: async function() {
       var months = {};
@@ -201,6 +206,14 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+$table-concept-max-height: 420px
+$table-background-color: #ffffff
+$table-hover-background-color: darken($table-background-color, 8%)
+$table-even-background-color: darken($table-background-color, 4%)
+$table-header-color: #ffffff
+$table-header-background-color: #2f2f2f
+$table-title-color: #ffffff
+$table-title-background-color: #2f2f2f
 .pop
   height: 60vh
   width: 60vw
@@ -283,6 +296,7 @@ export default {
     margin: auto
     @media screen and (max-width: 1200px)
       flex-direction: column
+      width: 100vw
       gap: 0px
   .container
     transition: all 0.5s ease
@@ -297,10 +311,41 @@ export default {
     border-radius: 8px
     box-shadow: 0px 10px 30px rgba(70, 0, 0, .3)
     @media screen and (min-width: 1200px)
-      height: 100px
+      min-height: 100px
     @media screen and (max-width: 1200px)
       flex-direction: column
       justify-content: flex-start
+      width: 90%
+      min-height: 100px
+    table
+      background-color: $table-background-color
+      border-collapse: collapse
+      tr
+        &:last-child
+          td
+            border-bottom: 0
+        th, td
+          text-align: left
+          padding: 15px
+          box-sizing: border-box
+        th
+          color: $table-header-color
+          background-color: $table-header-background-color
+          border-bottom: solid 2px #d8d8d8
+          top: 0
+        td
+          border: solid 1px #d8d8d8
+          border-left: 0
+          border-right: 0
+      tbody tr
+        transition: background-color 150ms ease-out
+        &:nth-child(2n)
+          background-color: $table-even-background-color
+        &:hover
+          background-color: $table-hover-background-color
+
+
+
     .block
       transition: all 0.5s ease
       text-align: center

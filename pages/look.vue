@@ -111,7 +111,7 @@ import Navbar from "@/components/Navbar.vue";
 import { GChart } from "vue-google-charts";
 
 export default {
-  middleware: ["session-control", "managerAuth"],
+  middleware: ["session-control", "lookAuth"],
   components: {
     Navbar,
     GChart

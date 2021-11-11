@@ -118,7 +118,6 @@ export default {
           s.push(spells[digit][figure] + spells[3][thousand]);
         }
       }
-      s.push("yalnız");
       var sr = s.reverse();
       for (var i = 0; i < sr.length; i++) {
         spell += s[i];
@@ -296,7 +295,7 @@ export default {
       doc.text(this.fee, 148, 140);
       doc.text(this.total, 175, 140);
       doc.text(this.fee, 155, 250);
-      doc.text("%8", 155, 257);
+      doc.text(""+((this.total*100) - (this.fee*100))/100, 155, 257);
       doc.text(this.total, 155, 264);
       doc.save(this.fullName + "-" + this.date + ".pdf");
     }
