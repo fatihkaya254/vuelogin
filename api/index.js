@@ -37,9 +37,9 @@ import fs from "fs";
 import path from "path";
 
 
-//app.listen(80, () => {
-//  console.log(`Example app listening at http://izders.com:80`)
-//})
+/*app.listen("izders.com:80", () => {
+  console.log(`Example app listening at http://izders.com:80`)
+})*/
 
 var corsOptions = {
   origin: process.env.OUR_URL,
@@ -67,7 +67,7 @@ const upload = Multer({
 
 mongoose
   .connect(
-    "mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
+    "mongodb+srv://root:ko5opt6rikYlIl4O@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
