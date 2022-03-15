@@ -663,7 +663,9 @@ export default {
         var preId = "";
         preId = this.groupPres[studentId];
         var join = this.gJoin[studentId];
-        const recordId = this.groupRecords[studentId]._id;
+                const recordId = ""
+        if(this.groupRecords[studentId]) recordId = this.groupRecords[studentId]._id;
+
         const subTopics = this.recordSubtopics;
         const branch = this.LGBranchId;
         var homework = "yok";

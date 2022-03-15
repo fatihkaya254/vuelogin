@@ -67,14 +67,16 @@ const upload = Multer({
 
 mongoose
   .connect(
-    "mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
+    "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false",
+    //"mongodb+srv://root:ko5opt6rikYlIl4O@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
+    //"mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }
   )
   .then(console.log("connected to db"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log('db.err: ' + err));
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);

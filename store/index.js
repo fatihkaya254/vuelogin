@@ -11,7 +11,7 @@ export const state = () => ({
   canPass: false,
   authKey: null,
   user: null,
-  packagePop: false
+  packagePop: false,
 });
 
 export const mutations = {
@@ -25,11 +25,14 @@ export const mutations = {
     state.authKey = null;
     state.user = null;
     Cookies.remove("jwt");
-    localStorage.removeItem("jwt");
+    if(typeof localStorage !== 'undefined') localStorage.removeItem("jwt");
+    this.$router.push('/')
+
+
   },
   setUser(state, user) {
-    state.user = user;
-    console.log("my user: " + state.user);
+      state.user = user;
+
   },
   changeToForm(state) {
     state.toForm = !state.toForm;
@@ -48,18 +51,20 @@ export const mutations = {
   },
   changeSmsValid(state, boolean) {
     state.smsValid = boolean;
-  }
+  },
 };
 
 export const actions = {
   refreshUser({ commit, dispatch, state }) {
+    console.log('refresh');
     let token = state.authKey;
     if (state.authKey == null) {
     } else {
       return this.$axios
         .post(`${process.env.OUR_HOST}/auth`, { token: token })
-        .then(res => {
+        .then((res) => {
           let user = JSON.stringify(res.data.user);
+          if(res.status == 204) return dispatch("clearAuthkey");
           dispatch("setUser", user);
         });
     }
@@ -74,40 +79,44 @@ export const actions = {
       } else {
         token = req.headers.cookie
           .split(";")
-          .find(c => c.trim().startsWith("jwt="));
+          .find((c) => c.trim().startsWith("jwt="));
         if (token) {
-          console.log("token");
           token = token.split("=")[1];
         }
       }
     } else {
-      console.log("localstorage");
       token = localStorage.getItem("jwt");
     }
     vuexContext.commit("setAuthkey", token);
   },
-  login(vuexContext, authKey) {
+  login(vuexContext, data) {
+    const authKey = data.authKey
+    const userInfo = data.userInfo
     Cookies.set("jwt", authKey);
     localStorage.setItem("jwt", authKey);
     vuexContext.commit("setAuthkey", authKey);
+    if(userInfo) return vuexContext.dispatch("setUser", JSON.stringify(userInfo));
     return this.$axios
       .post(`${process.env.OUR_HOST}/auth`, { token: authKey })
-      .then(res => {
+      .then((res) => {
         let user = JSON.stringify(res.data.user);
-        vuexContext.dispatch("setUser", user);
+          if(res.status == 204) return dispatch("clearAuthkey");
+          vuexContext.dispatch("setUser", user);
       });
   },
   setUser(vuexContext, user) {
     vuexContext.commit("setUser", user);
   },
-
+  clearAuthkey(vuexContext) {
+    vuexContext.commit("clearAuthkey");
+  },
   setPackagePop(vuexContext, status) {
     vuexContext.commit("setPackagePop", status);
   },
 
   generatePasscode({ commit, dispatch, state }, authData) {
-    this.$axios.post("/phone", { phone: authData.phone }).then(res => {
-      if (res.data.smsStatus == "success") {
+    this.$axios.post("/phone", { phone: authData.phone }).then((res) => {
+      if (res.data.smsStatus == 200) {
         commit("changePhoneIsValid", false);
         commit("changeSmsValid", true);
         commit("changeNumberInvalid", false);
@@ -122,31 +131,69 @@ export const actions = {
     this.$axios
       .post("/code", {
         phone: authData.phone,
-        code: authData.code
+        code: authData.code,
       })
-      .then(res => {
+      .then((res) => {
         if (res.data.auth) {
-          dispatch("login", res.data.authKey);
+          dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
           commit("changePhoneIsValid", false);
           commit("changeNumberInvalid", false);
           commit("changeSmsValid", false);
           commit("changeToForm", false);
         } else {
-          console.log("nothing else matters");
+          alert("Şifre Hatalı");
         }
       });
+  },
+  enterTrustCode({ commit, dispatch, state }, trustCode) {
+    this.$axios
+      .post("/enterTrustCode", {
+        trustCode,
+      })
+      .then((res) => {
+        if (res.data.auth) {
+          dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
+          commit("changePhoneIsValid", false);
+          commit("changeNumberInvalid", false);
+          commit("changeSmsValid", false);
+          commit("changeToForm", false);
+          this.$router.push('/myRecords')
+        } else {
+          alert("Pin Hatalı");
+        }
+      });
+  },
+  async enterCodeOut({ commit, dispatch, state }, authData) {
+    const res = await this.$axios.post("/code", {
+      phone: authData.phone,
+      code: authData.code,
+    });
+    const lessonRequest = authData.lessonRequest;
+    if (res.data.auth) {
+      await dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
+      if (state.user != null && state.user != "") {
+        let user = await JSON.parse(state.user);
+        lessonRequest.parent = await user._id;
+      }
+      await dispatch("economics/addLessonRequest", lessonRequest, {
+        root: true,
+      });
+      this.$router.push("profile/lessonRequests");
+    } else {
+      console.log("login failed");
+    }
   },
   enterPass({ commit, dispatch, state }, authData) {
     this.$axios
       .post("/pass", {
         phone: authData.phone,
-        code: authData.code
+        code: authData.code,
       })
-      .then(res => {
+      .then((res) => {
         if (res.data.auth) {
-          dispatch("login", res.data.authKey);
+          dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
           commit("canPass", false);
-          this.$router.push('/myrecords');
+          this.$router.push("/myrecords");
         } else {
           commit("canPass", true);
         }
@@ -159,11 +206,11 @@ export const actions = {
         name: authData.name,
         surname: authData.surname,
         email: authData.email,
-        profilePic: authData.profilePic
+        profilePic: authData.profilePic,
       })
-      .then(res => {
+      .then((res) => {
         if (res.data.auth) {
-          dispatch("login", res.data.authKey);
+          dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
           commit("changePhoneIsValid", false);
           commit("changeNumberInvalid", false);
           commit("changeSmsValid", false);
@@ -172,7 +219,7 @@ export const actions = {
           console.log("nothing else matters");
         }
       });
-  }
+  },
 };
 
 export const getters = {
@@ -180,7 +227,7 @@ export const getters = {
     return state.authKey != null;
   },
   canPass(state) {
-    return state.canPass
+    return state.canPass;
   },
   getAuthkey(state) {
     return state.authKey;
@@ -280,7 +327,12 @@ export const getters = {
       return user.surname;
     }
   },
-
+  userFullName(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      return user.name + " " + user.surname;
+    }
+  },
   userPhone(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
@@ -301,7 +353,13 @@ export const getters = {
       return user.branch;
     }
   },
-
+  isManager(state) {
+    if (state.user != null && state.user != "") {
+      let user = JSON.parse(state.user);
+      if(user.role) return user.role.rank <= 10;
+      return false
+    }
+  },
   isTeacher(state) {
     if (state.user != null && state.user != "") {
       let user = JSON.parse(state.user);
@@ -315,5 +373,5 @@ export const getters = {
         return false;
       }
     }
-  }
+  },
 };
