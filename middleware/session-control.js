@@ -1,10 +1,13 @@
-export default function(context){
+export default function (context) {
     console.log("sessioncontrol Middleware");
+    let token = context.store.getters.getAuthkey;
     if (process.client) {
-        console.log('client');
-        context.store.dispatch("initAuth")
+      if (context.store.getters.getUser) return;
+      if(!token) localStorage.removeItem('jwt')
+      console.log("client");
+      context.store.dispatch("initAuth");
     } else {
-        console.log('server');
-        context.store.dispatch("initAuth", context.req)
+      console.log("server");
+      context.store.dispatch("initAuth", context.req);
     }
-}
+  }

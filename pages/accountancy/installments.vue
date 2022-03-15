@@ -9,7 +9,7 @@
       input(type="text" placeholder="ara" v-model="searchText")
     .list
       .students(v-for="p in purchases" :style="[(payment()[p.student._id] != undefined) ? {'background-color': 'antiquewhite'} : {'background-color': '#FF665A'}]"  v-show="search(p.student.name, p.student.surname, p.parent.name, p.parent.surname)")
-        .title(@click="drop(p.student._id)")
+        .title(@click="drop(p.student._id)") 
           p {{p.parent.name}} {{p.parent.surname}} ({{p.student.name}} {{p.student.surname}}) {{p.totalFee}}  
           p(style="color: red; font-size: 9pt; font-weight: 700;") {{paymentProgress(p.student._id)}}
         .index(v-if="studentId == p.student._id")
@@ -52,15 +52,17 @@
                 input(type="text" v-model="newIns[i._id]" v-if="!i.closed")
                 input(type="date" v-model="newDates[i._id]" v-if="!i.closed")
                 label(v-if="i.closed") {{i.installmentTotal}}
+            input(type="submit" value="Yeni Taksit Ekle" @click="addNewPayment(payment()[p.student._id])")
             input(type="submit" value="Kaydet" @click="saveEdits()")
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { log } from '../../api/middlewares/log';
 import invoice from "../../components/invoice";
 export default {
   components: {
-    invoice
+    invoice,
   },
   data() {
     return {
@@ -89,11 +91,12 @@ export default {
       generating: false,
       newIns: {},
       newDates: {},
-      remains: 0
+      remains: 0,
     };
   },
   methods: {
     ...mapActions("economics", ["getPayments"]),
+    ...mapMutations("economics", ["addNewPayment"]),
     ...mapGetters("economics", ["payment"]),
     ...mapGetters(["userId"]),
     ...mapGetters("economics", [
@@ -107,7 +110,7 @@ export default {
       "ia1",
       "ia2",
       "ia3",
-      "iUserId"
+      "iUserId",
     ]),
     ...mapActions("economics", [
       "setiFullName",
@@ -120,9 +123,71 @@ export default {
       "setia1",
       "setia2",
       "setia3",
-      "setiUserId"
+      "setiUserId",
     ]),
-    startEdit: function(student, total) {
+    addNewPayment: async function (p) {
+      var order = 0;
+      var val = {};
+      var installment = {};
+      for (const [key, v] of Object.entries(p)) {
+        if (order < +v.installmentOrder) {
+          order = +v.installmentOrder;
+          val = v;
+        }
+      }
+      installment.purchase = val.purchase[0]._id;
+      installment.user = val.user._id;
+      installment.student = val.student._id;
+      installment.installmentTotal = val.installmentTotal;
+      installment.installmentDate = this.nextMonth(val.installmentDate);
+      installment.installmentOrder = ++order;
+      installment.paymentTotal = val.paymentTotal;
+      await this.$axios
+        .post(`${process.env.OUR_HOST}/addPayment`, {
+          payment: installment,
+        })
+        .then((res) => {
+          if (res.status == 201) {
+            //this.addNewPayment(res.data.payment)
+            this.getPayments()
+          }
+        });
+    },
+    nextMonth: function (d) {
+      var date = new Date(d);
+      return new Date(date.setMonth(date.getMonth() + 1));
+    },
+    isin: function name(pur, inst) {
+      if (inst) {
+        const pt = JSON.stringify(pur);
+        const it = JSON.stringify(inst);
+        const i = JSON.parse(it);
+        const p = JSON.parse(pt);
+        if (!Object.entries(p).length) return p;
+        for (const [k, v] of Object.entries(p)) {
+          if (!Object.entries(p).length) return p;
+          var count = 0;
+          for (const [key, val] of Object.entries(i)) {
+            if (!Object.entries(p).length) return p;
+            val.purchase.forEach((element) => {
+              if (element._id == v) {
+                delete p[k];
+                //console.log(Object.entries(p).length);
+                if (!Object.entries(p).length) {
+                  count++;
+                  return p;
+                }
+              }
+            });
+          }
+        }
+        //console.log(Object.entries(p).length);
+        //console.log("x" + count);
+        return p;
+      }
+      return 0;
+    },
+    startEdit: function (student, total) {
       this.edit = true;
       var remains = 0;
       const p = this.payment()[student];
@@ -149,7 +214,7 @@ export default {
         }
       }
     },
-    paymentProgress: function(student) {
+    paymentProgress: function (student) {
       const inst = this.payment()[student];
       if (inst == undefined) {
         return "";
@@ -167,18 +232,18 @@ export default {
       }
       return "TT: " + tot + " ÖT: " + pay + " ---> K: " + rem;
     },
-    saveEdits: async function() {
+    saveEdits: async function () {
       for (const key in this.newIns) {
         var changes = {
           installmentTotal: this.newIns[key],
-          installmentDate: this.newDates[key]
+          installmentDate: this.newDates[key],
         };
         await this.$axios
           .put(`${process.env.OUR_HOST}/updatePayment`, {
             id: key,
-            changes
+            changes,
           })
-          .then(res => {
+          .then((res) => {
             console.log(res);
           });
       }
@@ -186,7 +251,7 @@ export default {
       this.getPayments();
       this.getPurchases();
     },
-    invoice: function(p) {
+    invoice: function (p) {
       this.closeIPop();
       this.setiFee("" + (p.paymentTotal / 108) * 100);
       this.setiUserId(p.user._id);
@@ -200,7 +265,7 @@ export default {
       }
       this.iPop = true;
     },
-    closeIPop: function() {
+    closeIPop: function () {
       this.iPop = false;
       this.setiTaxOffice("");
       this.setiTaxNumber("");
@@ -211,12 +276,14 @@ export default {
       this.setiUserId("");
       this.setiFullName("");
     },
-    getPurchases: async function() {
-      await this.$axios.get(`${process.env.OUR_HOST}/getActives`).then(res => {
-        this.purchases = res.data;
-      });
+    getPurchases: async function () {
+      await this.$axios
+        .get(`${process.env.OUR_HOST}/getActives`)
+        .then((res) => {
+          this.purchases = res.data;
+        });
     },
-    fixDate: function(mydate) {
+    fixDate: function (mydate) {
       if (mydate == undefined) return "Ödeme Yapılmadı";
       let datetime = mydate;
       let date = datetime.split("-");
@@ -225,7 +292,7 @@ export default {
       let day = date[2].charAt(0) + date[2].charAt(1);
       return day + "/" + month + "/" + year;
     },
-    search: function(name, surname, pn, ps) {
+    search: function (name, surname, pn, ps) {
       var tname = name.toLowerCase();
       var a = tname.split(" ");
       var tsurname = surname.toLowerCase();
@@ -251,7 +318,7 @@ export default {
       }
       return false;
     },
-    drop: function(student) {
+    drop: function (student) {
       var p = this.purchases[student];
       if (this.studentId == student) {
         this.studentId = "";
@@ -268,14 +335,14 @@ export default {
         if (p.installment != 0) this.installment = p.installment;
       }
     },
-    subDrop: function(id) {
+    subDrop: function (id) {
       if (this.installmentId == id) {
         this.installmentId = "";
       } else {
         this.installmentId = id;
       }
     },
-    changeLoan: function(index) {
+    changeLoan: function (index) {
       var afters = 0;
       for (let a = index; a >= 0; a--) {
         afters += parseInt(this.loans[a], 10);
@@ -285,7 +352,7 @@ export default {
         this.loans[b] = befores;
       }
     },
-    createPayment: async function(user, purchase, student) {
+    createPayment: async function (user, purchase, student) {
       this.generating = true;
       var newPayment = {};
       newPayment.student = student;
@@ -297,9 +364,9 @@ export default {
         newPayment.installmentOrder = i + 1;
         await this.$axios
           .post(`${process.env.OUR_HOST}/addPayment`, {
-            payment: newPayment
+            payment: newPayment,
           })
-          .then(res => {
+          .then((res) => {
             if (res.status == 201) {
               console.log(res.status);
             }
@@ -308,7 +375,7 @@ export default {
       await this.getPayments();
       this.generating = false;
     },
-    appPay: async function(paymentTotal, installmentOrder, installmentTotal) {
+    appPay: async function (paymentTotal, installmentOrder, installmentTotal) {
       var changes = {};
       changes.closed = false;
       var ept = parseInt(paymentTotal, 10);
@@ -326,20 +393,20 @@ export default {
         .put(`${process.env.OUR_HOST}/updatePayment`, {
           id: this.installmentId,
           changes,
-          pay: pt
+          pay: pt,
         })
-        .then(res => {
+        .then((res) => {
           console.log(res);
         });
       this.getPayments();
     },
-    cdfi: function(dt) {
+    cdfi: function (dt) {
       let date = dt.split("-");
       let year = date[0];
       let month = date[1];
       let day = date[2].charAt(0) + date[2].charAt(1);
       return year + "-" + month + "-" + day;
-    }
+    },
   },
   mounted() {
     this.getPurchases();
@@ -371,8 +438,8 @@ export default {
         var year = date.getFullYear();
         this.dates[l] = year + "-" + month + "-" + day;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

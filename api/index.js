@@ -74,7 +74,7 @@ mongoose
     }
   )
   .then(console.log("connected to db"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log('db.err: ' + err));
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
