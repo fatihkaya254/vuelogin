@@ -67,7 +67,7 @@ const upload = Multer({
 
 mongoose
   .connect(
-    "mongodb+srv://root:ko5opt6rikYlIl4O@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
+    process.env.OUR_DB,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
