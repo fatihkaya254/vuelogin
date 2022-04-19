@@ -323,7 +323,16 @@ exports.update = async (req, res) => {
     });
   }
 };
+exports.getNumbers = async (req, res) => {
+  User.find().then(users => {
+    var userMap = {};
+    users.forEach(function(user) {
+      userMap[user.phone] = user.name + ' ' + user.surname;
+    });
 
+    res.send(userMap);
+  });
+};
 exports.getAll = async (req, res) => {
   User.find().then(users => {
     var userMap = {};

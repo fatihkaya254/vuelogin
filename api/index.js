@@ -126,6 +126,7 @@ app.use(function (err, req, res, next) {
   }
 });
 //-------------------------------------------- USERS -------------------------------------------- //
+app.get("/innum", User.getNumbers);
 app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);
 app.post("/pass", User.authPass);
