@@ -130,7 +130,6 @@ export default {
       params: {
         client_id:
           "711011716160-f76f9vie40p629b3fluboqchbaqf2liv.apps.googleusercontent.com"
-          //"711011716160-5p2kb7qb71duf9oljo11ohsbkva425dq.apps.googleusercontent.com"
       },
       // only needed if you want to render the button with the google ui
       renderParams: {
