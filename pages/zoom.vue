@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     doThousandsRegExp: function(n) {
-      return n.toLocaleString("tr-TR");
+      if(n) return n.toLocaleString("tr-TR");
     },
     click: function(n) {
       if (n == this.period) n = 0;
