@@ -17,6 +17,8 @@
                 p Çıktı
             NuxtLink(:to="'/accountancy/delayed'", class="nuxt-link") 
                 p Gecikmiş Ödemeler
+            NuxtLink(:to="'/accountancy/list'", class="nuxt-link") 
+                p Telefon Numaraları
         .content
             nuxt-child
 </template>
