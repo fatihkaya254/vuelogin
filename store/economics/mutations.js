@@ -5,6 +5,9 @@ export default {
   setPayments(state, payment) {
     state.payment = payment;
   },
+  addNewPayment(state, payment){
+    this.$set(state.payment[payment.student._id], payment._id, payment)
+  },
   setPurchases(state, purchases) {
     state.purchase = purchases;
   },

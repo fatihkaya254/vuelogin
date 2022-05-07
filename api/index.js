@@ -37,9 +37,9 @@ import fs from "fs";
 import path from "path";
 
 
-//app.listen(80, () => {
-//  console.log(`Example app listening at http://izders.com:80`)
-//})
+/*app.listen("izders.com:80", () => {
+  console.log(`Example app listening at http://izders.com:80`)
+})*/
 
 var corsOptions = {
   origin: process.env.OUR_URL,
@@ -67,14 +67,14 @@ const upload = Multer({
 
 mongoose
   .connect(
-    "mongodb+srv://root:root@cluster0.k07vz.mongodb.net/blogpost?retryWrites=true&w=majority",
+    process.env.OUR_DB,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }
   )
   .then(console.log("connected to db"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log('db.err: ' + err));
 
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useFindAndModify", false);
@@ -126,6 +126,7 @@ app.use(function (err, req, res, next) {
   }
 });
 //-------------------------------------------- USERS -------------------------------------------- //
+app.get("/innum", User.getNumbers);
 app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);
 app.post("/pass", User.authPass);

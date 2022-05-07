@@ -173,11 +173,11 @@ exports.auth = async (req, res) => {
         const userInfo = await User.findById(decodedToken.id).populate("role");
         console.log("token verifing ok");
         //console.log("userinfobeforeid: " + userInfo);
-        res.status(201).json({ user: userInfo });
+        res.status(201).json({ auth: true, user: userInfo });
       }
     });
   } else {
-    res.status(201).json({ user: null });
+    res.status(201).json({auth: false,  user: null });
   }
 };
 
@@ -323,7 +323,16 @@ exports.update = async (req, res) => {
     });
   }
 };
+exports.getNumbers = async (req, res) => {
+  User.find().then(users => {
+    var userMap = {};
+    users.forEach(function(user) {
+      userMap[user.phone] = user.name + ' ' + user.surname;
+    });
 
+    res.send(userMap);
+  });
+};
 exports.getAll = async (req, res) => {
   User.find().then(users => {
     var userMap = {};
