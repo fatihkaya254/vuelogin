@@ -1,5 +1,9 @@
 import LessonRecord from "../models/lessonRecord";
 
+exports.updateMany = async(req, res) => {
+  console.log(req.body.changes);
+}
+
 exports.newLessonRecord = async (req, res) => {
   let lessonRecordInfo = req.body.lessonRecord;
   const newLessonRecord = await LessonRecord.create(lessonRecordInfo);
@@ -8,8 +12,10 @@ exports.newLessonRecord = async (req, res) => {
 
 exports.dailyTeacherRecords = async (req, res) => {
   const teacher = req.body.teacher;
-  const recordDate = req.body.date;
-  LessonRecord.find({ teacher, recordDate })
+  const recordDate = new Date(req.body.date);
+  var nextDay = new Date(req.body.date);
+  nextDay.setDate(nextDay.getDate() + 1);
+  LessonRecord.find({ teacher, recordDate: { $gte: recordDate, $lt: nextDay } })
     .sort([["createdAt", -1]])
     .then(lessons => {
       var lessonMap = {};
@@ -35,6 +41,7 @@ exports.update = async (req, res) => {
     console.log(error);
   }
 };
+
 
 exports.findOne = async (req, res) => {
   let conditions = req.body.conditions;
