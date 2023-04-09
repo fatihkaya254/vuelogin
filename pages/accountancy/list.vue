@@ -15,7 +15,7 @@ export default {
     },
     methods: {
         getNum: async function () {
-            await this.$axios.get('/innum').then(res =>{
+            await this.$axios.get('/innumsoft').then(res =>{
                 this.numbers = res.data
                 console.log(res.data);
             })

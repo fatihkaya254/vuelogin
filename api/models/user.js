@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema({
     surname: {
         type: String,
     },
+    annonate: {
+        type: String,
+    },
     birthDay: {
         type: Date,
     },

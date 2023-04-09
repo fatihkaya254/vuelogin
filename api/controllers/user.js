@@ -333,6 +333,15 @@ exports.getNumbers = async (req, res) => {
     res.send(userMap);
   });
 };
+exports.getNumbersandSoft = async (req, res) => {
+  User.find().then(users => {
+    var userMap = {};
+    users.forEach(function(user) {
+      userMap[user.phone] = user.name + ' ' + user.surname + " - " + user.annonate;
+    });
+    res.send(userMap);
+  });
+};
 exports.getAll = async (req, res) => {
   User.find().then(users => {
     var userMap = {};
