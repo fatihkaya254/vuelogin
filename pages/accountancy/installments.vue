@@ -141,7 +141,6 @@ export default {
       installment.installmentTotal = val.installmentTotal;
       installment.installmentDate = this.nextMonth(val.installmentDate);
       installment.installmentOrder = ++order;
-      installment.paymentTotal = val.paymentTotal;
       await this.$axios
         .post(`${process.env.OUR_HOST}/addPayment`, {
           payment: installment,
