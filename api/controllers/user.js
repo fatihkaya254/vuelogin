@@ -352,6 +352,19 @@ exports.getAll = async (req, res) => {
     res.send(userMap);
   });
 };
+
+exports.getAllNames = async ( req, res ) => {
+  try {
+    const users = await User.find()
+    const userNames = users.reduce((acc, user) => {
+      acc[user._id] = `${user.name} ${user.surname}`;
+      return acc;
+  }, {});
+    res.send({userNames})
+  } catch (error) {
+    res.send({ error })
+  }
+}
 // belirli bir branşı aramak için $elemMatch : { $eq: "60a38a65252c3e2968a6e0f7"}
 exports.getTeachers = async (req, res) => {
   User.find({ branch: { $exists: true, $ne: null, $ne: [] } }).then(users => {

@@ -127,6 +127,7 @@ app.use(function (err, req, res, next) {
 });
 //-------------------------------------------- USERS -------------------------------------------- //
 app.get("/innum", User.getNumbers);
+app.get("/getAllNames", User.getAllNames)
 app.get("/innumsoft", User.getNumbersandSoft);
 app.post("/phone", User.generateCode);
 app.post("/code", User.authCode);
@@ -141,6 +142,7 @@ app.get("/teachers", User.getTeachers);
 app.put("/changePhoneCheck", User.changePhoneCheck);
 app.post("/addUser", User.newUser);
 app.post("/getOneUser", User.getOneUser);
+
 
 //--------------------------------------------  ROLES -------------------------------------------- //
 app.post("/addRole", Role.newRole);
@@ -198,6 +200,7 @@ app.get("/packages", Package.getAllPackages);
 //--------------------------------------------  Payment -------------------------------------------- //
 app.post("/addPayment", Payment.newPayment);
 app.get("/payments", Payment.getAllPayments);
+app.get("/summary", Payment.getSummary);
 app.get("/paylogs", Payment.getAllPaylogs);
 app.post("/myPayments", Payment.getMyPayments);
 app.put("/updatePayment", Payment.update);

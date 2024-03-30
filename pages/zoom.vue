@@ -1,20 +1,44 @@
 <template lang="pug">
 .body
-  div(v-for="g in general_data" @click="click(g.period)")
-    .container
-      .block
-          h5 {{g.period}}
-      .block
-          .string Alacak
-          .number {{doThousandsRegExp(g.total)}}₺
-      .block
-          .string Ödenen
-          .number {{doThousandsRegExp(g.ptotal)}}₺
-      .block
-          .string Kalan
-          .number {{doThousandsRegExp(g.remainder)}}₺
-    .container(style="background: #d6ffff;" v-show="period == g.period")
-
+  div(v-for="data, year in yearly") 
+    .container(style="background: #dae3ff;" v-if="year != 'pay' && year != 'fee'" @click="yearSelect(year)")
+        .block
+            h5 {{year}}
+        .block
+            .string Alacak
+            .number {{doThousandsRegExp(data.fee)}}₺
+        .block
+            .string Ödenen
+            .number {{doThousandsRegExp(data.pay)}}₺
+        .block
+            .string Kalan
+            .number {{doThousandsRegExp(data.fee-data.pay)}}₺
+    div(v-if="yearCheck(year)" )
+      div(v-for="dat, month in data" )
+        .container(v-if="month != 'pay' && month != 'fee'" @click="monthSelect(month+'-'+year)")
+            .block
+              h5 {{trMonths[month-1]}} - {{ year }}
+            .block
+                .string Alacak
+                .number {{doThousandsRegExp(dat.fee)}}₺
+            .block
+                .string Ödenen
+                .number {{doThousandsRegExp(dat.pay)}}₺
+            .block
+                .string Kalan
+                .number {{doThousandsRegExp(dat.fee-dat.pay)}}₺
+            .block
+                .string Excell
+                .number
+                  downloadexcel(
+                      class="btn btn-default"
+                      :key="trMonths[month-1]"
+                      :data="excell[year][month]"
+                      :fields="json_fields"
+                      :worksheet="trMonths[month-1]"
+                      :name="trMonths[month-1]+'-'+ year+'.xls'"
+                    )
+        .container(style="background: #d6ffff;" v-if="monthCheck(month+'-'+year)")
           table
             thead
               tr
@@ -24,12 +48,27 @@
                 th Tarih
                 th Kalan
             tbody
-              tr(v-for="p in json_data[g.period]")
-                td {{p.student}}
-                td {{doThousandsRegExp(p.total)}}₺
-                td {{doThousandsRegExp(p.ptotal)}}₺
-                td {{p.installmentDate}}
-                td {{doThousandsRegExp(p.total - p.ptotal)}}₺
+              tr(v-for="p, key in dat" v-if="key != 'pay' && key != 'fee'" )
+                td {{users[p.student]}}
+                td {{doThousandsRegExp(p.fee)}}₺
+                td {{doThousandsRegExp(p.pay)}}₺
+                td {{formatDate(p.date)}}
+                td {{doThousandsRegExp(p.fee - p.pay)}}₺
+               
+
+  div
+    .container
+        .block
+            h5 Toplam
+        .block
+            .string Alacak
+            .number {{doThousandsRegExp(yearly.fee)}}₺
+        .block
+            .string Ödenen
+            .number {{doThousandsRegExp(yearly.pay)}}₺
+        .block
+            .string Kalan
+            .number {{doThousandsRegExp(yearly.fee-yearly.pay)}}₺
 
 </template>
 <script>
@@ -37,16 +76,25 @@ import downloadexcel from "vue-json-excel";
 export default {
   middleware: ["session-control", "lookAuth"],
   components: {
-    downloadexcel
+    downloadexcel,
   },
   data() {
     return {
+      names: {},
+      yearly: {
+        pay: 0,
+        fee: 0,
+      },
+      excell: {},
+      years: [],
+      months: [],
+      users: {},
       period: "",
       totalInstallments: [],
       totalPayment: [],
       wholeMonths: {
         installments: 0,
-        payments: 0
+        payments: 0,
       },
       trMonths: [
         "Ocak",
@@ -60,21 +108,19 @@ export default {
         "Eylül",
         "Ekim",
         "Kasım",
-        "Aralık"
+        "Aralık",
       ],
       json_fields: {
         Öğrenci: "student",
-        Tutar: "total",
-        "Ödenen Tutar": "ptotal",
-        "Taksit Tarihi": "installmentDate",
-        "Ödeme Tarihi": "paymentDate",
-        Açıklama: "paymentMethod"
+        Tutar: "fee",
+        "Ödenen Tutar": "pay",
+        "Taksit Tarihi": "date",
       },
       general_fields: {
         Dönem: "period",
-        "Beklenen Tahsilat": "total",
-        "Tahsil Edilen": "ptotal",
-        Kalan: "remainder"
+        "Beklenen Tahsilat": "fee",
+        "Tahsil Edilen": "pay",
+        Kalan: "remainder",
       },
       general_data: [],
       json_data: [],
@@ -82,126 +128,117 @@ export default {
         [
           {
             key: "charset",
-            value: "utf-8"
-          }
-        ]
-      ]
+            value: "utf-8",
+          },
+        ],
+      ],
     };
   },
   methods: {
-    doThousandsRegExp: function(n) {
-      if(n) return n.toLocaleString("tr-TR");
+    doThousandsRegExp: function (n) {
+      if (n) return n.toLocaleString("tr-TR");
     },
-    click: function(n) {
-      if (n == this.period) n = 0;
-      console.log(n);
-      this.period = n;
+
+
+    getMonthAndYear(dateStr) {
+      const date = new Date(dateStr);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      return { month, year };
     },
-    getPaylogs: async function() {
-      var months = {};
-      this.$axios.get(`${process.env.OUR_HOST}/payments`).then(res => {
-        for (const [key, value] of Object.entries(res.data)) {
-          for (const [subkey, subvalue] of Object.entries(value)) {
-            var date = new Date(subvalue.installmentDate.slice(0, 10));
-            var data = {};
-            data.paymentDate = "-";
-            if (subvalue.paymentDate != undefined) {
-              var datep = new Date(subvalue.paymentDate.slice(0, 10));
-              data.paymentDate =
-                datep.getDate() +
-                " " +
-                this.trMonths[datep.getMonth()] +
-                " " +
-                datep.getFullYear();
-            }
-            data.total = subvalue.installmentTotal;
-            data.ptotal = subvalue.paymentTotal;
-            data.paymentMethod = subvalue.paymentMethod;
-            data.student =
-              subvalue.student.name + " " + subvalue.student.surname;
-            data.installmentDate =
-              date.getDate() +
-              " " +
-              this.trMonths[date.getMonth()] +
-              " " +
-              date.getFullYear();
-            this.json_data.push(data);
-            if (
-              months[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] == undefined
-            )
-              months[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] = [];
-            months[
-              this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-            ].push(data);
-            if (
-              this.totalInstallments[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] == undefined
-            )
-              this.totalInstallments[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] = 0;
-            this.totalInstallments[
-              this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-            ] += parseInt(subvalue.installmentTotal, 10);
-            if (
-              this.totalPayment[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] == undefined
-            )
-              this.totalPayment[
-                this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-              ] = 0;
-            this.totalPayment[
-              this.trMonths[date.getMonth()] + "-" + date.getFullYear()
-            ] += parseInt(subvalue.paymentTotal, 10);
-          }
-        }
-        for (const key in months) {
-          this.wholeMonths.installments += this.totalInstallments[key];
-          this.wholeMonths.payments += this.totalPayment[key];
-          var general = {
-            period: key,
-            total: this.totalInstallments[key],
-            ptotal: this.totalPayment[key],
-            remainder: this.totalInstallments[key] - this.totalPayment[key]
-          };
-          this.general_data.push(general);
-          var last = {
-            student: "TOPLAM",
-            total: this.totalInstallments[key],
-            ptotal: this.totalPayment[key],
-            installmentDate: "",
-            paymentDate: "",
-            paymentMethod: ""
-          };
-          months[key].push(last);
-        }
-        this.general_data.push({
-          period: "Toplam",
-          total: this.wholeMonths.installments,
-          ptotal: this.wholeMonths.payments,
-          remainder: this.wholeMonths.installments - this.wholeMonths.payments
-        });
-        this.json_data = months;
+    addSubObject(main, sub) {
+      // Ana obje içinde "2021" adında bir obje var mı kontrol edelim
+      if (!main.hasOwnProperty(sub)) {
+        main[sub] = {
+          pay: 0,
+          fee: 0,
+        }; // Yoksa, boş bir obje ekleyelim
+      }
+    },
+    monthSelect: function (month) {
+      const indeks = this.months.indexOf(month);
+      if (indeks !== -1) {
+        // Eğer 3 değeri dizide bulunuyorsa, bu değeri çıkaralım
+        this.months.splice(indeks, 1);
+      } else {
+        this.months.push(month);
+      }
+    },
+    monthCheck: function (month) {
+      return this.months.includes(month);
+    },
+    yearSelect: function (year) {
+      const indeks = this.years.indexOf(year);
+      if (indeks !== -1) {
+        // Eğer 3 değeri dizide bulunuyorsa, bu değeri çıkaralım
+        this.years.splice(indeks, 1);
+      } else {
+        this.years.push(year);
+      }
+    },
+    yearCheck: function (year) {
+      return this.years.includes(year);
+    },
+    addData: function (object, year, month, value) {
+      let student, date, fee, pay;
+      student = value.student;
+      date = value.installmentDate;
+      fee = value.installmentTotal;
+      pay = value.paymentTotal;
+      object.fee += fee;
+      object.pay += pay;
+      object[year].fee += fee;
+      object[year].pay += pay;
+      object[year][month].fee += fee;
+      object[year][month].pay += pay;
+      object[year][month][value._id] = { student, date, fee, pay };
+    },
+    addExcell: function (object, year, month, value) {
+      let student, date, fee, pay;
+      student = this.users[value.student];
+      date = this.formatDate(value.installmentDate) + ' ' + year;
+      fee = value.installmentTotal;
+      pay = value.paymentTotal;
+      object[year][month].push({ student, date, fee, pay });
+    },
+    summary: async function () {
+      const res = await this.$axios("/summary");
+      const payments = res.data.payments;
+      const yearly = {
+        pay: 0,
+        fee: 0,
+      };
+      let excell = {};
+      for (const [key, val] of Object.entries(payments)) {
+        const iDate = this.getMonthAndYear(val.installmentDate);
+        this.addSubObject(yearly, iDate.year);
+        this.addSubObject(yearly[iDate.year], iDate.month);
+        this.addData(yearly, iDate.year, iDate.month, val);
+        //for excell
+        this.addSubObject(excell, iDate.year);
+        if (!excell[iDate.year].hasOwnProperty(iDate.month))
+          excell[iDate.year][iDate.month] = [];
+        this.addExcell(excell, iDate.year, iDate.month, val);
+      }
+      this.yearly = yearly;
+      this.excell = excell;
+    },
+    formatDate: function (tarihStr) {
+      let tarih = new Date(tarihStr);
+      return tarih.toLocaleDateString("tr-TR", {
+        month: "long",
+        day: "numeric",
       });
     },
-    sort: function() {
-      console.log(this.json_data);
-      var data = this.json_data;
-      for (const [k, v] in data) {
-        console.log(v);
-      }
-    }
+    getNames: async function () {
+      const res = await this.$axios.get("getAllNames");
+      this.users = res.data.userNames;
+    },
   },
   async mounted() {
-    await this.getPaylogs();
-    this.sort();
-  }
+    await this.getNames();
+    this.summary();
+  },
 };
 </script>
 

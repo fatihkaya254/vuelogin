@@ -193,7 +193,7 @@ export const actions = {
         if (res.data.auth) {
           dispatch("login", {authKey:res.data.authKey, userInfo:res.data.userInfo});
           commit("canPass", false);
-          this.$router.push("/myrecords");
+          this.$router.push("/zoom");
         } else {
           commit("canPass", true);
         }

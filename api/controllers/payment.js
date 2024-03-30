@@ -28,6 +28,15 @@ exports.getAllPayments = async (req, res) => {
     });
 };
 
+exports.getSummary = async (req, res) => {
+  try {
+    const payments = await Payment.find({}).sort("installmentDate")
+    res.send({payments})
+  } catch (error) {
+    res.send({error})
+  }
+};
+
 exports.getAllPaylogs = async (req, res) => {
   Paylog.find({})
     .populate([{ path: "payment", populate: { path: "student" } }])
