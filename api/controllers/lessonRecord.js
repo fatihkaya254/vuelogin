@@ -55,8 +55,10 @@ exports.getTodays = async (req, res) => {
   const now = new Date();
   var month = now.getMonth() + 1;
   const today = now.getFullYear() + "-" + month + "-" + now.getDate();
+  var nextDay = new Date(Date.now());
+  nextDay.setDate(nextDay.getDate() + 1);
   try {
-    const todays = await LessonRecord.find({ recordDate: today }).sort('hour')
+    const todays = await LessonRecord.find({ recordDate: { $gte: today, $lt: nextDay } }).sort('hour')
     res.status(201).json({ todays });
   } catch (error) {
     console.log(error);
